@@ -69,21 +69,44 @@ Background.prototype.draw = function (ctx) {
     ctx.fillRect(0,500,800,300);
     Entity.prototype.draw.call(this);
 }
+function Sidewalk(game) {
+	this.sidewalk = new Animation(ASSET_MANAGER.getAsset("./img/Sidewalk.png"), 0, 0, 160, 75, 0.03, 1, true, false);
+	
+	this.radius = 200;
+	Entity.call(this, game, 0, 500);
+}
+
+Sidewalk.prototype = new Entity();
+Sidewalk.prototype.constructor = Sidewalk;
+
+Sidewalk.prototype.update = function() { 
+}
+
+Sidewalk.prototype.draw = function(ctx) {
+	for (var i = 0; i < 5; i++) {
+		this.sidewalk.drawFrame(this.game.clockTick, ctx, this.x + (160 * i), this.y);
+	}
+	Entity.prototype.draw.call(this);
+}
 
 function Cat(game) {
-	this.neutral = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 0, 80, 150, 0.03, 1, true, false);
+	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 967, 96, 96, 0.03, 1, true, false);
+	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 104, 967, 96, 96, 0.03, 1, true, false);
 	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 0, 80, 150, 0.03, 9, false, false);
 	this.jumpAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 155, 80, 150, 0.03, 9, false, false);
-	this.runRAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 310, 80, 150, 0.03, 9, true, false);
-	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 465, 80, 150, 0.03, 9, true, false);
+	this.runRAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 701, 128, 128, 0.1, 6, true, false);
+	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 834, 128, 128, 0.1, 6, true, true);
 	this.duckAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 621, 80, 75, 0.03, 9, true, false);
+	this.x = 0;
 	this.running = false;
 	this.attacking = false;
 	this.ducking = false;
 	this.jumping = false;
+	this.left = false; 
+	this.right = true;
 	this.radius = 100;
-	this.ground = 400;
-	Entity.call(this, game, 0, 400);
+	this.ground = 350;
+	Entity.call(this, game, 20, 350);
 }
 
 Cat.prototype = new Entity();
@@ -93,11 +116,24 @@ Cat.prototype.update = function() {
 	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
 	this.running = (this.game.right || this.game.left);
+
 	this.ducking = this.game.down;
 	if (this.attacking) {
 		if (this.attackAnim.isDone()) {
 			this.attackAnim.elapsedTime = 0;
 			this.attacking = false;
+		}
+	}
+	if (this.running) {
+		if (this.game.right) {
+			this.x += 7;
+			this.right = true;
+			this.left = false;
+		}
+		else if (this.game.left) {
+			this.x -= 7;
+			this.left = true;
+			this.right = false;
 		}
 	}
 	if (this.jumping) {
@@ -106,7 +142,7 @@ Cat.prototype.update = function() {
 			this.jumping = false;
         }
         var jumpDistance = this.jumpAnim.elapsedTime / this.jumpAnim.totalTime;
-        var totalHeight = 26;
+        var totalHeight = 30;
         if (jumpDistance > 0.5)
             jumpDistance = 1 - jumpDistance;
 		
@@ -119,17 +155,22 @@ Cat.prototype.update = function() {
 
 Cat.prototype.draw = function(ctx) {
 	if (this.attacking) {
-		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y - 50);
+		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y);
 	} else if (this.jumping) {
-		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y - 100);
+		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 50);
 	} else if (this.running && this.game.right) {
-		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y - 50);
+		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 25);
 	} else if (this.running && this.game.left) {
-		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y - 50);
+		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 25);
 	} else if (this.ducking) {
-		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y + 25);
+		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 75);
 	} else {
-		this.neutral.drawFrame(this.game.clockTick, ctx, this.x + 20, this.y - 50);
+		if (this.right) {
+			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x, this.y + 57);
+		}
+		if (this.left) {
+			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x, this.y + 57);
+		}
 	}
 	Entity.prototype.draw.call(this);
 }
@@ -137,6 +178,7 @@ Cat.prototype.draw = function(ctx) {
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/catBeta.png");
+ASSET_MANAGER.queueDownload("./img/Sidewalk.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -145,7 +187,10 @@ ASSET_MANAGER.downloadAll(function () {
     var gameEngine = new GameEngine();
     var bg = new Background(gameEngine);
 	var cat = new Cat(gameEngine);
+	var sidewalk = new Sidewalk(gameEngine);
     gameEngine.addEntity(bg);
+	
+	gameEngine.addEntity(sidewalk);
 	gameEngine.addEntity(cat);
     gameEngine.init(ctx);
     gameEngine.start();
