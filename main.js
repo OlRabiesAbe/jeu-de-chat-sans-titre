@@ -12,6 +12,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.reverse = reverse;
 }
 
+//
 Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
@@ -90,13 +91,22 @@ Sidewalk.prototype.draw = function(ctx) {
 }
 
 function Cat(game) {
-	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 967, 96, 96, 0.03, 1, true, false);
-	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 104, 967, 96, 96, 0.03, 1, true, false);
-	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 0, 80, 150, 0.03, 9, false, false);
-	this.jumpAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 155, 80, 150, 0.03, 9, false, false);
-	this.runRAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 701, 128, 128, 0.1, 6, true, false);
-	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 834, 128, 128, 0.1, 6, true, true);
-	this.duckAnim = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 621, 80, 75, 0.03, 9, true, false);
+	//	(spriteSheet,startX,startY,frameWidth,frameHeight,frameDuration,frames,loop,reverse)		
+	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		0, 512, 256, 256, 1, 1, true, false);
+	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		256, 512, 256, 256, 1, 1, true, false);
+	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		768, 512, 256, 256, 0.3, 3, false, false);
+	this.jumpAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		768, 512, 256, 256, 0.3, 3, false, false);
+	this.runRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		0, 0, 256, 256, 0.1, 6, true, false);
+	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"), 
+		0, 256, 256, 256, 0.1, 6, true, true);
+	this.duckAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_spritesheet_proto.png"),
+		1280, 512, 256, 256, 0.3, 3, true, false);	
+		
 	this.x = 0;
 	this.running = false;
 	this.attacking = false;
@@ -154,22 +164,23 @@ Cat.prototype.update = function() {
 }
 
 Cat.prototype.draw = function(ctx) {
+	//
 	if (this.attacking) {
-		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 	} else if (this.jumping) {
-		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 50);
+		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 	} else if (this.running && this.game.right) {
-		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 25);
+		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 	} else if (this.running && this.game.left) {
-		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 25);
+		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 	} else if (this.ducking) {
-		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y + 75);
+		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 	} else {
 		if (this.right) {
-			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x, this.y + 57);
+			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 		}
 		if (this.left) {
-			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x, this.y + 57);
+			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x, this.y - 100);
 		}
 	}
 	Entity.prototype.draw.call(this);
@@ -177,7 +188,7 @@ Cat.prototype.draw = function(ctx) {
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/catBeta.png");
+ASSET_MANAGER.queueDownload("./img/cat_spritesheet_proto.png");
 ASSET_MANAGER.queueDownload("./img/Sidewalk.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -190,7 +201,7 @@ ASSET_MANAGER.downloadAll(function () {
 	var sidewalk = new Sidewalk(gameEngine);
     gameEngine.addEntity(bg);
 	
-	gameEngine.addEntity(sidewalk);
+	//gameEngine.addEntity(sidewalk);
 	gameEngine.addEntity(cat);
     gameEngine.init(ctx);
     gameEngine.start();
