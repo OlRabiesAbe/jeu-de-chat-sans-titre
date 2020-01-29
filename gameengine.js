@@ -29,6 +29,8 @@ Timer.prototype.tick = function () {
 }
 
 function GameEngine() {
+	this.camera = new Camera(this);
+	this.cat = new Cat(this);
     this.entities = [];
     this.showOutlines = false;
     this.ctx = null;
@@ -41,6 +43,7 @@ function GameEngine() {
 
 GameEngine.prototype.init = function (ctx) {
     this.ctx = ctx;
+	this.cat.platform = this.entities[0];
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.startInput();
@@ -62,7 +65,7 @@ GameEngine.prototype.startInput = function () {
     var that = this;
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
-			if (e.code === "Space") that.space = true;
+			if (String.fromCharCode(e.which) === ' ') that.space = true;
 			if (String.fromCharCode(e.which) === 'D') that.right = true;
 			if (String.fromCharCode(e.which) === 'A') that.left = true;
 			if (String.fromCharCode(e.which) === 'S') that.down = true;
@@ -74,7 +77,7 @@ GameEngine.prototype.startInput = function () {
 		if (String.fromCharCode(e.which) === 'A') that.left = false;
 		if (String.fromCharCode(e.which) === 'S') that.down = false;
 		if (String.fromCharCode(e.which) === 'W') that.w = false;
-		if (e.code === "Space") that.space = false;
+		if (String.fromCharCode(e.which) === ' ') that.space = false;
 	}, false);
     console.log('Input started');
 }
@@ -95,7 +98,7 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
-
+	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
 
@@ -103,7 +106,6 @@ GameEngine.prototype.update = function () {
             entity.update();
         }
     }
-
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
