@@ -254,6 +254,138 @@ Lamp.prototype.draw = function(ctx) {
 	}
 		
 }
+function Bird(game, x, y, type) {	
+	this.bird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 35, 35, 185,70, 0.1, 4, true, false)
+	this.reverseBird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 30, 600, 185,70, 0.1, 4, true, false)
+	this.attackBird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 30, 400, 185,100, 0.1, 1, true, false)
+	
+	this.type = type
+	this.length = 50;
+	this.height = 100
+	this.start = x
+	this.x = x;
+	this.y = y;
+	this.type = type
+	this.count = 0;
+	this.leftCheck = true;
+	this.rightCheck = false
+	Entity.call(this, game, x , y )
+}
+Bird.prototype = new Entity();
+Bird.prototype.constructor = Enemy;
+
+Bird.prototype.update= function() {
+	
+	if(this.type === "Fly"){
+		if(this.x === 200){
+			this.leftCheck = false;
+			this.rightCheck = true
+		}
+		if(this.x === 604){
+			this.leftCheck = true;
+			this.rightCheck = false
+		}
+		if(this.leftCheck){
+			this.x -= 4
+		}
+		if(this.rightCheck){
+			this.x += 4
+		}
+	}
+	if(this.type === "Attack"){
+		if(this.x === 200){
+			this.leftCheck = false;
+			this.rightCheck = true
+		}
+		if(this.x === 404){
+			this.leftCheck = true;
+			this.rightCheck = false
+		}
+		if(this.leftCheck){
+			this.y += 4
+			this.x -= 4
+		}
+		if(this.rightCheck){
+			this.y -= 4
+			this.x += 4
+		}
+	}
+	
+}
+Bird.prototype.draw = function (ctx) {
+	if(this.type === "Fly" && this.leftCheck ){
+		this.bird.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+
+	} 
+	if(this.type === "Fly" && this.rightCheck|| this.type === "Attack" && this.rightCheck){
+		this.reverseBird.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+
+	} 
+	if(this.type === "Attack" && this.leftCheck){
+		this.attackBird.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+
+	} 
+    Entity.prototype.draw.call(this);
+}
+function Range(game, x, y, type) {
+	this.ready = new Animation(ASSET_MANAGER.getAsset("./img/cowboy.png"), 240, 370, 190, 160, 0.12, 3, true, false);
+	this.bullet = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 240, 370, 190, 160, 0.12, 3, true, false);
+	this.l = true;
+	this.r = false
+	this.type = type
+	this.color = "Gold"
+	this.length = 50;
+	this.height = 100
+	this.start = x
+	this.x = x;
+	this.y = y;
+	this.count = 0;
+	this.leftCheck = true;
+	this.rightCheck = false
+	Entity.call(this, game, this.x , this.y)
+}
+Range.prototype = new Entity();
+Range.prototype.constructor = Range;
+
+Range.prototype.update= function() {
+	
+    Entity.prototype.update.call(this);
+	
+}
+
+Range.prototype.draw = function (ctx) {
+	this.ready.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+	
+}
+function Bullet(game, x, y) {
+	this.bullet = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 15, 240, 61.75, 70, 0.12, 7, true, false);
+	
+	this.color = "Gold"
+	this.length = 50;
+	this.height = 100
+	this.x = x;
+	this.y = y;
+	this.count = 0;
+	this.leftCheck = true;
+	this.rightCheck = false
+	Entity.call(this, game, this.x , this.y)
+}
+Bullet.prototype = new Entity();
+Bullet.prototype.constructor = Bullet;
+
+Bullet.prototype.update= function() {
+	this.x += 5
+	if(this.x === 1100){
+		this.x = 620
+	}
+    Entity.prototype.update.call(this);
+	
+}
+
+Bullet.prototype.draw = function (ctx) {
+	this.bullet.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+	
+}
 
 function Enemy(game, x, y) {
 	this.left = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 250, 153, 115, 0.1, 4, true, false);
@@ -401,6 +533,9 @@ ASSET_MANAGER.queueDownload("./img/skyscraper.png");
 ASSET_MANAGER.queueDownload("./img/platform.png");
 ASSET_MANAGER.queueDownload("./img/puddle.png");
 ASSET_MANAGER.queueDownload("./img/lamp.png");
+ASSET_MANAGER.queueDownload("./img/bird.png");
+ASSET_MANAGER.queueDownload("./img/cowboy.png");
+ASSET_MANAGER.queueDownload("./img/bullet.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -434,6 +569,11 @@ ASSET_MANAGER.downloadAll(function () {
 	var lamp = new Lamp(gameEngine, 950, 400); 
 	var lamp2 = new Lamp(gameEngine, 1300, 400);
 	var lamp3 = new Lamp(gameEngine, 1600, 400);
+		
+	var birdFly = new Bird(gameEngine,  600, 100, "Fly")
+	var birdAttack = new Bird(gameEngine,  400, 150, "Attack")
+	var range = new Range(gameEngine,  500, 200, "Attack")
+	var bullet = new Bullet(gameEngine,  620, 185)
 	var sidewalk = new Sidewalk(gameEngine);
     gameEngine.addPlatform(plat);
     gameEngine.addPlatform(p2);
@@ -450,6 +590,12 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEnemy(bad6);
 	gameEngine.addEntity(gameEngine.cat);
 	gameEngine.addEntity(gameEngine.camera);
+		gameEngine.addEnemy(birdFly);
+	gameEngine.addEnemy(birdAttack);
+	gameEngine.addEnemy(range)
+	gameEngine.addEntity(bullet);
+
+	
 	//console.log(gameEngine.platforms);
 	//console.log(gameEngine.enemies);
 	//console.log(gameEngine.otherEntities);
