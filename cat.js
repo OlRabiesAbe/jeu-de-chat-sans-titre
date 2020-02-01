@@ -187,7 +187,7 @@ Cat.prototype.collisionHelper = function() {
 				//alert(this.boundingbox.bottom + " " + this.y + " " + pf.boundingbox.top + " " + pf.y)
 				pf.color = "Blue"
 				pf.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 0, 0, 286, 214, 0.3, 3, false, false); 
-				this.removeFromWorld = true;
+				//this.removeFromWorld = true;
 			} 
 			//else if (pf.color === "Green" || pf.color === "Black" && this.collidePlatform(pf)) {
          //      this.y = pf.boundingbox.top - this.boundingbox.frameHeight;
