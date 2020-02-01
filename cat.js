@@ -20,21 +20,15 @@ function Cat(game) {
 	this.jumping = false;
 	this.left = false; 
 	this.right = true;
+	this.falling = false;
 	this.radius = 100;
-	this.ground = 350;
-	this.totalHeight = 30;
-	this.hspeed = 0;
-	this.MAX_HSPEED = 9;
-	this.HACCEL = 1;
-	this.HDECCEL = this.HACCEL;
-	this.vspeed = 0;
-	this.MAX_VSPEED = 27;
-	this.VDECCEL = 1;
-	this.MAX_VDECCEL = -this.MAX_VSPEED;
-	this.boxes = true
-	this.boundingbox = new BoundingBox(this.x, this.y, this.neutralR.frameWidth - 30, this.neutralR.frameHeight - 20, "Black");
+	this.jumpHeight = 20;
+	this.totalHeight = 200;
+	this.ground = 350
+	this.boxes = true;
+	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
 	
-	Entity.call(this, game, 20, 350);
+	Entity.call(this, game, 40, 350);
 }
 
 Cat.prototype = new Entity();
@@ -46,16 +40,24 @@ function distance(a, b) {
 }
 
 Cat.prototype.collideDeath = function (other) {
-    return this.y + this.height== other.y  && this.x < other.x + other.length
+    return this.y + this.height === other.y  && this.x < other.x + other.length
     		&& this.x + this.radius > other.x ;
     		
 };
 Cat.prototype.collideEnemy = function (other) {
-    return this.x < other.x + other.length
-	&& this.x + this.attackRange > other.x ;
+    var a = this.x < other.x + other.length
+			&& this.x + this.attackRange > other.x ;
+	//console.log(a)
+	return a;
 	
 };
 
+Cat.prototype.collidePlatform = function (other) {
+	var a = this.x <= other.boundingbox.width + other.x
+			&& this.x > other.x && this.boundingbox.bottom >= other.boundingbox.top &&
+			this.boundingbox.top < other.boundingbox.bottom;
+	return a;
+}
 /**
  * This function will detect if the cat reaches the 
  * leftmost boundary.
@@ -73,82 +75,18 @@ Cat.prototype.collideRight = function () {
 
 
 Cat.prototype.update = function() {
-	//if (this.collideRight()) this.x = 800 - this.radius; //Checks boundry for right side of the map
-	//if (this.collideLeft()) this.x = this.radius-100; //Checks boundary for left side of the map
-	
-	var death = this.game.entities[4]
-	var bad = this.game.entities[5]
-
-	if(this.collideDeath(death)){
-		this.removeFromWorld = false;
-		death.color = "Blue"
-	} else {
-		death.color = "Red"
-	}
-	
+	console.log("y" + this.y);
 	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
 	this.running = (this.game.right || this.game.left);
-
 	this.ducking = this.game.down;
-	if (this.attacking) {
-		if(this.collideEnemy(bad)){		//This will remove the enemy when the player hits it.
-			bad.removeFromWorld = true;
-			
-		} 
+	
+	if (this.attacking) { 
 		if (this.attackAnim.isDone()) {
 			this.attackAnim.elapsedTime = 0;
-			this.attacking = false;
+			this.attacking = false;	
 		}
 	}
-	/*if(this.running) { 												//code for momentum, to be implemented
-		//sanitizing input (why is no press = undefined?  not false?)
-		this.right = isNaN(this.game.right) ? false : this.game.right;
-		this.left = isNaN(this.game.left) ? false : this.game.left;
-		//add or subtract from hspeed depending on right/left
-		this.hspeed += ((+this.right * this.HACCEL) - (+this.left * this.HACCEL));
-	} else if(Math.abs(this.hspeed) < this.HDECCEL) {
-		//if hspeed is < HDECCEL, we dont want to subtract from it,
-		//casue that would mean slight backwards acceleration from decceleration, which is jank.
-		this.hspeed = 0;
-	} else if(this.hspeed != 0) {
-		//subtracts decceleration from hspeed if hspeed positive, else adds it.
-		this.hspeed -= (+this.right * this.HDECCEL) - (+this.left * this.HDECCEL);
-	}
-	//handling top speed
-	if(Math.abs(this.hspeed) > this.MAX_HSPEED) 
-		this.hspeed = this.MAX_HSPEED * Math.sign(this.hspeed);
-	this.x += this.hspeed;
-	
-	if(this.y >= this.ground) this.vspeed = 0;
-	if(this.jumping && this.y >= this.ground) {
-		this.vspeed = this.MAX_VSPEED;
-	} else if (this.y <= this.ground && this.vspeed > this.MAX_VDECCEL){
-		this.vspeed -= this.VDECCEL;
-	}
-	this.y -= this.vspeed;*/
-	if (this.running) {
-		if (this.game.right) {
-	        this.boundingbox = new BoundingBox(this.x + 35, this.y + 60, this.neutralR.frameWidth - 30, this.neutralR.frameHeight - 10, "Orange");
-			if (this.x + 7 <= 1490) {
-				this.x += 7;
-			}
-			this.right = true;
-			this.left = false;
-		}
-		else if (this.game.left) {
-	        this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10, "Purple");
-			if (this.x - 7 >= 0) {
-				this.x -= 7;
-			}
-			this.left = true;
-			this.right = false;
-		}
-	}
-	if (this.game.space && !this.jumping && !this.falling) {
-        this.jumping = true;
-        this.ground = this.y;
-    }
 	if (this.jumping) {		     
         if (this.jumpAnim.isDone()) {
             this.jumpAnim.elapsedTime = 0;
@@ -160,14 +98,14 @@ Cat.prototype.update = function() {
         if (jumpDistance > 0.5)
             jumpDistance = 1 - jumpDistance;
 		
-        var height = this.totalHeight*(-40 * (jumpDistance * jumpDistance - jumpDistance)) ;
+        var height = this.totalHeight*(-4 * (jumpDistance * jumpDistance - jumpDistance)) ;
         //var height = jumpDistance * 2 * totalHeight;
         this.lastBottom = this.boundingbox.bottom;
         this.y = this.ground - height;
     	this.boundingbox = new BoundingBox(this.x + 40, this.y - 25, this.jumpAnim.frameWidth - 10, this.jumpAnim.frameHeight - 35, "Blue");
     	
-        for (var i = 0; i < 3; i++) {
-            var pf = this.game.entities[i];
+        for (var i = 0; i < this.game.platforms.length; i++) {
+            var pf = this.game.platforms[i];
             if (this.boundingbox.collide(pf.boundingbox) && this.lastBottom < pf.boundingbox.top) {
                 this.jumping = false;
                 this.y = pf.boundingbox.top - this.neutralR.frameHeight - 54;
@@ -176,15 +114,15 @@ Cat.prototype.update = function() {
                 this.jumpAnim.elapsedTime = 0;
             } 
         }        
-    }	
+    }
 	if(this.falling){
 		 //this.jumping = false
 		 this.lastBottom = this.boundingbox.bottom;
          this.y += this.game.clockTick / this.jumpAnim.totalTime * 4 * this.totalHeight + 5;
     	 this.boundingbox = new BoundingBox(this.x + 35, this.y + 50, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 5, "Pink");
     	 
-         for (var i = 0; i < 3; i++) {
-             var pf = this.game.entities[i];
+         for (var i = 0; i < this.game.platforms.length; i++) {
+             var pf = this.game.platforms[i];
              if (this.boundingbox.collide(pf.boundingbox) && this.lastBottom < pf.boundingbox.top) {              
             	 this.falling = false;
                  this.y = pf.boundingbox.top - this.neutralR.frameHeight - 54;
@@ -205,12 +143,68 @@ Cat.prototype.update = function() {
 		*/
         if (this.boundingbox.left > this.platform.boundingbox.right) this.falling = true;
     }
-	//console.log(this.x + " " + this.y);
-	Entity.prototype.update.call(this);
-}
+	if (this.running) {
+		if (this.game.right) {
+			if (this.x + 7 <= 2190) {
+				this.x += 7;
+			}
+			this.boundingbox = new BoundingBox(this.x + 18, this.y + 70, this.runRAnim.frameWidth - 45, this.runRAnim.frameHeight - 45);
+			this.right = true;
+			this.left = false;
+		} else if (this.game.left) {
+	        if (this.x - 7 >= 0) {
+				this.x -= 7;
+			}
+			this.boundingbox = new BoundingBox(this.x + 18, this.y + 70, this.runLAnim.frameWidth - 45, this.runLAnim.frameHeight - 45);
+			
+			this.left = true;
+			this.right = false;
+		}
+	}
+	if (this.ducking) {
+		this.boundingbox = new BoundingBox(this.x, this.y + 75, this.duckAnim.frameWidth - 6, this.duckAnim.frameHeight);
+	}
+	if (!this.running && !this.jumping && !this.attacking && !this.ducking) {
+		if (this.right) {
+			this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralR.frameWidth , this.neutralR.frameHeight);
+		}
+		else {
+			this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralL.frameWidth, this.neutralL.frameHeight);
+		}
+	}
 
+
+	this.collisionHelper();
+	Entity.prototype.update.call(this);
+} 
+
+Cat.prototype.collisionHelper = function() {
+	for (var i = 0; i < this.game.platforms.length; i++) {
+			//console.log(this.game.platforms);
+           var pf = this.game.platforms[i];
+			// console.log(pf);
+			if (pf.color === "Red" && this.collidePlatform(pf)) {
+				//alert(this.boundingbox.bottom + " " + this.y + " " + pf.boundingbox.top + " " + pf.y)
+				pf.color = "Blue"
+				pf.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 0, 0, 286, 214, 0.3, 3, false, false); 
+				this.removeFromWorld = true;
+			} 
+			//else if (pf.color === "Green" || pf.color === "Black" && this.collidePlatform(pf)) {
+         //      this.y = pf.boundingbox.top - this.boundingbox.frameHeight;
+         //      this.platformH = pf.boundingbox.top;
+         //      this.jumpAnim.elapsedTime = 0;
+         //   }  
+			//else
+       }  
+	for (var i = 0; i < this.game.enemies.length; i++) {
+		var enemy = this.game.enemies[i];
+		if (this.collideEnemy(enemy) && this.attacking) {
+			enemy.removeFromWorld = true;
+		}
+	}
+}
 Cat.prototype.draw = function(ctx) {
-	
+	//console.log(this.boundingbox.color);
 	if(this.boxes){
 		//ctx.strokeStyle = "red";
        // ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
@@ -220,25 +214,51 @@ Cat.prototype.draw = function(ctx) {
 	
 	if (this.attacking) {
 		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 2); 
-	} 
+		ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
+		} 
 	
 	else if (this.jumping) {
 		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x + 50 - this.game.camera.x, this.y - 60);
+		if (this.jumpAnim.isDone()) {
+            this.jumpAnim.elapsedTime = 0;
+            this.jumping = false;
+            this.falling = true;
+        }
+		ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 		
 	} else if (this.running && this.game.right) {
 		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
+		ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 		
 	} else if (this.running && this.game.left) {
 		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
+		ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 		
 	} else if (this.ducking) {
 		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 75);
+		ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 	} else {
 		if (this.right) {
 			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 57);
+			ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 		}
 		if (this.left) {
 			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 57);
+			ctx.strokeStyle = this.boundingbox.color;
+        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 		}
 	}
 

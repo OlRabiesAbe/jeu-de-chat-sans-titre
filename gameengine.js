@@ -31,7 +31,10 @@ Timer.prototype.tick = function () {
 function GameEngine() {
 	this.camera = new Camera(this);
 	this.cat = new Cat(this);
-    this.entities = [];
+	this.entities = [];
+	this.platforms = [];
+    this.enemies = [];
+	this.otherEntities = [];
     this.showOutlines = false;
     this.ctx = null;
     this.click = null;
@@ -43,7 +46,9 @@ function GameEngine() {
 
 GameEngine.prototype.init = function (ctx) {
     this.ctx = ctx;
-	this.cat.platform = this.entities[0];
+	this.cat.platform = this.platforms[0];
+
+	//this.cat.platform = this.entities[0];
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.startInput();
@@ -84,9 +89,20 @@ GameEngine.prototype.startInput = function () {
 
 GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
-    this.entities.push(entity);
+	this.entities.push(entity);
+    this.otherEntities.push(entity);
 }
 
+GameEngine.prototype.addPlatform = function (entity) {
+    console.log('added entity');
+	this.entities.push(entity);
+    this.platforms.push(entity);
+}
+GameEngine.prototype.addEnemy= function (entity) {
+    console.log('added entity');
+	this.entities.push(entity);
+    this.enemies.push(entity);
+}
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
@@ -101,7 +117,6 @@ GameEngine.prototype.update = function () {
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
-
         if (!entity.removeFromWorld) {
             entity.update();
         }
