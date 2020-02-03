@@ -1,0 +1,24 @@
+++=======WHAT NEEDS TO BE DONE=======++
+	-fix collision, from the ground up
+		*how does collision work now?
+			-find all relevant code
+		*remove, replace. the actual design shouldnt be hard
+			-
+	-fix catBeta.png, or replace entirely
+		*fix sizes, must be done from ground up
+		*make sensible locations
+			-impose grids
+		*rewrite code to do with spritesheet reading
+			-for simplicity, try to only touch x y size vars
+	-make new animations
+		*cat_jump (Make in one sitting!!)
+		*cat_tail_swish
+			-code for animation must be added too
+		*cat_claw
+		*dog_walk
+			-skeleton first
+	-scrap together some general assets
+		*sidewalk
+		*platforms
+		*background
+		*lantern
