@@ -233,23 +233,31 @@ function Tile(game, img, framex, framey, x, y,) {
 	this.x = x * 128; this.y = y * 128;
 	this.width = 128; this.height = 128; 
 	//Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
-	this.animation = new Animation(ASSET_MANAGER.getAsset(img), framex, framey, 32, 32, 1, 1, true, false);
+	this.animation = new Animation(ASSET_MANAGER.getAsset(img), framex, framey, 128, 128, 1, 1, true, false);
 }
 Tile.prototype = new Entity();
 Tile.prototype.constructor = Tile;
-Tile.prototype.update = function(ctx) {
+Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles displacing the cat when it collides with the tile (enters the tile)
 	
 	//checking if the cat is in this tile. last else = a collision is occuring
 	if(this.game.cat.y + this.game.cat.height < this.y || this.y + this.height < this.game.cat.y) {}
 	else if (this.game.cat.x + this.game.cat.width < this.x || this.x + this.width < this.game.cat.x) {}
+	//a collision has occured, displace cat out of tile
 	else {
+		//approach from top						\/displacement equation\/
+		//(top is first because most collision will be from standing on the floor)
+		if(this.game.cat.y <= this.y) this.game.cat.y -= (this.game.cat.y + this.game.cat.height - this.y);
 		//approach from left
-		if (this.game.cat.x < this.x) this.game.cat.x = this.game.cat.x - (this.game.cat.x + this.game.cat.width - this.x);
-		else if (this.game.cat.x >= this.x) this.game.cat.x = this.game.cat.x + (this.x + this.width - this.game.cat.x);
+		else if (this.game.cat.x <= this.x) this.game.cat.x -= (this.game.cat.x + this.game.cat.width - this.x);
+		//approach from right
+		else if (this.game.cat.x > this.x) this.game.cat.x = this.x + this.width;
+		//approach from bottom
+		//(bottom is last because otherwise touching surfaces would warp you into the floor)
+		else if (this.game.cat.y > this.y) this.game.cat.y = this.y + this.height;
 	}
 }
-Tile.prototype.draw = function(ctx) {
-	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 3);
+Tile.prototype.draw = function(ctx) { //i dont understand drawing funcs
+	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 1);
 	Entity.prototype.draw.call(this);
 }
 
@@ -625,7 +633,7 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEnemy(range)
 	gameEngine.addEntity(bullet);
 	
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/template.png", 0, 0, 3, 1));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/template.png", 0, 0, 3, 2.5));
 
 	
 	console.log(gameEngine.platforms);
