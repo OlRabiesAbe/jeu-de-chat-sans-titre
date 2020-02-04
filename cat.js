@@ -66,7 +66,7 @@ Cat.prototype.collideLeft = function () {
     return (this.x - this.radius) < -100;
 };
 /**
- * This function will detect if the cat reches the 
+ * This function will detect if the cat reaches the 
  * rightmost boundary.
  */
 Cat.prototype.collideRight = function () {

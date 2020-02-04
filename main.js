@@ -579,7 +579,7 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.addPlatform(p2);
 	gameEngine.addEntity(sidewalk); 
     gameEngine.addPlatform(death);
-		gameEngine.addEntity(lamp);
+	gameEngine.addEntity(lamp);
 	gameEngine.addEntity(lamp2);
 	gameEngine.addEntity(lamp3);
     gameEngine.addEnemy(bad);
@@ -590,7 +590,7 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEnemy(bad6);
 	gameEngine.addEntity(gameEngine.cat);
 	gameEngine.addEntity(gameEngine.camera);
-		gameEngine.addEnemy(birdFly);
+	gameEngine.addEnemy(birdFly);
 	gameEngine.addEnemy(birdAttack);
 	gameEngine.addEnemy(range)
 	gameEngine.addEntity(bullet);
