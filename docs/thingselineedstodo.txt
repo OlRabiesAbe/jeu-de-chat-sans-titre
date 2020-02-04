@@ -3,10 +3,9 @@
 		[DONE]*how does collision work now?
 			[DONE]-find all relevant code
 		*remove, replace. the actual design shouldnt be hard
-			-finish vertical cases
+			[DONE]-finish vertical cases
 			-fix hitboxes for test tile
-				-draw 128 * 128 test tile
-			-fix hitboxes for cat \|/
+				[DONE]-draw 128 * 128 test tile
 			-delete everything now not being used
 	-fix catBeta.png, or replace entirely
 		*fix sizes, must be done from ground up
@@ -14,6 +13,7 @@
 			-impose grids
 		*rewrite code to do with spritesheet reading
 			-for simplicity, try to only touch x y size vars
+		*fix hitboxes for cat
 	-make new animations
 		*cat_jump (Make in one sitting!!)
 		*cat_tail_swish
