@@ -206,19 +206,17 @@ Platform.prototype.draw = function (ctx) {
 	if (this.animation !== null) {
 		if (this.color === "Red") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 170);
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+			ctx.strokeStyle = this.boundingbox.color;
+			ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		} else if (this.color === "Green") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
-			
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+			ctx.strokeStyle = this.boundingbox.color;
+			ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		}
 		 else if (this.color === "Blue") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 140);
-			
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+			ctx.strokeStyle = this.boundingbox.color;
+			ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		}
 	}
 	else {
@@ -226,6 +224,33 @@ Platform.prototype.draw = function (ctx) {
 		ctx.fillRect(this.x - this.game.camera.x,this.y,this.length,this.height);
 	}
     Entity.prototype.draw.call(this);
+}
+
+//~.~.~.~.~.~.~.~.~.~.~.~. code for a generic tile ~.~.~.~.~.~.~.~.~.~.~.~.//
+function Tile(game, img, framex, framey, x, y,) {
+	this.game = game;
+	this.x = x * 128; this.y = y * 128;
+	this.x = x * 128; this.y = y * 128;
+	this.width = 128; this.height = 128; 
+	//Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
+	this.animation = new Animation(ASSET_MANAGER.getAsset(img), framex, framey, 32, 32, 1, 1, true, false);
+}
+Tile.prototype = new Entity();
+Tile.prototype.constructor = Tile;
+Tile.prototype.update = function(ctx) {
+	
+	//checking if the cat is in this tile. last else = a collision is occuring
+	if(this.game.cat.y + this.game.cat.height < this.y || this.y + this.height < this.game.cat.y) {}
+	else if (this.game.cat.x + this.game.cat.width < this.x || this.x + this.width < this.game.cat.x) {}
+	else {
+		//approach from left
+		if (this.game.cat.x < this.x) this.game.cat.x = this.game.cat.x - (this.game.cat.x + this.game.cat.width - this.x);
+		else if (this.game.cat.x >= this.x) this.game.cat.x = this.game.cat.x + (this.x + this.width - this.game.cat.x);
+	}
+}
+Tile.prototype.draw = function(ctx) {
+	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 3);
+	Entity.prototype.draw.call(this);
 }
 
 function Lamp(game, x, y) {
@@ -536,6 +561,7 @@ ASSET_MANAGER.queueDownload("./img/lamp.png");
 ASSET_MANAGER.queueDownload("./img/bird.png");
 ASSET_MANAGER.queueDownload("./img/cowboy.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/template.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -575,28 +601,34 @@ ASSET_MANAGER.downloadAll(function () {
 	var range = new Range(gameEngine,  500, 200, "Attack")
 	var bullet = new Bullet(gameEngine,  620, 185)
 	var sidewalk = new Sidewalk(gameEngine);
+	
     gameEngine.addPlatform(plat);
     gameEngine.addPlatform(p2);
 	gameEngine.addEntity(sidewalk); 
     gameEngine.addPlatform(death);
+	
 	gameEngine.addEntity(lamp);
 	gameEngine.addEntity(lamp2);
 	gameEngine.addEntity(lamp3);
+	
     gameEngine.addEnemy(bad);
 	gameEngine.addEnemy(bad2);
 	gameEngine.addEnemy(bad3);
 	gameEngine.addEnemy(bad4);
 	gameEngine.addEnemy(bad5);
 	gameEngine.addEnemy(bad6);
+	
 	gameEngine.addEntity(gameEngine.cat);
 	gameEngine.addEntity(gameEngine.camera);
 	gameEngine.addEnemy(birdFly);
 	gameEngine.addEnemy(birdAttack);
 	gameEngine.addEnemy(range)
 	gameEngine.addEntity(bullet);
+	
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/template.png", 0, 0, 3, 1));
 
 	
-	//console.log(gameEngine.platforms);
+	console.log(gameEngine.platforms);
 	//console.log(gameEngine.enemies);
 	//console.log(gameEngine.otherEntities);
 	

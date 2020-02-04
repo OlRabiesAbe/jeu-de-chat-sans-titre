@@ -113,6 +113,18 @@ GameEngine.prototype.draw = function () {
 }
 
 GameEngine.prototype.update = function () {
+	var platformsCount = this.platforms.length;
+	for (var i = 0; i < platformsCount; i++) {
+        var platform = this.platforms[i];
+        if (!platform.removeFromWorld) {
+            platform.update();
+        }
+    }
+    for (var i = platformsCount - 1; i >= 0; --i) {
+        if (this.platforms[i].removeFromWorld) {
+            this.platforms.splice(i, 1);
+        }
+    }
     var entitiesCount = this.entities.length;
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
@@ -121,7 +133,7 @@ GameEngine.prototype.update = function () {
             entity.update();
         }
     }
-    for (var i = this.entities.length - 1; i >= 0; --i) {
+    for (var i = entitiesCount - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
         }
