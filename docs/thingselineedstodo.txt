@@ -1,9 +1,13 @@
 ++=======WHAT NEEDS TO BE DONE=======++
 	-fix collision, from the ground up
-		*how does collision work now?
-			-find all relevant code
+		[DONE]*how does collision work now?
+			[DONE]-find all relevant code
 		*remove, replace. the actual design shouldnt be hard
-			-
+			-finish vertical cases
+			-fix hitboxes for test tile
+				-draw 128 * 128 test tile
+			-fix hitboxes for cat \|/
+			-delete everything now not being used
 	-fix catBeta.png, or replace entirely
 		*fix sizes, must be done from ground up
 		*make sensible locations
