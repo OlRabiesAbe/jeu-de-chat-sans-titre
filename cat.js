@@ -26,7 +26,7 @@ function Cat(game) {
 	this.radius = 100;
 	this.jumpHeight = 20;
 	this.totalHeight = 200;
-	this.ground = 350;
+	this.ground = 255;
 	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
@@ -87,6 +87,7 @@ Cat.prototype.collisionHelper = function(ctx) {}
 Cat.prototype.update = function() {
 	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
+	else this.jumping = false;
 	this.running = (this.game.right || this.game.left);
 	this.ducking = this.game.down;
 	
@@ -97,6 +98,19 @@ Cat.prototype.update = function() {
 		}
 	}
 	
+	//=====setting ground=====//
+	var highest_ground_beneath_me = 999999;
+	for(var i = 0; i < this.game.platforms.length; i++){
+		//if a platform is beneath cat and is higher than last highest ground, set as new highest ground
+		if ((this.x + this.width <= this.game.platforms[i].x 
+			|| this.game.platforms[i].x + this.game.platforms[i].width <= this.x) 
+			|| this.game.platforms[i].y < this.y) {}
+		else if (this.game.platforms[i].y < highest_ground_beneath_me){
+			highest_ground_beneath_me = this.game.platforms[i].y;
+		}
+	}
+	this.ground = highest_ground_beneath_me;
+	//console.log("highest ground beneath me is " + this.ground);
 	
 	//~.~.~.~.~.~.~.~.~.~. code for momentuous movement ~.~.~.~.~.~.~.~.~.~.~.~.//
 	if(this.running) {
@@ -107,7 +121,7 @@ Cat.prototype.update = function() {
 		this.hspeed += ((+this.right * this.HACCEL) - (+this.left * this.HACCEL));
 	} else if(Math.abs(this.hspeed) < this.HDECCEL) {
 		//if hspeed is < HDECCEL, we dont want to subtract from it,
-		//casue that would mean slight backwards acceleration from decceleration, which is jank.
+		//cause that would mean slight backwards acceleration from decceleration, which is jank.
 		this.hspeed = 0;
 	} else if(this.hspeed != 0) {
 		//subtracts decceleration from hspeed if hspeed positive, else adds it.
@@ -120,14 +134,16 @@ Cat.prototype.update = function() {
 	
 	//~.~.~.~.~.~.~.~.~.~.~.~.~.~. code for momentuous jumping ~.~.~.~.~.~.~.~.~.~.~.//
 	//if ur on the ground your not falling
-	if(this.y >= this.ground) this.vspeed = 0;
+	if(this.y + this.height == this.ground) this.vspeed = 0;
 	// if jump is pressed while on the ground, vspeed = MAX_VSPEED
-	if(this.jumping && this.y >= this.ground) {
+	if(this.jumping && this.y + this.height >= this.ground) {
 		this.vspeed = this.MAX_VSPEED;
+		console.log("buh");
 	// otherwise, decelerate
-	} else if (this.y <= this.ground && this.vspeed > this.MAX_VDECCEL){
+	} else if (this.y + this.height < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
 	}
+	console.log("vspeed " + this.vspeed + ", ground " + this.ground + ", y " + this.y);
 	this.y -= this.vspeed;
 	
 	
@@ -163,8 +179,8 @@ Cat.prototype.draw = function(ctx) {
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	
 	
-	} else if (this.vspeed != 0) {
-		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x + 50 - this.game.camera.x, this.y - 60);
+	} else if (this.y > this.ground) {
+		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 		if (this.jumpAnim.isDone()) {
             this.jumpAnim.elapsedTime = 0;
             this.jumping = false;
@@ -175,19 +191,19 @@ Cat.prototype.draw = function(ctx) {
 	
 		
 	} else if (this.running && this.game.right) {
-		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
+		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
 		ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	
 		
 	} else if (this.running && this.game.left) {
-		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
+		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
 		ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	
 		
 	} else if (this.ducking) {
-		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 75);
+		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
 		ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	

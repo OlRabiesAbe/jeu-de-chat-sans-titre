@@ -240,14 +240,26 @@ Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles d
 	else {
 		//approach from top						\/displacement equation\/
 		//(top is first because most collision will be from standing on the floor)
-		if(this.game.cat.y <= this.y) this.game.cat.y -= (this.game.cat.y + this.game.cat.height - this.y);
+		if(this.game.cat.y <= this.y) {
+			this.game.cat.y -= (this.game.cat.y + this.game.cat.height - this.y);
+			this.game.cat.vspeed = 0;
+		}
 		//approach from left
-		else if (this.game.cat.x <= this.x) this.game.cat.x -= (this.game.cat.x + this.game.cat.width - this.x);
+		else if (this.game.cat.x <= this.x) {
+			this.game.cat.x -= (this.game.cat.x + this.game.cat.width - this.x);
+			this.game.cat.hspeed = 0;
+		}
 		//approach from right
-		else if (this.game.cat.x > this.x) this.game.cat.x = this.x + this.width;
+		else if (this.game.cat.x > this.x) {
+			this.game.cat.x = this.x + this.width;
+			this.game.cat.hspeed = 0;
+		}
 		//approach from bottom
 		//(bottom is last because otherwise touching surfaces would warp you into the floor)
-		else if (this.game.cat.y > this.y) this.game.cat.y = this.y + this.height;
+		else if (this.game.cat.y > this.y) {
+			this.game.cat.y = this.y + this.height;
+			this.game.cat.vspeed = 0;
+		}
 	}
 }
 Tile.prototype.draw = function(ctx) { //i dont understand drawing funcs
@@ -575,7 +587,7 @@ ASSET_MANAGER.downloadAll(function () {
 	var skyscraper = new Background(gameEngine);
 	//var skyscraper = new Background(gameEngine);
 
-    gameEngine.addPlatform(bg);	
+    //gameEngine.addPlatform(bg);	
 	gameEngine.addEntity(skyscraper);
 	/**
 	 * Generic platforms can be created, no more need to make a function for each
@@ -627,7 +639,13 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEnemy(range)
 	gameEngine.addEntity(bullet);
 	
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 2.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 2));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 3));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 0, 3.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 1, 3.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 2, 3.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 3.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 4, 3.5));
 
 	
 	console.log(gameEngine.platforms);
