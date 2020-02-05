@@ -1,10 +1,4 @@
-/**
- * DATE: 1/23/20
- * NAME: Collision and Interaction and Platform Generator Prototype 1.
- * Author: Tyler Jackson
- * 
- */
- 
+
 var GREEN_PLATFORM_WIDTH = 358;
 var GREEN_PLATFORM_HEIGHT = 83;
 var DEATH_PUDDLE_WIDTH = 287;
@@ -230,7 +224,7 @@ Platform.prototype.draw = function (ctx) {
 function Tile(game, img, framex, framey, x, y,) {
 	this.game = game;
 	this.x = x * 128; this.y = y * 128;
-	this.x = x * 128; this.y = y * 128;
+	this.x = x * 128; this.y = y * 128; 
 	this.width = 128; this.height = 128; 
 	//Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
 	this.animation = new Animation(ASSET_MANAGER.getAsset(img), framex, framey, 128, 128, 1, 1, true, false);
@@ -559,7 +553,7 @@ EnemyPace.prototype.draw = function(ctx) {
 }
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/catBeta.png");
+ASSET_MANAGER.queueDownload("./img/cat_sheet.png")
 ASSET_MANAGER.queueDownload("./img/dog.png");
 ASSET_MANAGER.queueDownload("./img/Sidewalk.png");
 ASSET_MANAGER.queueDownload("./img/skyscraper.png");
@@ -569,7 +563,7 @@ ASSET_MANAGER.queueDownload("./img/lamp.png");
 ASSET_MANAGER.queueDownload("./img/bird.png");
 ASSET_MANAGER.queueDownload("./img/cowboy.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
-ASSET_MANAGER.queueDownload("./img/template.png");
+ASSET_MANAGER.queueDownload("./img/placeholder_tile.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -633,7 +627,7 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEnemy(range)
 	gameEngine.addEntity(bullet);
 	
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/template.png", 0, 0, 3, 2.5));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 2.5));
 
 	
 	console.log(gameEngine.platforms);
