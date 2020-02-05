@@ -8,11 +8,11 @@
 				[DONE]-draw 128 * 128 test tile
 			-delete everything now not being used
 	-fix catBeta.png, or replace entirely
-		*fix sizes, must be done from ground up
-		*make sensible locations
-			-impose grids
-		*rewrite code to do with spritesheet reading
-			-for simplicity, try to only touch x y size vars
+		[DONE]*fix sizes, must be done from ground up
+		[DONE]*make sensible locations
+			[DONE]-impose grids
+		[DONE]*rewrite code to do with spritesheet reading
+			[DONE]-for simplicity, try to only touch x y size vars
 		*fix hitboxes for cat
 	-make new animations
 		*cat_jump (Make in one sitting!!)
@@ -26,3 +26,4 @@
 		*platforms
 		*background
 		*lantern
+		[DONE]*generic placeholder tile
