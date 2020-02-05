@@ -163,7 +163,7 @@ Cat.prototype.draw = function(ctx) {
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	
 	
-	} else if (this.jumping) {
+	} else if (this.vspeed != 0) {
 		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x + 50 - this.game.camera.x, this.y - 60);
 		if (this.jumpAnim.isDone()) {
             this.jumpAnim.elapsedTime = 0;
