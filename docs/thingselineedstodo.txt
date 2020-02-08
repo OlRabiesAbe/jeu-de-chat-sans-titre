@@ -1,29 +1,18 @@
 ++=======WHAT NEEDS TO BE DONE=======++
 	-fix collision, from the ground up
-		[DONE]*how does collision work now?
-			[DONE]-find all relevant code
-		*remove, replace. the actual design shouldnt be hard
-			[DONE]-finish vertical cases
-			-fix hitboxes for test tile
-				[DONE]-draw 128 * 128 test tile
-			-delete everything now not being used
-	-fix catBeta.png, or replace entirely
-		[DONE]*fix sizes, must be done from ground up
-		[DONE]*make sensible locations
-			[DONE]-impose grids
-		[DONE]*rewrite code to do with spritesheet reading
-			[DONE]-for simplicity, try to only touch x y size vars
-		*fix hitboxes for cat
+		*fix horizontal collision
+		*fix hitboxes for tiles
+		*delete everything now not being used
 	-make new animations
 		*cat_jump (Make in one sitting!!)
+		*cat_claw
 		*cat_tail_swish
 			-code for animation must be added too
-		*cat_claw
 		*dog_walk
 			-skeleton first
 	-scrap together some general assets
+		*prototype tileset
 		*sidewalk
 		*platforms
 		*background
 		*lantern
-		[DONE]*generic placeholder tile
