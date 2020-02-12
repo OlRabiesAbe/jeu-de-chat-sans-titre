@@ -43,7 +43,7 @@ function Cat(game) {
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
 	
-	Entity.call(this, game, 40, 350);
+	Entity.call(this, game, 50, 50);
 }
 
 Cat.prototype = new Entity();
