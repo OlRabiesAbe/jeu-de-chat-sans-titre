@@ -26,6 +26,7 @@ function Cat(game) {
 	this.totalHeight = 200;
 	this.ground = 350
 	this.boxes = true;
+	this.spawn = 0;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
 	
 	Entity.call(this, game, 40, 350);
@@ -33,6 +34,7 @@ function Cat(game) {
 
 Cat.prototype = new Entity();
 Cat.prototype.constructor = Cat;
+
 function distance(a, b) {
     var dx = a.x - b.x;
     var dy = a.y - b.y;
@@ -141,7 +143,7 @@ Cat.prototype.update = function() {
 	        this.boundingbox = new BoundingBox(this.x - 5, this.y + 60, this.neutralL.frameWidth - 30, this.neutralL.frameHeight - 10, "Orange");
 		}
 		*/
-        if (this.boundingbox.left > this.platform.boundingbox.right) this.falling = true;
+        //if (this.boundingbox.left > this.platform.boundingbox.right) this.falling = true;
     }
 	if (this.running) {
 		if (this.game.right) {
@@ -175,6 +177,7 @@ Cat.prototype.update = function() {
 
 
 	this.collisionHelper();
+	
 	Entity.prototype.update.call(this);
 } 
 
@@ -187,7 +190,7 @@ Cat.prototype.collisionHelper = function() {
 				//alert(this.boundingbox.bottom + " " + this.y + " " + pf.boundingbox.top + " " + pf.y)
 				pf.color = "Blue"
 				pf.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 0, 0, 286, 214, 0.3, 3, false, false); 
-				//this.removeFromWorld = true;
+				this.removeFromWorld = true;
 			} 
 			//else if (pf.color === "Green" || pf.color === "Black" && this.collidePlatform(pf)) {
          //      this.y = pf.boundingbox.top - this.boundingbox.frameHeight;

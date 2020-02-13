@@ -31,13 +31,14 @@ Timer.prototype.tick = function () {
 function GameEngine() {
 	this.camera = new Camera(this);
 	this.cat = new Cat(this);
+	this.sceneManager = new SceneManager(this);
 	this.entities = [];
 	this.platforms = [];
     this.enemies = [];
 	this.otherEntities = [];
     this.showOutlines = false;
     this.ctx = null;
-    this.click = null;
+    this.click = false;
     this.mouse = null;
     this.wheel = null;
     this.surfaceWidth = null;
@@ -47,17 +48,16 @@ function GameEngine() {
 GameEngine.prototype.init = function (ctx) {
     this.ctx = ctx;
 	this.cat.platform = this.platforms[0];
-
 	//this.cat.platform = this.entities[0];
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.startInput();
     this.timer = new Timer();
-    console.log('game initialized');
+    //console.log('game initialized');
 }
 
 GameEngine.prototype.start = function () {
-    console.log("starting game");
+    //console.log("starting game");
     var that = this;
     (function gameLoop() {
         that.loop();
@@ -66,8 +66,29 @@ GameEngine.prototype.start = function () {
 }
 
 GameEngine.prototype.startInput = function () {
-    console.log('Starting input');
+    //console.log('Starting input');
+	var getXandY = function (e) {
+        var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
+        var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
+
+        if (x < 1024) {
+            x = Math.floor(x / 32);
+            y = Math.floor(y / 32);
+        }
+
+        return { x: x, y: y };
+    }
     var that = this;
+	this.ctx.canvas.addEventListener("mousemove", function (e) {
+		that.btnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
+	
+	}, false);
+	//console.log("CLICK" + that.click);
+	this.ctx.canvas.addEventListener("click", function (e) {
+		that.click = true;
+		that.mouseTimer = 0;
+	}, false);
+
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
 			if (String.fromCharCode(e.which) === ' ') that.space = true;
@@ -106,7 +127,10 @@ GameEngine.prototype.addEnemy= function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
+	//console.log(this.click);
+	//console.log(this.entities);
     for (var i = 0; i < this.entities.length; i++) {
+		//console.log(this.entities[i]);
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
@@ -114,9 +138,20 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
+	this.mouseTimer += this.clockTick;
+	if (this.click && this.mouseTimer >= 0.05) {
+		this.click = false;
+		this.mouseTimer = 0;
+	}
+	//console.log(this.camera);
+	//console.log(typeof(this.camera));
+	//console.log(this.camera.update)
+	console.log(this.entities);
+	console.log(this.sceneManager);
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
+		//console.log(this.entities[i]);
         if (!entity.removeFromWorld) {
             entity.update();
         }

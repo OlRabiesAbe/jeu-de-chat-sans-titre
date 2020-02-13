@@ -1,14 +1,18 @@
 /**
- * DATE: 1/23/20
- * NAME: Collision and Interaction and Platform Generator Prototype 1.
- * Author: Tyler Jackson
- * 
+ * DATE: 2/13/2020
+ * NAME: Main file.
+ * Author: Tyler Jackson, Elijah Cole, Brent O'Neill
  */
  
 var GREEN_PLATFORM_WIDTH = 358;
 var GREEN_PLATFORM_HEIGHT = 83;
 var DEATH_PUDDLE_WIDTH = 287;
 var DEATH_PUDDLE_HEIGHT = 214;
+
+// USE CONSTANTS FOR SCENE INDEXES 
+var TITLE_SCENE = 0;
+var LEVEL_ONE_SCENE = 1;
+
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;
@@ -198,6 +202,9 @@ Platform.prototype.update = function (ctx) {
 		if (this.animation.isDone()) {
 			this.color = "Red";
 			this.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 1732, 1070, 287, 214, 0.25, 3, true, false);
+			this.game.sceneManager.setScene(this.game.sceneManager.scenes[TITLE_SCENE])
+			this.game.cat.x = this.game.cat.spawn;
+	
 		}
 		
 	}
@@ -228,11 +235,14 @@ Platform.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+/**
+ * A lamp will turn on when the cat is near it.
+ */
 function Lamp(game, x, y) {
-	this.offAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 0, 0, 74, 373, 1, 1, true, false);
-	this.onAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 76, 0, 74, 373, 1, 1, true, false);
+	this.offAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 1022, 0, 128, 384, 1, 1, true, false);
+	this.onAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 0, 0, 128, 384, 0.02, 8, true, false);
 	this.flag = false;
-	Entity.call(this, game, x, 130);
+	Entity.call(this, game, x, 120);
 }
 
 Lamp.prototype = new Entity();
@@ -253,6 +263,36 @@ Lamp.prototype.draw = function(ctx) {
 		this.offAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	}
 		
+}
+
+/**
+ * A checkpoint is a light post that turns blue when active. This will save where the cat
+ * has progressed so on death the cat will respawn there so long as the cat activates a new 
+ * checkpoint.
+ */
+function Checkpoint(game, x, y) {
+	this.offAnim = new Animation(ASSET_MANAGER.getAsset("./img/checkpoint.png"), 512, 0, 64, 128, 1, 1, true, false);
+	this.onAnim = new Animation(ASSET_MANAGER.getAsset("./img/checkpoint.png"), 0, 0, 64, 128, 0.02, 8, true, false);
+	this.on = false;
+	Entity.call(this, game, x, y);
+}
+
+Checkpoint.prototype = new Entity();
+Checkpoint.prototype.constructor = Checkpoint;
+
+Checkpoint.prototype.update = function(ctx) {
+	if (this.game.cat.x >= this.x -  5 && this.game.cat.x <= this.x + 5 && !this.on) {
+		this.on = true;
+		this.game.cat.spawn = this.x;
+	}
+}
+
+Checkpoint.prototype.draw = function(ctx) {
+	if (this.on) {
+		this.onAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+	} else {
+		this.offAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+	}
 }
 function Bird(game, x, y, type) {	
 	this.bird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 35, 35, 185,70, 0.1, 4, true, false)
@@ -425,6 +465,8 @@ Enemy.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+
+// This enemy will turn around to face you
 function EnemyIdle(game, x, y) {
 	this.idle = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 500, 153, 115, 0.6, 3, true, false);
 //	this.idleRev = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 500, 153, 115, 0.8, 3, false, true);
@@ -498,6 +540,8 @@ function EnemyPace(game, minX, maxX, y) {
 EnemyPace.prototype = new Entity();
 EnemyPace.prototype.constructor = EnemyIdle;
 
+
+// The enemy will walk back and forth by checking where it is
 EnemyPace.prototype.update= function() {
 	if (this.l) {
 		if (this.x - 5 >=	this.minX) {
@@ -524,6 +568,46 @@ EnemyPace.prototype.draw = function(ctx) {
 	}
 	
 }
+
+// Entities for the title screen are static, so they can reuse this same constructor
+function Title(game, asset, assetW, assetH, x, y) {
+	this.animation = new Animation(ASSET_MANAGER.getAsset(asset), 0, 0, assetW, assetH, 1, 1, true, false);
+	Entity.call(this, game, x, y);
+}
+Title.prototype = new Entity();
+Title.prototype.constructor = Title;
+
+Title.prototype.update = function() {
+}
+Title.prototype.draw = function(ctx) {
+	this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+}
+
+// This button is on the title screen and will start the game
+function StartBtn(game, x, y) {
+	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 0, 239, 101, 1, 1, true, false);
+	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 102, 239, 101, 1, 1, true, false);
+	this.hover = false;
+	Entity.call(this, game, x, y);
+}
+
+StartBtn.prototype = new Entity();
+StartBtn.prototype.constructor = StartBtn;
+
+StartBtn.prototype.update = function() {
+	this.hover = this.game.btnHover;
+	if (this.game.click && this.hover) {
+		this.game.sceneManager.setScene(this.game.sceneManager.scenes[LEVEL_ONE_SCENE]);
+	}
+}
+
+StartBtn.prototype.draw = function(ctx) {
+	if (!this.hover) {
+		this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+	} else {
+		this.hoverAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+	}
+}
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/catBeta.png");
@@ -536,6 +620,11 @@ ASSET_MANAGER.queueDownload("./img/lamp.png");
 ASSET_MANAGER.queueDownload("./img/bird.png");
 ASSET_MANAGER.queueDownload("./img/cowboy.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/checkpoint.png");
+ASSET_MANAGER.queueDownload("./img/catLogo.png");
+ASSET_MANAGER.queueDownload("./img/title.png");
+ASSET_MANAGER.queueDownload("./img/startBtn.png");
+
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -547,8 +636,7 @@ ASSET_MANAGER.downloadAll(function () {
 	var skyscraper = new Background(gameEngine);
 	//var skyscraper = new Background(gameEngine);
 
-    gameEngine.addPlatform(bg);	
-	gameEngine.addEntity(skyscraper);
+ 
 	/**
 	 * Generic platforms can be created, no more need to make a function for each
 	 * platform made in the game.
@@ -566,7 +654,7 @@ ASSET_MANAGER.downloadAll(function () {
 	var bad4 = new EnemyIdle(gameEngine, 1300);
 	var bad5 = new EnemyPace(gameEngine, 100, 600, 390);
 	var bad6 = new EnemyPace(gameEngine, 900, 1300, 390)
-	var lamp = new Lamp(gameEngine, 950, 400); 
+	//var lamp = new Lamp(gameEngine, 950, 400); 
 	var lamp2 = new Lamp(gameEngine, 1300, 400);
 	var lamp3 = new Lamp(gameEngine, 1600, 400);
 		
@@ -574,33 +662,35 @@ ASSET_MANAGER.downloadAll(function () {
 	var birdAttack = new Bird(gameEngine,  400, 150, "Attack")
 	var range = new Range(gameEngine,  500, 200, "Attack")
 	var bullet = new Bullet(gameEngine,  620, 185)
+	var checkpoint = new Checkpoint(gameEngine, 930, 375); 
 	var sidewalk = new Sidewalk(gameEngine);
-    gameEngine.addPlatform(plat);
-    gameEngine.addPlatform(p2);
-	gameEngine.addEntity(sidewalk); 
-    gameEngine.addPlatform(death);
-		gameEngine.addEntity(lamp);
-	gameEngine.addEntity(lamp2);
-	gameEngine.addEntity(lamp3);
-    gameEngine.addEnemy(bad);
-	gameEngine.addEnemy(bad2);
-	gameEngine.addEnemy(bad3);
-	gameEngine.addEnemy(bad4);
-	gameEngine.addEnemy(bad5);
-	gameEngine.addEnemy(bad6);
-	gameEngine.addEntity(gameEngine.cat);
-	gameEngine.addEntity(gameEngine.camera);
-		gameEngine.addEnemy(birdFly);
-	gameEngine.addEnemy(birdAttack);
-	gameEngine.addEnemy(range)
-	gameEngine.addEntity(bullet);
+	
+	// Title scren entities
+	var title = new Title(gameEngine, "./img/title.png", 350, 200, 0, 0);
+	var icon = new Title(gameEngine, "./img/catLogo.png", 450, 527, 150, 175);
+	var startBtn = new StartBtn(gameEngine, 550, 50);
 
+
+	console.log(gameEngine.sceneManager)
 	
-	//console.log(gameEngine.platforms);
-	//console.log(gameEngine.enemies);
-	//console.log(gameEngine.otherEntities);
+	// Declaring all entities for a title screen
+	var titleScene = new Scene(gameEngine,
+		[{type:"Other", ent:title}, {type:"Other", ent:icon},{type:"Other", ent:startBtn}]);
+	console.log(titleScene);
 	
+	// Declaring all entities for level 1
+	var levelOne = new Scene(gameEngine,
+		[{type:"Platform", ent:bg}, {type:"Other", ent:skyscraper}, 
+		{type:"Platform", ent:plat}, {type:"Platform", ent:p2}, {type:"Other", ent:sidewalk},
+			{type:"Platform", ent:death}, {type:"Other", ent:checkpoint}, {type:"Other", ent:lamp2},
+			{type:"Other", ent:lamp3}, {type:"Enemy", ent:bad}, {type:"Enemy", ent:bad2}, {type:"Enemy", ent:bad3}, 
+			{type:"Enemy", ent:bad4}, {type:"Enemy", ent:bad5}, {type:"Enemy", ent:bad6}, {type:"Enemy", ent:birdFly},
+			{type:"Enemy", ent:birdAttack}, {type:"Other", ent:gameEngine.cat}, {type:"Enemy", ent:range}, {type:"Other", ent:bullet}]);
+	
+	gameEngine.sceneManager.addScene(titleScene);
+	gameEngine.sceneManager.addScene(levelOne);
+	gameEngine.sceneManager.setScene(gameEngine.sceneManager.scenes[TITLE_SCENE]);
+
     gameEngine.init(ctx);
-    console.log(gameEngine.cat.platform)
 	gameEngine.start();
 });
