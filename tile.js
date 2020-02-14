@@ -51,7 +51,7 @@ Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles d
 				console.log("cat hit ground" + " tile data: (" + this.x + ", " + this.y + ")");
 			}
 			
-			//the cat can't get within BE units of the bottom of the tile, cause otherwise the cat could visually enter the tile
+			//the cat isn't allowed to get within BE units of the bottom of the tile, cause otherwise the cat could visually enter the tile
 			//~+BOTTOM OF OR INSIDE OF TILE CASE+~
 			if (this.game.cat.y > this.y + this.FLOOR_MAGNET_RADIUS && this.game.cat.y < this.y + this.height + this.BOTTOM_EXTENSION 
 					&& this.game.cat.x + this.game.cat.width > this.x + this.VERT_COLL_RADIUS && this.game.cat.x < this.x + this.width - this.VERT_COLL_RADIUS && i == 2) {
