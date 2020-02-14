@@ -1,7 +1,7 @@
 ++=======WHAT NEEDS TO BE DONE=======++
 	-fix collision, from the ground up
-		*fix horizontal collision
-		*fix hitboxes for tiles
+		[DONE]*fix horizontal collision
+		[DONE]*fix hitboxes for tiles
 		*delete everything now not being used
 	-make new animations
 		*cat_jump (Make in one sitting!!)
