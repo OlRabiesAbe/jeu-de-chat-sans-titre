@@ -30,15 +30,15 @@ function Cat(game) {
 	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
-	this.MAX_HSPEED = 9;
+	this.MAX_HSPEED = 8;
 	this.HACCEL = 1;
 	this.HDECCEL = this.HACCEL;
 	
 	//suite of variables for the cat's vertical movement
 	this.vspeed = 0;
-	this.MAX_VSPEED = 40;
+	this.MAX_VSPEED = 52;
 	this.VDECCEL = 4;
-	this.MAX_VDECCEL = -this.MAX_VSPEED;
+	this.MAX_VDECCEL = -32; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
@@ -102,8 +102,8 @@ Cat.prototype.update = function() {
 	var highest_ground_beneath_me = 999999;
 	for(var i = 0; i < this.game.platforms.length; i++){
 		//if a platform is beneath cat and is higher than last highest ground, set as new highest ground
-		if ((this.x + this.width <= this.game.platforms[i].x 
-			|| this.game.platforms[i].x + this.game.platforms[i].width <= this.x) 
+		if ((this.x + this.width < this.game.platforms[i].x 
+			|| this.game.platforms[i].x + this.game.platforms[i].width < this.x) 
 			|| this.game.platforms[i].y < this.y) {}
 		else if (this.game.platforms[i].y < highest_ground_beneath_me){
 			highest_ground_beneath_me = this.game.platforms[i].y;
@@ -133,14 +133,13 @@ Cat.prototype.update = function() {
 	this.x += this.hspeed;
 	
 	//~.~.~.~.~.~.~.~.~.~.~.~.~.~. code for momentuous jumping ~.~.~.~.~.~.~.~.~.~.~.//
-	//if ur on the ground your not falling
-	if(this.y + this.height == this.ground) this.vspeed = 0;
+	//if ur on the ground your not falling, and the inverse of that
+	if(this.y == this.ground) this.vspeed = 0;
 	// if jump is pressed while on the ground, vspeed = MAX_VSPEED
 	if(this.jumping && this.y + this.height >= this.ground) {
 		this.vspeed = this.MAX_VSPEED;
-		console.log("buh");
 	// otherwise, decelerate
-	} else if (this.y + this.height < this.ground && this.vspeed > this.MAX_VDECCEL){
+	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
 	}
 	console.log("vspeed " + this.vspeed + ", ground " + this.ground + ", y " + this.y);
@@ -170,55 +169,55 @@ Cat.prototype.draw = function(ctx) {
 		//ctx.strokeStyle = "red";
         //ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
         ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	}
 	
 	if (this.attacking) {
-		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y); 
+		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2); 
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 	
 	} else if (this.y > this.ground) {
-		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 		if (this.jumpAnim.isDone()) {
             this.jumpAnim.elapsedTime = 0;
             this.jumping = false;
             this.falling = true;
         }
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 		
 	} else if (this.running && this.game.right) {
-		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
+		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 		
 	} else if (this.running && this.game.left) {
-		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
+		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 		
 	} else if (this.ducking) {
-		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 25);
+		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 	
 	} else {
 		if (this.right) {
-			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
+			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 			ctx.strokeStyle = this.boundingbox.color;
-			ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+			ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 		}
 		if (this.left) {
-			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y + 20);
+			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y -this.height + 2);
 			ctx.strokeStyle = this.boundingbox.color;
-			ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+			ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 	
 		}
 	}

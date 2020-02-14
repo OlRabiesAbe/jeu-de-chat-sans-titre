@@ -191,6 +191,13 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 2, 4));
 	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 4));
 	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 4, 4));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 5, 4));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 6, 4));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 7, 4));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 8, 4));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 6, 1));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 7, 1));
+	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 8, 1));
 
 	
 	console.log(gameEngine.platforms);
@@ -198,6 +205,5 @@ ASSET_MANAGER.downloadAll(function () {
 	//console.log(gameEngine.otherEntities);
 	
     gameEngine.init(ctx);
-    console.log(gameEngine.cat.platform)
 	gameEngine.start();
 });
