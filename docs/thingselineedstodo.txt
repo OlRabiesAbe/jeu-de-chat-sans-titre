@@ -2,6 +2,8 @@
 	-fix collision, from the ground up
 		[DONE]*fix horizontal collision
 		[DONE]*fix hitboxes for tiles
+		*fix bug to do with cat standing on vertical surfaces
+		*make cat smaller (implement brent's code to elis-col build)
 		*delete everything now not being used
 	-make new animations
 		*cat_jump (Make in one sitting!!)
