@@ -1,3 +1,5 @@
+LIVES = 2;
+HEALTH = 3;
 function Cat(game) {
 	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 0, 967, 96, 96, 0.03, 1, true, false);
 	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/catBeta.png"), 104, 967, 96, 96, 0.03, 1, true, false);
@@ -24,12 +26,12 @@ function Cat(game) {
 	this.radius = 100;
 	this.jumpHeight = 20;
 	this.totalHeight = 200;
-	this.ground = 350
+	this.ground = 376;
 	this.boxes = true;
 	this.spawn = 0;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
 	
-	Entity.call(this, game, 40, 350);
+	Entity.call(this, game, 40, 376);
 }
 
 Cat.prototype = new Entity();
@@ -77,7 +79,7 @@ Cat.prototype.collideRight = function () {
 
 
 Cat.prototype.update = function() {
-	console.log("y" + this.y);
+	//console.log("y" + this.y);
 	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
 	this.running = (this.game.right || this.game.left);
@@ -128,7 +130,7 @@ Cat.prototype.update = function() {
              if (this.boundingbox.collide(pf.boundingbox) && this.lastBottom < pf.boundingbox.top) {              
             	 this.falling = false;
                  this.y = pf.boundingbox.top - this.neutralR.frameHeight - 54;
-             //    this.ground = this.y
+                 this.ground = this.y
                  this.platform = pf;
                  this.fallAnim.elapsedTime = 0;
              }
@@ -147,15 +149,15 @@ Cat.prototype.update = function() {
     }
 	if (this.running) {
 		if (this.game.right) {
-			if (this.x + 7 <= 2190) {
-				this.x += 7;
+			if (this.x + 5 <= MAP_SIZE - this.runRAnim.frameWidth) {
+				this.x += 5;
 			}
 			this.boundingbox = new BoundingBox(this.x + 18, this.y + 70, this.runRAnim.frameWidth - 45, this.runRAnim.frameHeight - 45);
 			this.right = true;
 			this.left = false;
 		} else if (this.game.left) {
-	        if (this.x - 7 >= 0) {
-				this.x -= 7;
+	        if (this.x - 5 >= 0) {
+				this.x -= 5;
 			}
 			this.boundingbox = new BoundingBox(this.x + 18, this.y + 70, this.runLAnim.frameWidth - 45, this.runLAnim.frameHeight - 45);
 			
@@ -175,9 +177,23 @@ Cat.prototype.update = function() {
 		}
 	}
 
-
 	this.collisionHelper();
-	
+		if (this.y > 600) {
+		this.removeFromWorld = true;
+		this.y = 400;
+			this.falling = false;
+		LIVES--;
+		if (LIVES >= 0) {
+			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
+			this.game.cat.x = this.game.cat.spawn;
+		} else {
+			this.game.sceneManager.setScene(this.game.sceneManager.scenes[GAME_OVER_SCENE]);
+			LIVES = 2;
+			this.game.cat.x = 0;
+			this.game.cat.spawn = 0;
+		}
+	}
+	console.log(this.y)
 	Entity.prototype.update.call(this);
 } 
 
@@ -192,11 +208,11 @@ Cat.prototype.collisionHelper = function() {
 				pf.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 0, 0, 286, 214, 0.3, 3, false, false); 
 				this.removeFromWorld = true;
 			} 
-			//else if (pf.color === "Green" || pf.color === "Black" && this.collidePlatform(pf)) {
-         //      this.y = pf.boundingbox.top - this.boundingbox.frameHeight;
-         //      this.platformH = pf.boundingbox.top;
-         //      this.jumpAnim.elapsedTime = 0;
-         //   }  
+			//else if (pf.color === "Green" || pf.color === "Grey" && this.collidePlatform(pf)) {
+          //     this.y = pf.boundingbox.top - this.boundingbox.frameHeight;
+          //     this.platformH = pf.boundingbox.top;
+           //    this.jumpAnim.elapsedTime = 0;
+           // }  
 			//else
        }  
 	for (var i = 0; i < this.game.enemies.length; i++) {

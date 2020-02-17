@@ -12,7 +12,9 @@ var DEATH_PUDDLE_HEIGHT = 214;
 // USE CONSTANTS FOR SCENE INDEXES 
 var TITLE_SCENE = 0;
 var LEVEL_ONE_SCENE = 1;
-
+var STATUS_SCENE = 2;
+var GAME_OVER_SCENE = 3;
+var PROTOTYPE_SCENE = 4;
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;
@@ -173,9 +175,17 @@ function Platform(game, x, y, length, height, color) {
 		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/platform.png"), 48, 445, 358, 83, 1, 1, true, false);
 		this.boundingbox = new BoundingBox(x, y, length, height);
 	} 
+	if (this.color === "Grey") {
+		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/Sidewalk.png"), 0, 0, 64, 64, 1, 1, true, false);
+		this.boundingbox = new BoundingBox(x, y, length, height);
+	}
+	if (this.color === "Brown") {
+		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bridge.png"), 0, 0, 64, 32, 1, 1, true, false);
+		this.boundingbox = new BoundingBox(x, y, length, height);
+	}
 	if (this.color === "Red") {
-		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 1732, 1070, 287, 214, 0.25, 3, true, false);
-		this.boundingbox = new BoundingBox(x + 60, y, 200, 80);
+		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/water.png"), 0, 0, 64, 64, 0.15, 7, true, false);
+		this.boundingbox = new BoundingBox(x, y, 64, 64);
 	}
 	else {
 		this.boundingbox = new BoundingBox(x, y, length, height);
@@ -201,9 +211,17 @@ Platform.prototype.update = function (ctx) {
 	} if (this.color === "Blue") {
 		if (this.animation.isDone()) {
 			this.color = "Red";
-			this.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 1732, 1070, 287, 214, 0.25, 3, true, false);
-			this.game.sceneManager.setScene(this.game.sceneManager.scenes[TITLE_SCENE])
-			this.game.cat.x = this.game.cat.spawn;
+			this.animation = new Animation(ASSET_MANAGER.getAsset("./img/water.png"), 0, 0, 64, 64, 0.25, 7, true, false);
+			LIVES--;
+			if (LIVES >= 0) {
+				this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
+				this.game.cat.x = this.game.cat.spawn;
+			} else {
+				this.game.sceneManager.setScene(this.game.sceneManager.scenes[GAME_OVER_SCENE]);
+				LIVES = 2;
+				this.game.cat.x = 0;
+				this.game.cat.spawn = 0;
+			}
 	
 		}
 		
@@ -212,17 +230,17 @@ Platform.prototype.update = function (ctx) {
 Platform.prototype.draw = function (ctx) {
 	if (this.animation !== null) {
 		if (this.color === "Red") {
-			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 170);
+			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
         ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
-		} else if (this.color === "Green") {
+		} else if (this.color === "Green" || this.color === "Grey" || this.color === "Brown") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 			
         ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		}
 		 else if (this.color === "Blue") {
-			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 140);
+			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 			
         ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
@@ -239,7 +257,7 @@ Platform.prototype.draw = function (ctx) {
  * A lamp will turn on when the cat is near it.
  */
 function Lamp(game, x, y) {
-	this.offAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 1022, 0, 128, 384, 1, 1, true, false);
+	this.offAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 1023, 0, 128, 384, 1, 1, true, false);
 	this.onAnim = new Animation(ASSET_MANAGER.getAsset("./img/lamp.png"), 0, 0, 128, 384, 0.02, 8, true, false);
 	this.flag = false;
 	Entity.call(this, game, x, 120);
@@ -540,7 +558,6 @@ function EnemyPace(game, minX, maxX, y) {
 EnemyPace.prototype = new Entity();
 EnemyPace.prototype.constructor = EnemyIdle;
 
-
 // The enemy will walk back and forth by checking where it is
 EnemyPace.prototype.update= function() {
 	if (this.l) {
@@ -569,45 +586,102 @@ EnemyPace.prototype.draw = function(ctx) {
 	
 }
 
-// Entities for the title screen are static, so they can reuse this same constructor
-function Title(game, asset, assetW, assetH, x, y) {
-	this.animation = new Animation(ASSET_MANAGER.getAsset(asset), 0, 0, assetW, assetH, 1, 1, true, false);
+
+
+function Level(game, x, y) {
+	this.game = game;
+	this.anim = new Animation(ASSET_MANAGER.getAsset("./img/levelText.png"), 0, 0, 176, 64, 1, 1, true, false);
+	this.zero = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 13, 7, 40, 50, 1, 1, true, false);
+	this.one = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 84, 8, 18, 49, 1, 1, true, false);
+	this.two = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 143, 7, 36, 50, 1, 1, true, false);
+	this.three = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 206, 7, 38, 51, 1, 1, true, false);
+	this.four = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 266, 7, 42, 49, 1, 1, true, false);
+	this.five = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 337, 8, 36, 50, 1, 1, true, false);
+	this.six = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 398, 7, 37, 50, 1, 1, true, false);
+	this.seven = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 467, 9, 34, 49, 1, 1, true, false);
+	this.eight = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 528, 9, 37, 51, 1, 1, true, false);
+	this.nine = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 593, 8, 37, 50, 1, 1, true, false);
+	this.nums = [this.zero, this.one, this.two, this.three, this.four, 
+				this.five, this.six, this.seven, this.eight, this.nine];
 	Entity.call(this, game, x, y);
 }
-Title.prototype = new Entity();
-Title.prototype.constructor = Title;
 
-Title.prototype.update = function() {
-}
-Title.prototype.draw = function(ctx) {
-	this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+Level.prototype = new Entity();
+Level.prototype.constructor = Level;
+
+Level.prototype.update = function() {
+	
 }
 
-// This button is on the title screen and will start the game
-function StartBtn(game, x, y) {
-	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 0, 239, 101, 1, 1, true, false);
-	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 102, 239, 101, 1, 1, true, false);
-	this.hover = false;
+Level.prototype.draw = function(ctx) {
+	this.anim.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+	this.nums[CURRENT_LEVEL].drawFrame(this.game.clockTick, ctx, this.x + this.anim.frameWidth + 20, this.y + 7);
+}
+
+function Health(game) {
+	this.healthy = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 0, 0, 48, 48, 1, 1, true, false);
+	this.unhealthy = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 96, 0, 48, 48, 1, 1, true, false);
+	this.danger = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 0, 0, 48, 48, 0.05, 3, true, false);
+	
+	this.hearts = [{health:this.healthy, heart:1}, {health:this.healthy, heart:2}, {health:this.healthy, heart:3}];
+	
+	Entity.call(this, game, 0, 0);
+	
+}
+
+Health.prototype = new Entity();
+Health.prototype.constructor = Health;
+
+Health.prototype.update = function() {
+	for (var i = 0; i < this.hearts.length; i++) {
+		if (this.hearts[i].heart <= HEALTH) {
+			this.hearts[i].health = this.healthy;
+		} else {
+			this.hearts[i].health = this.unhealthy;
+		}
+	}
+	if (HEALTH === 1) {
+		this.hearts[0].health = this.danger;
+	}
+}
+Health.prototype.draw = function(ctx) {
+	for (var i = 0; i < this.hearts.length; i++) {
+		this.hearts[i].health.drawFrame(this.game.clockTick, ctx, this.x + (this.hearts[i].health.frameWidth * i), this.y);
+	}
+}
+function Lives(game, x, y) {
+	this.game = game;
+	this.zero = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 13, 7, 40, 50, 1, 1, true, false);
+	this.one = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 84, 8, 18, 49, 1, 1, true, false);
+	this.two = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 143, 7, 36, 50, 1, 1, true, false);
+	this.three = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 206, 7, 38, 51, 1, 1, true, false);
+	this.four = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 266, 7, 42, 49, 1, 1, true, false);
+	this.five = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 337, 8, 36, 50, 1, 1, true, false);
+	this.six = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 398, 7, 37, 50, 1, 1, true, false);
+	this.seven = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 467, 9, 34, 49, 1, 1, true, false);
+	this.eight = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 528, 9, 37, 51, 1, 1, true, false);
+	this.nine = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 593, 8, 37, 50, 1, 1, true, false);
+	this.nums = [this.zero, this.one, this.two, this.three, this.four, 
+				this.five, this.six, this.seven, this.eight, this.nine];
 	Entity.call(this, game, x, y);
+	this.tens = Math.floor(LIVES / 10);
+	this.ones = LIVES % 10;
+}
+Lives.prototype = new Entity()
+Lives.prototype.constructor = Lives;
+
+Lives.prototype.update = function() {
+	this.tens = Math.floor(LIVES / 10);
+	this.ones = LIVES % 10;
 }
 
-StartBtn.prototype = new Entity();
-StartBtn.prototype.constructor = StartBtn;
+Lives.prototype.draw = function(ctx) {
+	this.nums[this.tens].drawFrame(this.game.clockTick, ctx, this.x, this.y);
+	this.nums[this.ones].drawFrame(this.game.clockTick, ctx, this.x + this.nums[this.tens].frameWidth + 5, this.y);
+	
+	//this.nums[LIVES].drawFrame(this.game.clockTick, ctx, this.x, this.y);
+}	
 
-StartBtn.prototype.update = function() {
-	this.hover = this.game.btnHover;
-	if (this.game.click && this.hover) {
-		this.game.sceneManager.setScene(this.game.sceneManager.scenes[LEVEL_ONE_SCENE]);
-	}
-}
-
-StartBtn.prototype.draw = function(ctx) {
-	if (!this.hover) {
-		this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
-	} else {
-		this.hoverAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y);
-	}
-}
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/catBeta.png");
@@ -624,7 +698,15 @@ ASSET_MANAGER.queueDownload("./img/checkpoint.png");
 ASSET_MANAGER.queueDownload("./img/catLogo.png");
 ASSET_MANAGER.queueDownload("./img/title.png");
 ASSET_MANAGER.queueDownload("./img/startBtn.png");
-
+ASSET_MANAGER.queueDownload("./img/numbers.png");
+ASSET_MANAGER.queueDownload("./img/gameOver.png");
+ASSET_MANAGER.queueDownload("./img/GameEndBtn.png");
+ASSET_MANAGER.queueDownload("./img/livesIcon.png");
+ASSET_MANAGER.queueDownload("./img/levelText.png");
+ASSET_MANAGER.queueDownload("./img/heart sheet.png");
+ASSET_MANAGER.queueDownload("./img/water.png");
+ASSET_MANAGER.queueDownload("./img/bridge.png");
+ASSET_MANAGER.queueDownload("./img/road.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -644,10 +726,12 @@ ASSET_MANAGER.downloadAll(function () {
 	 * var platformName = new Platform(gameEngine, X-Coordinate, Y-Coordinate, Length, Height)
 	 *  
 	 */
+	 
+	// PROTOTYPE ENTITIES
 	var plat = new Platform(gameEngine, 100, 430, GREEN_PLATFORM_WIDTH, GREEN_PLATFORM_HEIGHT, "Green");
 	var p2 = new Platform(gameEngine, 500, 350, GREEN_PLATFORM_WIDTH, GREEN_PLATFORM_HEIGHT, "Green");
 	var p3 = new Platform(gameEngine, 900, 350, GREEN_PLATFORM_WIDTH, GREEN_PLATFORM_HEIGHT, "Green")
-	var death = new Platform(gameEngine, 1800, 500, DEATH_PUDDLE_WIDTH, DEATH_PUDDLE_HEIGHT, "Red")
+	//var death = new Platform(gameEngine, 600, 500, DEATH_PUDDLE_WIDTH, DEATH_PUDDLE_HEIGHT, "Red")
 	var bad = new Enemy(gameEngine, 700, 400)
 	var bad2 = new Enemy(gameEngine, 1400, 400);
 	var bad3 = new EnemyIdle(gameEngine, 500, 400);
@@ -670,16 +754,45 @@ ASSET_MANAGER.downloadAll(function () {
 	var icon = new Title(gameEngine, "./img/catLogo.png", 450, 527, 150, 175);
 	var startBtn = new StartBtn(gameEngine, 550, 50);
 
-
-	console.log(gameEngine.sceneManager)
+	// STATUS SCREEN ENTITIES
+	var lives = new Lives(gameEngine, 453, 275);
+	var livesIcon = new Title(gameEngine, "./img/livesIcon.png", 144, 104, 303, 248);
+	var levelIcon = new Level(gameEngine, 303, 178);
+	//console.log(gameEngine.sceneManager)
 	
+	// GAME OVER SCREEN ENTITIES 
+	var gameover = new Title(gameEngine, "./img/gameOver.png", 647, 112, 76, 234);
+	var continueBtn = new ContinueBtn(gameEngine, 148, 355);
+	var endBtn = new EndBtn(gameEngine, 412, 355);
+
 	// Declaring all entities for a title screen
 	var titleScene = new Scene(gameEngine,
 		[{type:"Other", ent:title}, {type:"Other", ent:icon},{type:"Other", ent:startBtn}]);
-	console.log(titleScene);
+	//console.log(titleScene);
 	
+	var lOneEnts = [];
+	for (var i = 0; i <= MAP_SIZE - (64 * 5); i++) {
+		var platform = new Platform(gameEngine, i, 472, 64, 64,  "Grey");
+		var platform2 = new Title(gameEngine, "./img/road.png", 64, 64, i, 536);
+		lOneEnts.push({type:"Platform", ent:platform});
+		lOneEnts.push({type:"Other", ent:platform2});
+		i += 64;
+	}
+	for (var i = MAP_SIZE - (64 * 4); i <= MAP_SIZE; i++) {
+		var bridge = new Platform(gameEngine, i, 472, 64, 32, "Brown");
+		var death = new Platform(gameEngine, i, 536, 64, 64, "Red");
+		lOneEnts.push({type:"Platform", ent:death});
+		lOneEnts.push({type:"Platform", ent:bridge});
+		i += 64; 
+	}
+	var hearts = new Health(gameEngine);
+	//lOneEnts.push({type:"Platform", ent:death});
+	lOneEnts.push({type:"Other", ent:gameEngine.cat});
+	lOneEnts.push({type:"Other", ent:hearts});
+	console.log(lOneEnts);
+	var levelOne = new Scene(gameEngine, lOneEnts);
 	// Declaring all entities for level 1
-	var levelOne = new Scene(gameEngine,
+	var protoScene = new Scene(gameEngine,
 		[{type:"Platform", ent:bg}, {type:"Other", ent:skyscraper}, 
 		{type:"Platform", ent:plat}, {type:"Platform", ent:p2}, {type:"Other", ent:sidewalk},
 			{type:"Platform", ent:death}, {type:"Other", ent:checkpoint}, {type:"Other", ent:lamp2},
@@ -687,8 +800,14 @@ ASSET_MANAGER.downloadAll(function () {
 			{type:"Enemy", ent:bad4}, {type:"Enemy", ent:bad5}, {type:"Enemy", ent:bad6}, {type:"Enemy", ent:birdFly},
 			{type:"Enemy", ent:birdAttack}, {type:"Other", ent:gameEngine.cat}, {type:"Enemy", ent:range}, {type:"Other", ent:bullet}]);
 	
+	var statusScreen = new Scene(gameEngine, [{type:"Other", ent:lives}, {type:"Other", ent:livesIcon}, {type:"Other", ent:levelIcon}]);
+	var gameOverScreen = new Scene(gameEngine, [{type:"Other", ent:gameover}, {type:"Other", ent:continueBtn}, {type:"Other", ent:endBtn}]);
+	
 	gameEngine.sceneManager.addScene(titleScene);
 	gameEngine.sceneManager.addScene(levelOne);
+	gameEngine.sceneManager.addScene(statusScreen);
+	gameEngine.sceneManager.addScene(gameOverScreen);
+	gameEngine.sceneManager.addScene(protoScene);
 	gameEngine.sceneManager.setScene(gameEngine.sceneManager.scenes[TITLE_SCENE]);
 
     gameEngine.init(ctx);

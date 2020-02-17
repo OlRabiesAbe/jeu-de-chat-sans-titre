@@ -1,5 +1,6 @@
 // This game shell was happily copied from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
+CURRENT_LEVEL = 1;
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -80,7 +81,9 @@ GameEngine.prototype.startInput = function () {
     }
     var that = this;
 	this.ctx.canvas.addEventListener("mousemove", function (e) {
-		that.btnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
+		that.stBtnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
+		that.contBtnHover = e.clientX < 157 || e.clientX > 390 || e.clientY < 359 || e.clientY > 461 ? false : true;
+		that.endBtnHover = e.clientX < 421 || e.clientX > 660 || e.clientY < 359 || e.clientY > 461 ? false : true;
 	
 	}, false);
 	//console.log("CLICK" + that.click);
@@ -88,7 +91,6 @@ GameEngine.prototype.startInput = function () {
 		that.click = true;
 		that.mouseTimer = 0;
 	}, false);
-
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
 			if (String.fromCharCode(e.which) === ' ') that.space = true;
@@ -127,6 +129,10 @@ GameEngine.prototype.addEnemy= function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
+	//if (this.sceneManager.getScene() === TITLE_SCENE) {
+	//	this.ctx.fillStyle = "#3E6AD7";
+	//	this.ctx.fillRect(0, 0, 800, 800);
+//	}
 	//console.log(this.click);
 	//console.log(this.entities);
     for (var i = 0; i < this.entities.length; i++) {
@@ -137,6 +143,16 @@ GameEngine.prototype.draw = function () {
 }
 
 GameEngine.prototype.update = function () {
+	//console.log(this.sceneManager.currentScene);
+	//console.log(this.sceneManager.getScene());
+	if (this.sceneManager.getScene() === STATUS_SCENE) {
+		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
+		console.log(this.sceneManager.scenes[STATUS_SCENE].timer);
+		if (this.sceneManager.scenes[STATUS_SCENE].timer >= 3.5) {
+			this.sceneManager.setScene(this.sceneManager.scenes[CURRENT_LEVEL]);
+			this.sceneManager.scenes[STATUS_SCENE].timer = 0;
+		}
+	}
     var entitiesCount = this.entities.length;
 	this.mouseTimer += this.clockTick;
 	if (this.click && this.mouseTimer >= 0.05) {
@@ -146,8 +162,8 @@ GameEngine.prototype.update = function () {
 	//console.log(this.camera);
 	//console.log(typeof(this.camera));
 	//console.log(this.camera.update)
-	console.log(this.entities);
-	console.log(this.sceneManager);
+	//console.log(this.entities);
+	//console.log(this.sceneManager);
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];

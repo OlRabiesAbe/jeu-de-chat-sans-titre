@@ -13,6 +13,7 @@ function SceneManager(game) {
 	this.currentScene = null;
 	this.currentSceneKey = null;
 	this.sceneIdx = 0;
+	this.transitionTime = 0;
 	this.scenes = [];
 }
 
@@ -36,6 +37,7 @@ SceneManager.prototype.setScene = function(otherScene) {
 			this.game.entities[g].removeFromWorld = true;
 		}
 	}
+
 	// Adds the entities from the new scene and makes sure they aren't destroyed
 	for (var i = 0; i < otherScene.entities.length; i++) {
 		var entity = otherScene.entities[i];
@@ -51,11 +53,11 @@ SceneManager.prototype.setScene = function(otherScene) {
 	}
 	// This keeps track of the index and current scene
 	this.currentScene = otherScene;
-	this.currentSceneKey = otherScene.num;
+	this.currentSceneKey = otherScene.idx;
 }
 
 SceneManager.prototype.getScene = function() {
-	return this.game.sceneManager.currentSceneKey;
+	return this.currentSceneKey;
 }
 /**
  * A function to create a scene. A scene is defined by having a game engine
