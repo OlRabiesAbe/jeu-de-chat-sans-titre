@@ -67,5 +67,3 @@ Tile.prototype.draw = function(ctx) { //i dont understand drawing funcs
 	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 1);
 	Entity.prototype.draw.call(this);
 }
-
-//https://www.youtube.com/watch?v=aZkLTFKV-fU
