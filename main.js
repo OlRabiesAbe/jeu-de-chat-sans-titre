@@ -123,35 +123,35 @@ BoundingBox.prototype.updateBoundingBox = function(theX, theY, theWidth, theHeig
 
 var ASSET_MANAGER = new AssetManager();
 
+ASSET_MANAGER.queueDownload("./img/bird.png");
+ASSET_MANAGER.queueDownload("./img/box.png");
+ASSET_MANAGER.queueDownload("./img/bridge.png");
+ASSET_MANAGER.queueDownload("./img/building.png");
+ASSET_MANAGER.queueDownload("./img/bullet.png");
+ASSET_MANAGER.queueDownload("./img/cat_logo.png");
 ASSET_MANAGER.queueDownload("./img/cat_sheet.png")
+ASSET_MANAGER.queueDownload("./img/checkpoint.png");
+ASSET_MANAGER.queueDownload("./img/cowboy.png");
+ASSET_MANAGER.queueDownload("./img/crane.png");
 ASSET_MANAGER.queueDownload("./img/dog.png");
-ASSET_MANAGER.queueDownload("./img/Sidewalk.png");
-ASSET_MANAGER.queueDownload("./img/skyscraper.png");
+ASSET_MANAGER.queueDownload("./img/dumpster.png");
+ASSET_MANAGER.queueDownload("./img/game_end_btn.png");
+ASSET_MANAGER.queueDownload("./img/game_over.png");
+ASSET_MANAGER.queueDownload("./img/heart_sheet.png");
+ASSET_MANAGER.queueDownload("./img/lamp.png");
+ASSET_MANAGER.queueDownload("./img/level_text.png");
+ASSET_MANAGER.queueDownload("./img/lives_icon.png");
+ASSET_MANAGER.queueDownload("./img/numbers.png");
+ASSET_MANAGER.queueDownload("./img/placeholder_tile.png");
 ASSET_MANAGER.queueDownload("./img/platform.png");
 ASSET_MANAGER.queueDownload("./img/puddle.png");
-ASSET_MANAGER.queueDownload("./img/lamp.png");
-ASSET_MANAGER.queueDownload("./img/bird.png");
-ASSET_MANAGER.queueDownload("./img/cowboy.png");
-ASSET_MANAGER.queueDownload("./img/bullet.png");
-ASSET_MANAGER.queueDownload("./img/placeholder_tile.png");
-ASSET_MANAGER.queueDownload("./img/checkpoint.png");
-ASSET_MANAGER.queueDownload("./img/catLogo.png");
-ASSET_MANAGER.queueDownload("./img/title.png");
-ASSET_MANAGER.queueDownload("./img/startBtn.png");
-ASSET_MANAGER.queueDownload("./img/numbers.png");
-ASSET_MANAGER.queueDownload("./img/gameOver.png");
-ASSET_MANAGER.queueDownload("./img/GameEndBtn.png");
-ASSET_MANAGER.queueDownload("./img/livesIcon.png");
-ASSET_MANAGER.queueDownload("./img/levelText.png");
-ASSET_MANAGER.queueDownload("./img/heart sheet.png");
-ASSET_MANAGER.queueDownload("./img/water.png");
-ASSET_MANAGER.queueDownload("./img/bridge.png");
 ASSET_MANAGER.queueDownload("./img/road.png");
-ASSET_MANAGER.queueDownload("./img/box.png");
-ASSET_MANAGER.queueDownload("./img/Dumpster.png");
-ASSET_MANAGER.queueDownload("./img/building.png");
+ASSET_MANAGER.queueDownload("./img/sidewalk.png");
+ASSET_MANAGER.queueDownload("./img/skyscraper.png");
+ASSET_MANAGER.queueDownload("./img/start_btn.png");
+ASSET_MANAGER.queueDownload("./img/title.png");
+ASSET_MANAGER.queueDownload("./img/water.png");
 ASSET_MANAGER.queueDownload("./img/window.png");
-ASSET_MANAGER.queueDownload("./img/crane.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
