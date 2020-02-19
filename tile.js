@@ -23,20 +23,19 @@ Tile.prototype.handleCollision = function(entity) {
 	else if (entity.x + entity.width < this.x - this.VERT_COLL_RADIUS || entity.x > this.x + this.width + this.VERT_COLL_RADIUS) {}
 	//a collision has occured, displace cat out of tile
 	else {
-		for(var i = 0; i < 3; i++) {
 			//cases: (this code is seriously frikking incomprehensible, i hope to god i never ahve to look at it again)
 			//all the conditions for the cat's collsion are somehow encoded into those disgusting boolean statements, and even a minor change can potentially ruin them
 			
 			//a tile's left/right colliders extends VCR units into and out of the tile, starts 4 units down from the top of the tile, and extends BE units beneath it
 			// ~+LEFT CASE+~
 			if(entity.x + entity.width > this.x - this.VERT_COLL_RADIUS && entity.x + entity.width < this.x + this.VERT_COLL_RADIUS 
-					&& entity.y > this.y + 4 && entity.y < this.y + this.height + this.BOTTOM_EXTENSION && i == 0) {
+					&& entity.y > this.y + 4 && entity.y < this.y + this.height + this.BOTTOM_EXTENSION) {
 				entity.x = this.x - entity.width - this.VERT_COLL_RADIUS;
 				entity.hspeed = 0;
 				//console.log("cat hit wall while going in an easterly direction" + ", tile data: (" + this.x + ", " + this.y + ")");
 			// ~+RIGHT CASE+~
 			} else if (entity.x > this.x + this.width - this.VERT_COLL_RADIUS && entity.x < this.x + this.width + this.VERT_COLL_RADIUS 
-					&& entity.y > this.y + 4 && entity.y < this.y + this.height + this.BOTTOM_EXTENSION && i == 0) {
+					&& entity.y > this.y + 4 && entity.y < this.y + this.height + this.BOTTOM_EXTENSION) {
 				entity.x = this.x + this.width + this.VERT_COLL_RADIUS;
 				entity.hspeed = 0;
 				//console.log("cat hit wall while going in a westerly direction" + ", tile data: (" + this.x + ", " + this.y + ")");
@@ -45,7 +44,7 @@ Tile.prototype.handleCollision = function(entity) {
 			//if the cat is within FMR units above or below the tile's top, cat gets sucked to the surface
 			//BUG W THIS, i think the top is too wide, the cat can stand on vertical walls
 			// ~+TOP OF TILE CASE+~
-			if(entity.y < this.y + this.FLOOR_MAGNET_RADIUS && entity.y > this.y - this.FLOOR_MAGNET_RADIUS && i == 1) {
+			if(entity.y < this.y + this.FLOOR_MAGNET_RADIUS && entity.y > this.y - this.FLOOR_MAGNET_RADIUS) {
 				entity.y = this.y;
 				entity.vspeed = 0;
 				//console.log("cat hit ground" + " tile data: (" + this.x + ", " + this.y + ")");
@@ -54,13 +53,12 @@ Tile.prototype.handleCollision = function(entity) {
 			//the cat isn't allowed to get within BE units of the bottom of the tile, cause otherwise the cat could visually enter the tile
 			//~+BOTTOM OF OR INSIDE OF TILE CASE+~
 			if (entity.y > this.y + this.FLOOR_MAGNET_RADIUS && entity.y < this.y + this.height + this.BOTTOM_EXTENSION 
-					&& entity.x + entity.width > this.x + this.VERT_COLL_RADIUS && entity.x < this.x + this.width - this.VERT_COLL_RADIUS && i == 2) {
+					&& entity.x + entity.width > this.x + this.VERT_COLL_RADIUS && entity.x < this.x + this.width - this.VERT_COLL_RADIUS) {
 				entity.y = this.y + this.height + this.BOTTOM_EXTENSION + entity.height;
 				entity.vspeed = 0;
 				//console.log("cat hit ceiling" + " tile data: (" + this.x + ", " + this.y + ")");
 			}
 		}
-	}
 	return;
 }
 Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles displacing the cat when it collides with the tile (enters the tile)
