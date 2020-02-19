@@ -35,6 +35,13 @@ SceneManager.prototype.setScene = function(otherScene) {
 		if (this.game.entities[g] != this.game.camera &&
 			this.game.entities[g] != this.game.sceneManager) {
 			this.game.entities[g].removeFromWorld = true;
+			if (this.game.entities[g].name !== undefined && this.game.entities[g].name === "Checkpoint" 
+						&& otherScene.idx === GAME_OVER_SCENE) {
+				this.game.entities[g].on = false;
+			}
+			if (this.game.entities[g].spawn !== undefined) {
+				this.game.entities[g].x = this.game.entities[g].spawn;
+			}
 		}
 	}
 

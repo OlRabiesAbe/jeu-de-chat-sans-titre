@@ -9,7 +9,7 @@ Title.prototype.constructor = Title;
 Title.prototype.update = function() {
 }
 Title.prototype.draw = function(ctx) {
-	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+	this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
 }
 
 // This button is on the title screen and will start the game

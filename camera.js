@@ -1,4 +1,4 @@
-MAP_SIZE = 4480
+MAP_SIZE = 14336;
 
 function Camera(game) {
 	Entity.call(this, game, 0, 0);

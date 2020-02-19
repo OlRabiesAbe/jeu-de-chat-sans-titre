@@ -1,5 +1,4 @@
 // This game shell was happily copied from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
-
 CURRENT_LEVEL = 1;
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
@@ -39,7 +38,7 @@ function GameEngine() {
 	this.otherEntities = [];
     this.showOutlines = false;
     this.ctx = null;
-    this.click = false;
+    this.click = null;
     this.mouse = null;
     this.wheel = null;
     this.surfaceWidth = null;
@@ -49,16 +48,17 @@ function GameEngine() {
 GameEngine.prototype.init = function (ctx) {
     this.ctx = ctx;
 	this.cat.platform = this.platforms[0];
+
 	//this.cat.platform = this.entities[0];
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.startInput();
     this.timer = new Timer();
-    //console.log('game initialized');
+    console.log('game initialized');
 }
 
 GameEngine.prototype.start = function () {
-    //console.log("starting game");
+    console.log("starting game");
     var that = this;
     (function gameLoop() {
         that.loop();
@@ -67,29 +67,14 @@ GameEngine.prototype.start = function () {
 }
 
 GameEngine.prototype.startInput = function () {
-    //console.log('Starting input');
-	var getXandY = function (e) {
-        var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
-        var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
-
-        if (x < 1024) {
-            x = Math.floor(x / 32);
-            y = Math.floor(y / 32);
-        }
-
-        return { x: x, y: y };
-    }
+    console.log('Starting input');
     var that = this;
 	this.ctx.canvas.addEventListener("mousemove", function (e) {
+		//console.log(e.clientX + " " + e.clientY);
 		that.stBtnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
 		that.contBtnHover = e.clientX < 157 || e.clientX > 390 || e.clientY < 359 || e.clientY > 461 ? false : true;
 		that.endBtnHover = e.clientX < 421 || e.clientX > 660 || e.clientY < 359 || e.clientY > 461 ? false : true;
 	
-	}, false);
-	//console.log("CLICK" + that.click);
-	this.ctx.canvas.addEventListener("click", function (e) {
-		that.click = true;
-		that.mouseTimer = 0;
 	}, false);
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
@@ -99,7 +84,10 @@ GameEngine.prototype.startInput = function () {
 			if (String.fromCharCode(e.which) === 'S') that.down = true;
 			e.preventDefault();
     }, false);
-
+	this.ctx.canvas.addEventListener("click", function (e) {
+		that.click = true;
+		that.mouseTimer = 0;
+	}, false);
 	this.ctx.canvas.addEventListener("keyup", function(e) {
 		if (String.fromCharCode(e.which) === 'D') that.right = false;
 		if (String.fromCharCode(e.which) === 'A') that.left = false;
@@ -107,7 +95,7 @@ GameEngine.prototype.startInput = function () {
 		if (String.fromCharCode(e.which) === 'W') that.w = false;
 		if (String.fromCharCode(e.which) === ' ') that.space = false;
 	}, false);
-    console.log('Input started');
+   // console.log('Input started');
 }
 
 GameEngine.prototype.addEntity = function (entity) {
@@ -129,22 +117,14 @@ GameEngine.prototype.addEnemy= function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
-	//if (this.sceneManager.getScene() === TITLE_SCENE) {
-	//	this.ctx.fillStyle = "#3E6AD7";
-	//	this.ctx.fillRect(0, 0, 800, 800);
-//	}
-	//console.log(this.click);
-	//console.log(this.entities);
     for (var i = 0; i < this.entities.length; i++) {
-		//console.log(this.entities[i]);
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
 }
 
 GameEngine.prototype.update = function () {
-	//console.log(this.sceneManager.currentScene);
-	//console.log(this.sceneManager.getScene());
+	//console.log(this.platforms);
 	if (this.sceneManager.getScene() === STATUS_SCENE) {
 		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
 		console.log(this.sceneManager.scenes[STATUS_SCENE].timer);
@@ -153,26 +133,33 @@ GameEngine.prototype.update = function () {
 			this.sceneManager.scenes[STATUS_SCENE].timer = 0;
 		}
 	}
-    var entitiesCount = this.entities.length;
 	this.mouseTimer += this.clockTick;
 	if (this.click && this.mouseTimer >= 0.05) {
 		this.click = false;
 		this.mouseTimer = 0;
 	}
-	//console.log(this.camera);
-	//console.log(typeof(this.camera));
-	//console.log(this.camera.update)
-	//console.log(this.entities);
-	//console.log(this.sceneManager);
+	var platformsCount = this.platforms.length;
+	for (var i = 0; i < platformsCount; i++) {
+        var platform = this.platforms[i];
+        if (!platform.removeFromWorld) {
+            platform.update();
+        }
+    }
+    for (var i = platformsCount - 1; i >= 0; --i) {
+        if (this.platforms[i].removeFromWorld) {
+            this.platforms.splice(i, 1);
+        }
+    }
+	
+    var entitiesCount = this.entities.length;
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
-		//console.log(this.entities[i]);
         if (!entity.removeFromWorld) {
             entity.update();
         }
     }
-    for (var i = this.entities.length - 1; i >= 0; --i) {
+    for (var i = entitiesCount - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
         }

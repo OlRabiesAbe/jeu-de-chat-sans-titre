@@ -34,9 +34,18 @@ function Platform(game, x, y, length, height, color) {
 		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bridge.png"), 0, 0, 64, 32, 1, 1, true, false);
 		this.boundingbox = new BoundingBox(x, y, length, height);
 	}
+	if (this.color === "Pink") {
+		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/Dumpster.png"), 0, 0, 256, 128, 1, 1, true, false);
+		this.height = 40;
+		this.boundingbox = new BoundingBox(x, y, length, 40);
+	}
 	if (this.color === "Red") {
 		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/water.png"), 0, 0, 64, 64, 0.15, 7, true, false);
 		this.boundingbox = new BoundingBox(x, y, 64, 64);
+	}
+	if (this.color === "Yellow") {
+		this.animation = new Animation(ASSET_MANAGER.getAsset("./img/box.png"), 0, 0, 128, 128, 1, 1, true, false);
+		this.boundingbox = new BoundingBox(x, y, length, height);
 	}
 	else {
 		this.boundingbox = new BoundingBox(x, y, length, height);
@@ -50,6 +59,9 @@ Platform.prototype = new Entity();
 Platform.prototype.constructor = Platform;
 
 Platform.prototype.update = function (ctx) {
+//	if (this.color === "Yellow") {
+	//	this.handleCollision();
+//	}
 	if (this.color === "Red") {
 		//alert(this.animation.elapsedTime + " " + this.animation.totalTime);
 		if (this.animation.elapsedTime === 0) {
@@ -77,6 +89,18 @@ Platform.prototype.update = function (ctx) {
 		}
 		
 	}
+	if (this.color === "Pink") {
+			
+	}
+}
+
+Platform.prototype.handleCollision = function() {
+	for (var i = 0; i < this.game.entities.length; i++) {
+		var entity = this.game.entitites[i];
+		if (entity.boundingbox !== undefined) {
+			if (!(this.boundingbox.left > entity.boundingbox.right || this.boundingbox.right < entity.boundingbox.left)) {}
+		}
+	}
 }
 Platform.prototype.draw = function (ctx) {
 	if (this.animation !== null) {
@@ -84,7 +108,8 @@ Platform.prototype.draw = function (ctx) {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
         ctx.strokeStyle = this.boundingbox.color;
         ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
-		} else if (this.color === "Green" || this.color === "Grey" || this.color === "Brown") {
+		} else if (this.color === "Green" || this.color === "Grey" || this.color === "Brown" 
+			|| this.color === "Yellow" || this.color === "Pink") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 			
         ctx.strokeStyle = this.boundingbox.color;
