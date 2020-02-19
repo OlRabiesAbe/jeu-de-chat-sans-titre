@@ -332,7 +332,11 @@ ASSET_MANAGER.downloadAll(function () {
 	lOneEnts.push({type:"Platform", ent:box5});
 	lOneEnts.push({type:"Platform", ent:box6});
 
+	var bird = new Bird(gameEngine, 64 * 40, 472 - (64 * 6), "Fly");
+	lOneEnts.push({type:"Enemy", ent:bird});
 	
+	var cowboy = new Range(gameEngine, 64 * 200, 472 - 64 * 2, "Attack");
+	lOneEnts.push({type:"Enemy", ent:cowboy});
 	var checkpoint = new Checkpoint(gameEngine, 112 * 64, 472 - 128);
 	var light = new Lamp(gameEngine, 64 * 6, 472 - 64 * 6);
 	var light2 = new Lamp(gameEngine, 64 * 15, 472 - 64 * 6);
