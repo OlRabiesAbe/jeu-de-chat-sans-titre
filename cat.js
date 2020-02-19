@@ -261,7 +261,7 @@ Cat.prototype.draw = function(ctx) {
 		} else if (this.running && this.game.left) {
 			this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 
-		} else if (this.ducking) {
+		} else if (false && this.ducking) {
 			this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
 
 		} else {
