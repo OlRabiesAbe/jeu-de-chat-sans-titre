@@ -6,14 +6,14 @@
 		*make cat smaller (implement brent's code to elis-col build)
 		*delete everything now not being used
 	-make new animations
-		*cat_jump (Make in one sitting!!)
+		[DONE]*cat_jump (Make in one sitting!!)
 		*cat_claw
 		*cat_tail_swish
 			-code for animation must be added too
 		*dog_walk
 			-skeleton first
 	-scrap together some general assets
-		*prototype tileset
+		[BRENT]*prototype tileset
 		*sidewalk
 		*platforms
 		*background
