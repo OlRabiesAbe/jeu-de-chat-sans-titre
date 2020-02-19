@@ -1,6 +1,6 @@
 function Level(game, x, y) {
 	this.game = game;
-	this.anim = new Animation(ASSET_MANAGER.getAsset("./img/levelText.png"), 0, 0, 176, 64, 1, 1, true, false);
+	this.anim = new Animation(ASSET_MANAGER.getAsset("./img/level_text.png"), 0, 0, 176, 64, 1, 1, true, false);
 	this.zero = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 13, 7, 40, 50, 1, 1, true, false);
 	this.one = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 84, 8, 18, 49, 1, 1, true, false);
 	this.two = new Animation(ASSET_MANAGER.getAsset("./img/numbers.png"), 143, 7, 36, 50, 1, 1, true, false);
@@ -29,9 +29,9 @@ Level.prototype.draw = function(ctx) {
 }
 
 function Health(game) {
-	this.healthy = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 0, 0, 48, 48, 1, 1, true, false);
-	this.unhealthy = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 96, 0, 48, 48, 1, 1, true, false);
-	this.danger = new Animation(ASSET_MANAGER.getAsset("./img/heart sheet.png"), 0, 0, 48, 48, 0.05, 3, true, false);
+	this.healthy = new Animation(ASSET_MANAGER.getAsset("./img/heart_sheet.png"), 0, 0, 48, 48, 1, 1, true, false);
+	this.unhealthy = new Animation(ASSET_MANAGER.getAsset("./img/heart_sheet.png"), 96, 0, 48, 48, 1, 1, true, false);
+	this.danger = new Animation(ASSET_MANAGER.getAsset("./img/heart_sheet.png"), 0, 0, 48, 48, 0.05, 3, true, false);
 	
 	this.hearts = [{health:this.healthy, heart:1}, {health:this.healthy, heart:2}, {health:this.healthy, heart:3}];
 	this.hearts.push({health:this.healthy, heart:4})
