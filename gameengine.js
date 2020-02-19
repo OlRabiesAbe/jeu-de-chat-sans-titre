@@ -1,5 +1,5 @@
 // This game shell was happily copied from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
-
+CURRENT_LEVEL = 1;
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -31,6 +31,7 @@ Timer.prototype.tick = function () {
 function GameEngine() {
 	this.camera = new Camera(this);
 	this.cat = new Cat(this);
+	this.sceneManager = new SceneManager(this);
 	this.entities = [];
 	this.platforms = [];
     this.enemies = [];
@@ -68,6 +69,13 @@ GameEngine.prototype.start = function () {
 GameEngine.prototype.startInput = function () {
     console.log('Starting input');
     var that = this;
+	this.ctx.canvas.addEventListener("mousemove", function (e) {
+		//console.log(e.clientX + " " + e.clientY);
+		that.stBtnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
+		that.contBtnHover = e.clientX < 157 || e.clientX > 390 || e.clientY < 359 || e.clientY > 461 ? false : true;
+		that.endBtnHover = e.clientX < 421 || e.clientX > 660 || e.clientY < 359 || e.clientY > 461 ? false : true;
+	
+	}, false);
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
 			if (String.fromCharCode(e.which) === ' ') that.space = true;
@@ -76,7 +84,10 @@ GameEngine.prototype.startInput = function () {
 			if (String.fromCharCode(e.which) === 'S') that.down = true;
 			e.preventDefault();
     }, false);
-
+	this.ctx.canvas.addEventListener("click", function (e) {
+		that.click = true;
+		that.mouseTimer = 0;
+	}, false);
 	this.ctx.canvas.addEventListener("keyup", function(e) {
 		if (String.fromCharCode(e.which) === 'D') that.right = false;
 		if (String.fromCharCode(e.which) === 'A') that.left = false;
@@ -84,7 +95,7 @@ GameEngine.prototype.startInput = function () {
 		if (String.fromCharCode(e.which) === 'W') that.w = false;
 		if (String.fromCharCode(e.which) === ' ') that.space = false;
 	}, false);
-    console.log('Input started');
+   // console.log('Input started');
 }
 
 GameEngine.prototype.addEntity = function (entity) {
@@ -113,6 +124,21 @@ GameEngine.prototype.draw = function () {
 }
 
 GameEngine.prototype.update = function () {
+	//console.log(this.platforms);
+	console.log(Math.floor(this.cat.x / 64));
+	if (this.sceneManager.getScene() === STATUS_SCENE) {
+		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
+		console.log(this.sceneManager.scenes[STATUS_SCENE].timer);
+		if (this.sceneManager.scenes[STATUS_SCENE].timer >= 3.5) {
+			this.sceneManager.setScene(this.sceneManager.scenes[CURRENT_LEVEL]);
+			this.sceneManager.scenes[STATUS_SCENE].timer = 0;
+		}
+	}
+	this.mouseTimer += this.clockTick;
+	if (this.click && this.mouseTimer >= 0.05) {
+		this.click = false;
+		this.mouseTimer = 0;
+	}
 	var platformsCount = this.platforms.length;
 	for (var i = 0; i < platformsCount; i++) {
         var platform = this.platforms[i];
@@ -125,6 +151,7 @@ GameEngine.prototype.update = function () {
             this.platforms.splice(i, 1);
         }
     }
+	
     var entitiesCount = this.entities.length;
 	this.camera.update();
     for (var i = 0; i < entitiesCount; i++) {

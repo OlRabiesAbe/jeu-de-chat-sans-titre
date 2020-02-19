@@ -1,6 +1,8 @@
+MAP_SIZE = 14336;
+
 function Camera(game) {
 	Entity.call(this, game, 0, 0);
-	this.mapSize = 2100;
+	this.mapSize = MAP_SIZE;
 	this.screenSize = 800;
 	this.myMoveAmount = 0;
 }
