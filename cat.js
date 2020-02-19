@@ -5,9 +5,12 @@ function Cat(game) {
 	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 257, 128, 128, 0.03, 1, true, false);
 	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 129, 257, 128, 128, 0.03, 1, true, false);
 	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 129, 128, 128, 0.03, 8, false, false);
-	this.jumpAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 0, 128, 128, 0.03, 8, false, false);
 	
-	this.fallAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 20, 128, 128, 0.03, 8, true, false);
+	this.jumpRisingLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 257, 257, 128, 128, 0.03, 1, true, false);
+	this.jumpFallingLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 385, 257, 128, 128, 0.03, 1, true, false);
+	this.jumpRisingRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 641, 257, 128, 128, 0.03, 1, true, false);
+	this.jumpFallingRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 513, 257, 128, 128, 0.03, 1, true, false);
+	
 	
 	this.runRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 0, 128, 128, 0.1, 6, true, false);
 	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 129, 128, 128, 0.1, 6, true, true);
@@ -232,64 +235,42 @@ Cat.prototype.update = function() {
 Cat.prototype.draw = function(ctx) {
 	console.log(this.invincTimer);
 	if (!this.invincTick) {
-	//console.log(this.boundingbox.color);
-	if(this.boxes){
-		//ctx.strokeStyle = "red";
-        //ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	}
-	
-	if (this.attacking) {
-		this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2); 
+		//console.log(this.boundingbox.color);
+		if(this.boxes){
+			//ctx.strokeStyle = "red";
+		//ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
 		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-	
-	} else if (this.y > this.ground) {
-		this.jumpAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
-		if (this.jumpAnim.isDone()) {
-            this.jumpAnim.elapsedTime = 0;
-            this.jumping = false;
-            this.falling = true;
-        }
-		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-		
-	} else if (this.running && this.game.right) {
-		this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
-		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-		
-	} else if (this.running && this.game.left) {
-		this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
-		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-		
-	} else if (this.ducking) {
-		this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
-		ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-	
-	} else {
-		if (this.right) {
-			this.neutralR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
-			ctx.strokeStyle = this.boundingbox.color;
-			ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
+		ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 		}
-		if (this.left) {
-			this.neutralL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y -this.height + 2);
-			ctx.strokeStyle = this.boundingbox.color;
-			ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-	
-		}
-	}
 
-	Entity.prototype.draw.call(this);
+		if (this.attacking) {
+			this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2); 
+
+		} else if (this.y < this.ground) {
+			if (this.vspeed > 0) {
+				this.right ? this.jumpRisingLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2) 
+								: this.jumpRisingRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+			} else {
+				this.right ? this.jumpFallingLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2) 
+								: this.jumpFallingRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+			}
+
+		} else if (this.running && this.game.right) {
+			this.runRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+
+		} else if (this.running && this.game.left) {
+			this.runLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+
+		} else if (this.ducking) {
+			this.duckAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+
+		} else {
+			if (this.right) 
+				this.neutralR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+			else 
+				this.neutralL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y -this.height + 2);
+		}
+
+		Entity.prototype.draw.call(this);
 	}
 }
