@@ -204,7 +204,7 @@ ASSET_MANAGER.downloadAll(function () {
 	
 	// Title scren entities
 	var title = new Title(gameEngine, "./img/title.png", 350, 200, 0, 0);
-	var icon = new Title(gameEngine, "./img/catLogo.png", 450, 527, 150, 175);
+	var icon = new Title(gameEngine, "./img/cat_logo.png", 450, 527, 150, 175);
 	var startBtn = new StartBtn(gameEngine, 550, 50);
 
 	// Declaring all entities for a title screen
@@ -213,13 +213,13 @@ ASSET_MANAGER.downloadAll(function () {
 
 	// STATUS SCREEN ENTITIES
 	var lives = new Lives(gameEngine, 453, 275);
-	var livesIcon = new Title(gameEngine, "./img/livesIcon.png", 144, 104, 303, 248);
+	var livesIcon = new Title(gameEngine, "./img/lives_icon.png", 144, 104, 303, 248);
 	var levelIcon = new Level(gameEngine, 303, 178);
 	//console.log(gameEngine.sceneManager)
 	var statusScreen = new Scene(gameEngine, [{type:"Other", ent:lives}, {type:"Other", ent:livesIcon}, {type:"Other", ent:levelIcon}]);
 		
 	// GAME OVER SCREEN ENTITIES 
-	var gameover = new Title(gameEngine, "./img/gameOver.png", 647, 112, 76, 234);
+	var gameover = new Title(gameEngine, "./img/game_over.png", 647, 112, 76, 234);
 	var continueBtn = new ContinueBtn(gameEngine, 148, 355);
 	var endBtn = new EndBtn(gameEngine, 412, 355);
 	var gameOverScreen = new Scene(gameEngine, [{type:"Other", ent:gameover}, {type:"Other", ent:continueBtn}, {type:"Other", ent:endBtn}]);
@@ -234,7 +234,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:tile});
 	}
 	for (var i = 0; i < 56; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
 									i * 64, 472, i * 64, 472, 
 									64, 64, 64, 64)
 		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
@@ -252,7 +252,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:water});
 	}
 		for (var i = 60; i < 67; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
 									i * 64, 472, i * 64, 472,
 									64, 64, 64, 64)
 		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
@@ -266,7 +266,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 71; i < 86; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
 									i * 64, 472, i * 64, 472,
 									64, 64, 64, 64)
 		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
@@ -280,7 +280,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 90; i < 154; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
 									i * 64, 472, i * 64, 472,
 									64, 64, 64, 64)
 		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
@@ -294,7 +294,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 158; i < 224; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
 									i * 64, 472, i * 64, 472,
 									64, 64, 64, 64)
 		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
@@ -303,7 +303,7 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
-	var dump = new Tile(gameEngine, "./img/Dumpster.png", 0, 0, 
+	var dump = new Tile(gameEngine, "./img/dumpster.png", 0, 0, 
 						64 * 18, 472 - 192, 64 * 18, 472 - 192, 
 						384, 60,384, 192);
 	lOneEnts.push({type:"Platform", ent:dump});
