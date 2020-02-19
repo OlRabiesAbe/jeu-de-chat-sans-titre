@@ -3,7 +3,6 @@
 function Tile(game, img, framex, framey, x, y,) {
 	this.game = game;
 	this.x = x * 128; this.y = y * 128;
-	this.x = x * 128; this.y = y * 128; 
 	this.width = 128; this.height = 128; 
 	
 	//collision specifics suite
