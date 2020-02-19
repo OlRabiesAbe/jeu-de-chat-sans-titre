@@ -14,8 +14,8 @@ Title.prototype.draw = function(ctx) {
 
 // This button is on the title screen and will start the game
 function StartBtn(game, x, y) {
-	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 0, 239, 101, 1, 1, true, false);
-	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/startBtn.png"), 0, 102, 239, 101, 1, 1, true, false);
+	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/start_btn.png"), 0, 0, 239, 101, 1, 1, true, false);
+	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/start_btn.png"), 0, 102, 239, 101, 1, 1, true, false);
 	this.hover = false;
 	Entity.call(this, game, x, y);
 }
