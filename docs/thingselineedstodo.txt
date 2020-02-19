@@ -17,4 +17,4 @@
 		*sidewalk
 		*platforms
 		*background
-		*lantern
+		[BRENT]*lantern
