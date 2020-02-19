@@ -125,6 +125,7 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
 	//console.log(this.platforms);
+	console.log(Math.floor(this.cat.x / 64));
 	if (this.sceneManager.getScene() === STATUS_SCENE) {
 		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
 		console.log(this.sceneManager.scenes[STATUS_SCENE].timer);

@@ -211,6 +211,7 @@ Cat.prototype.update = function() {
 		this.falling = false;
 		LIVES--;
 		HEALTH = 9;
+		this.invinc = false;
 		if (LIVES >= 0) {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 			this.game.cat.x = this.game.cat.spawn;

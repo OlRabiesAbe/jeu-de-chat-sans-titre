@@ -150,6 +150,8 @@ ASSET_MANAGER.queueDownload("./img/road.png");
 ASSET_MANAGER.queueDownload("./img/box.png");
 ASSET_MANAGER.queueDownload("./img/Dumpster.png");
 ASSET_MANAGER.queueDownload("./img/building.png");
+ASSET_MANAGER.queueDownload("./img/window.png");
+ASSET_MANAGER.queueDownload("./img/crane.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -223,25 +225,39 @@ ASSET_MANAGER.downloadAll(function () {
 	var gameOverScreen = new Scene(gameEngine, [{type:"Other", ent:gameover}, {type:"Other", ent:continueBtn}, {type:"Other", ent:endBtn}]);
 
 	var lOneEnts = [];
+	
+	// TILE PARAMATERS: GAME, ASSET, FRAMEX, FRAMEY, X, Y, POSX, POSY, WIDTH, HEIGHT, FRAMEWIDTH, FRAMEHEIGHT
 	for (var i = -4; i <= 4; i++) {
-		var tile = new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, -128, i * 128, 128, 128, 128, 128)
+		var tile = new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 
+							-128, i * 128, -128, i * 128, 
+							128, 128, 128, 128)
 		lOneEnts.push({type:"Platform", ent:tile});
 	}
 	for (var i = 0; i < 56; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0, i * 64, 472, 64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, i * 64, 536, 64, 64, 64, 64)
+		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+									i * 64, 472, i * 64, 472, 
+									64, 64, 64, 64)
+		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
+									i * 64, 536, i * 64, 536, 
+									64, 64, 64, 64)
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
 	for (var i = 56; i < 60; i++) {
-		var bridge = new Tile(gameEngine, "./img/bridge.png", 0, 0, i * 64, 472, 64, 32, 64, 32);
+		var bridge = new Tile(gameEngine, "./img/bridge.png", 0, 0, 
+									i * 64, 472, i * 64, 472,
+									64, 32, 64, 32);
 		var water = new Platform(gameEngine, i * 64, 536, 64, 64, "Red");
 		lOneEnts.push({type:"Platform", ent:bridge});
 		lOneEnts.push({type:"Platform", ent:water});
 	}
 		for (var i = 60; i < 67; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0, i * 64, 472, 64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, i * 64, 536, 64, 64, 64, 64)
+		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+									i * 64, 472, i * 64, 472,
+									64, 64, 64, 64)
+		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
+									i * 64, 536, i * 64, 536,
+									64, 64, 64, 64)
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
@@ -250,8 +266,12 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 71; i < 86; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0, i * 64, 472, 64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, i * 64, 536, 64, 64, 64, 64)
+		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+									i * 64, 472, i * 64, 472,
+									64, 64, 64, 64)
+		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
+									i * 64, 536, i * 64, 536,
+									64, 64, 64, 64)
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
@@ -260,8 +280,12 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 90; i < 154; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0, i * 64, 472, 64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, i * 64, 536, 64, 64, 64, 64)
+		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+									i * 64, 472, i * 64, 472,
+									64, 64, 64, 64)
+		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
+									i * 64, 536, i * 64, 536,
+									64, 64, 64, 64)
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
@@ -270,34 +294,90 @@ ASSET_MANAGER.downloadAll(function () {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	for (var i = 158; i < 224; i++) {
-		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0, i * 64, 472, 64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, i * 64, 536, 64, 64, 64, 64)
+		var platform = new Tile(gameEngine, "./img/Sidewalk.png", 0, 0,
+									i * 64, 472, i * 64, 472,
+									64, 64, 64, 64)
+		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
+									i * 64, 536, i * 64, 536,
+									64, 64, 64, 64)
 		lOneEnts.push({type:"Platform", ent:platform})
 		lOneEnts.push({type:"Platform", ent:platform2});
 	}
-	var dump = new Tile(gameEngine, "./img/Dumpster.png", 0, 0, 64 * 18, 472 - 192, 384, 60,384, 192);
+	var dump = new Tile(gameEngine, "./img/Dumpster.png", 0, 0, 
+						64 * 18, 472 - 192, 64 * 18, 472 - 192, 
+						384, 60,384, 192);
 	lOneEnts.push({type:"Platform", ent:dump});
-	var box = new Tile(gameEngine, "./img/box.png", 0, 0, 64 * 28, 472 - 128, 128, 128, 128, 128);
-	var box2 = new Tile(gameEngine, "./img/box.png", 0, 0, 64 * 38, 472 - 128, 128, 128, 128, 128);
-	var box3 = new Tile(gameEngine, "./img/box.png", 0, 0, 64 * 45, 472 - 128, 128, 128, 128, 128);
-	var box4 = new Tile(gameEngine, "./img/box.png", 0, 0, 64 * 45, 472 - 256, 128, 128, 128, 128);
+	var box = new Tile(gameEngine, "./img/box.png", 0, 0,
+										64 * 28, 472 - 128, 64 * 28, 472 - 128,
+										128, 128, 128, 128);
+	var box2 = new Tile(gameEngine, "./img/box.png", 0, 0,
+										64 * 38, 472 - 128, 64 * 38, 472 - 128,
+										128, 128, 128, 128);
+	var box3 = new Tile(gameEngine, "./img/box.png", 0, 0, 
+										64 * 45, 472 - 128, 64 * 45, 472 - 128, 
+										128, 128, 128, 128);
+	var box4 = new Tile(gameEngine, "./img/box.png", 0, 0,
+										64 * 45, 472 - 256, 64 * 45, 472 - 256,
+										128, 128, 128, 128);
+	var box5 = new Tile(gameEngine, "./img/box.png", 0, 0, 
+										64 * 152, 472 - 128, 64 * 152, 472 - 128,
+										128, 128, 128, 128);
+	var box6 = new Tile(gameEngine, "./img/box.png", 0, 0, 
+										64 * 158, 472 - 128, 64 * 158, 472 - 128, 
+										128, 128, 128, 128);
 	lOneEnts.push({type:"Platform", ent:box});
 	lOneEnts.push({type:"Platform", ent:box2});
 	lOneEnts.push({type:"Platform", ent:box3});
 	lOneEnts.push({type:"Platform", ent:box4});
+	lOneEnts.push({type:"Platform", ent:box5});
+	lOneEnts.push({type:"Platform", ent:box6});
 
 	
 	var checkpoint = new Checkpoint(gameEngine, 112 * 64, 472 - 128);
 	var light = new Lamp(gameEngine, 64 * 6, 472 - 64 * 6);
 	var light2 = new Lamp(gameEngine, 64 * 15, 472 - 64 * 6);
+	
+	var light3 = new Lamp(gameEngine, 64 * 52, 472 - 64 * 6);
+	var light4 = new Lamp(gameEngine, 64 * 42, 472 - 64 * 6);
+	var light5 = new Lamp(gameEngine, 64 * 32, 472 - 64 * 6);
 	lOneEnts.push({type:"Other", ent:light});
 	lOneEnts.push({type:"Other", ent:light2});
-	var building = new Tile(gameEngine, "./img/building.png", 0, 0, 64 * 10, 472 - (64*7), 192, 1, 192, 448)
-	var building2 = new Tile(gameEngine, "./img/building.png", 0, 0, 64, 472 - (64*4), 64*3, 1, 64 * 3, 64 * 4)
+	lOneEnts.push({type:"Other", ent:light3});
+	lOneEnts.push({type:"Other", ent:light4});
+	lOneEnts.push({type:"Other", ent:light5});
+	var building = new Tile(gameEngine, "./img/building.png", 0, 0, 
+										64 * 10, 472 - (64*7), 64 * 10, 472 - (64*7), 
+										192, 1, 256, 448)
+	var building2 = new Tile(gameEngine, "./img/building.png", 0, 0,
+										64, 472 - (64*4), 64, 472 - (64 * 4), 
+										64*3, 1, 64 * 3, 64 * 4)
+	var building3 = new Tile(gameEngine, "./img/building.png", 0, 0,
+										64 * 61, 472 - (64*5), 64 * 61, 472 - (64 * 5), 
+										64*4, 1, 64 * 4, 64 * 5)
+	var building4 = new Tile(gameEngine, "./img/building.png", 0, 0,
+										64 * 48, 472 - (64*7), 64 * 48, 472 - (64 * 7), 
+										64*3, 1, 64 * 3, 64 * 7)
 	lOneEnts.push({type:"Other", ent:checkpoint});
 	lOneEnts.push({type:"Other", ent:building});
 	lOneEnts.push({type:"Other", ent:building2});
+	lOneEnts.push({type:"Other", ent:building3});
+	lOneEnts.push({type:"Other", ent:building4});
+	
+	
+	
+	var pane = new Tile(gameEngine, "./img/window.png", 0, 0, 
+														64 * 11, 472 - 64 * 5 + 97, 64 * 11, 472 - (64 * 5), 
+														128, 32, 128, 128)
+	var pane2 = new Tile(gameEngine, "./img/window.png", 0, 0, 
+														64 * 62, 472 - 64 * 4 + 97, 64 * 62, 472 - (64 * 4), 
+														128, 32, 128, 128)
+	lOneEnts.push({type:"Platform", ent:pane});
+	lOneEnts.push({type:"Platform", ent:pane2});
 
+	var crane = new Tile(gameEngine, "./img/crane.png", 0, 0,
+						64 * 68, 472 - (64 * 6), 64 * 68, 472 - (64 * 6),
+						512, 32, 512, 384);
+	lOneEnts.push({type:"Platform", ent:crane});
 	lOneEnts.push({type:"Enemy", ent:new EnemyPace(gameEngine, 1152, 1792, 1492, 472-115)})
 	
 	var hearts = new Health(gameEngine);

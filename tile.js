@@ -1,10 +1,11 @@
 
 //~.~.~.~.~.~.~.~.~.~.~.~. code for a generic tile ~.~.~.~.~.~.~.~.~.~.~.~.//
-function Tile(game, img, framex, framey, x, y, width, height, frameW, frameH) {
+function Tile(game, img, framex, framey, x, y, posX, posY, width, height, frameW, frameH) {
 	this.game = game;
 	this.x = x; this.y = y;
 	this.width = width; this.height = height; 
 	this.frameW = frameW; this.frameH = this.frameH;
+	this.posX = posX; this.posY = posY
 	//collision specifics suite
 	this.VERT_COLL_RADIUS = this.height / 8; //how far a tile's hitbox extends out to the left and right
 	this.FLOOR_MAGNET_RADIUS = this.height / 4; //how vertically close the cat has to be to be "standing on" the tile
@@ -72,6 +73,6 @@ Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles d
 
 }
 Tile.prototype.draw = function(ctx) { //i dont understand drawing funcs
-	this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, 1);
+	this.animation.drawFrame(this.game.clockTick, ctx, this.posX - this.game.camera.x, this.posY, 1);
 	Entity.prototype.draw.call(this);
 }
