@@ -7,22 +7,28 @@
 function getLevelOneEnts(gameEngine) {
 	var lOneEnts = [];
 	
-	// TILE PARAMATERS: GAME, ASSET, FRAMEX, FRAMEY, X, Y, POSX, POSY, WIDTH, HEIGHT, FRAMEWIDTH, FRAMEHEIGHT
+	// TILE PARAMATERS: GAME, ASSET, FRAMEX, FRAMEY, X, Y, POSX, POSY, WIDTH, HEIGHT, FRAMEWIDTH, FRAMEHEIGHT,
+	// OBJECT. The object will have two fields, allDir means that it has to push out in all directions (the
+	// cat cannot walk through at all), and bottom which means the cat can or cannot jump above it.
 	
 	// A typical for loop to put lots of platforms at once. This one
 	// places multiple blocks stacked on top of each other.
 	for (var i = -4; i <= 4; i++) {
+		// A tile pushes a cat out in all directions
 		var tile = new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 
 							-128, i * 128, -128, i * 128, 
 							128, 128, 128, 128, {allDir:true, bottom:true})
 		lOneEnts.push({type:"Platform", ent:tile});
 	}
+	
+	// This is saying from block 0 to block 20, place a ground tile
 	for (var i = 0; i < 20; i++) {
 		var platform = new Tile(gameEngine, "./img/ground.png", 0, 0,
 									i * 128, 768 - 128, i * 128, 768 - 128, 
 									128, 128, 128, 128, {allDir:true, bottom:true})
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
+	// From block 20 to 22, add these things. The rest of the for loops are handled similarly.
 	for (var i = 20; i < 22; i++) {
 		var bridge = new Tile(gameEngine, "./img/bridge.png", 0, 0, 
 									i * 128, 640, i * 128, 640,
@@ -115,6 +121,8 @@ function getLevelOneEnts(gameEngine) {
 		lOneEnts.push({type:"Platform", ent:platform})
 	}
 	
+	// The cat can walk through the buildings, so both parameters on the object can be
+	// false.
 	for (var i = 1; i < 3; i++) {
 		var building_blk = new Tile(gameEngine, "./img/building.png", 0, 0,
 									128 * i, 640 - 128, 128 * i, 640 - 128,
@@ -195,6 +203,7 @@ function getLevelOneEnts(gameEngine) {
 		lOneEnts.push({type:"Other", ent:building_blk4});
 	}
 	
+	// Boxes are placed sporadically, so there isn't a convenient way to put them in a for loop
 	var box = new Tile(gameEngine, "./img/box.png", 0, 0,
 										128 * 14, 640 - 128, 128 * 14, 640 - 128,
 										128, 128, 128, 128, {allDir:true, bottom:true});
@@ -261,11 +270,13 @@ function getLevelOneEnts(gameEngine) {
 	lOneEnts.push({type:"Platform", ent:box15});
 	lOneEnts.push({type:"Platform", ent:box16});
 	
+	// The cat can jump above the dump, this parameter helps prevent it from dying like before
 	var dump = new Tile(gameEngine, "./img/dumpster.png", 0, 0, 
 						64 * 15, 640 - 192, 64 * 15, 640 - 192, 
 						384, 60,384, 192, {allDir:true, bottom:false});
 	lOneEnts.push({type:"Platform", ent:dump});
 	
+	// The cat can walk through a vertical crane section
 	for (var i = 1; i < 5; i++) {
 		var craneV = new Tile(gameEngine, "./img/crane_piece_v.png", 0, 0,
 										128 * 39, 128 * i, 128 * 39, 128 * i,
@@ -289,13 +300,14 @@ function getLevelOneEnts(gameEngine) {
 							
 	}
 
+
+	// This part adds the checkpoint to block 42
 	var checkpoint = new Checkpoint(gameEngine, 128 * 42, 640 - 128);
 	lOneEnts.push({type:"Other", ent:checkpoint});
 	
-	
+	// Lamps are placed throughout the stage 
 	var lamp = new Lamp(gameEngine, 128 * 5, 640 - 64 * 6);
 	var lamp2 = new Lamp(gameEngine, 128 * 12, 640 - 64 * 6);
-	
 	lOneEnts.push({type:"Other", ent:new Lamp(gameEngine, 128 * 56, 640 - 128 * 3)})
 	lOneEnts.push({type:"Other", ent:new Lamp(gameEngine, 128 * 63, 640 - 128 * 3)})
 	lOneEnts.push({type:"Other", ent:new Lamp(gameEngine, 128 * 92, 640 - 128 * 3)})
@@ -306,6 +318,7 @@ function getLevelOneEnts(gameEngine) {
 	lOneEnts.push({type:"Other", ent:lamp})
 	lOneEnts.push({type:"Other", ent:lamp2})
 	
+	// Idle dogs and rats are placed throughout the stage
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 11, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 26, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 39, 768 - 128 - 100)})
