@@ -1,6 +1,6 @@
 function ContinueBtn(game, x, y) {
-	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 0, 0, 239, 101, 1, 1, true, false);
-	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 0, 102, 239, 101, 1, 1, true, false);
+	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 0, 0, 359, 152, 1, 1, true, false);
+	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 0, 153, 359, 152, 1, 1, true, false);
 	this.hover = false;
 	Entity.call(this, game, x, y);
 }
@@ -25,8 +25,8 @@ ContinueBtn.prototype.draw = function(ctx) {
 }
 
 function EndBtn(game, x, y) {
-	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 241, 0, 239, 101, 1, 1, true, false);
-	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 241, 102, 239, 101, 1, 1, true, false);
+	this.animation = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 361, 0, 359, 152, 1, 1, true, false);
+	this.hoverAnim = new Animation(ASSET_MANAGER.getAsset("./img/game_end_btn.png"), 361, 153, 359, 152, 1, 1, true, false);
 	this.hover = false;
 	Entity.call(this, game, x, y);
 }

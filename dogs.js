@@ -43,6 +43,7 @@ function EnemyIdle(game, x, y) {
 	this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 460, 500, 153, 115, 0.6, 3, true, false);
 //	this.idleRevL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 345, 500, 153, 115, 0.8, 3, false, true);
 //	this.rev = false;
+	this.boundingbox = new BoundingBox(x - 5, y + 10, this.idleL.frameWidth - 64, this.idleL.frameHeight, "Black");
 	this.l = true;
 	this.r = false;
 	this.color = "Gold"
@@ -81,7 +82,9 @@ EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
 	return;
 }
 EnemyIdle.prototype.draw = function (ctx) {
-	ctx.fillStyle = this.color;
+	ctx.strokeStyle = this.color;
+	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	
 	if (this.l) {
 		this.idleL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	} else {

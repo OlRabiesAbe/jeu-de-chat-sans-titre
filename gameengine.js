@@ -71,9 +71,10 @@ GameEngine.prototype.startInput = function () {
     var that = this;
 	this.ctx.canvas.addEventListener("mousemove", function (e) {
 		//console.log(e.clientX + " " + e.clientY);
-		that.stBtnHover = e.clientX < 559 || e.clientX > 791 || e.clientY < 54 || e.clientY > 155 ? false : true;
-		that.contBtnHover = e.clientX < 157 || e.clientX > 390 || e.clientY < 359 || e.clientY > 461 ? false : true;
-		that.endBtnHover = e.clientX < 421 || e.clientX > 660 || e.clientY < 359 || e.clientY > 461 ? false : true;
+		that.stBtnHover = e.clientX < 894 || e.clientX > 1240 || e.clientY < 65 || e.clientY > 203 ? false : true;
+		that.contBtnHover = e.clientX < 284 || e.clientX > 631 || e.clientY < 427 || e.clientY > 566 ? false : true;
+		that.endBtnHover = e.clientX < 645 || e.clientX > 1021 || e.clientY < 427 || e.clientY > 566 ? false : true;
+		that.winBtnHover = e.clientX < 894 || e.clientX > 1240 || e.clientY < 65 || e.clientY > 203 ? false : true;
 	
 	}, false);
     this.ctx.canvas.addEventListener("keydown", function (e) {	
@@ -117,6 +118,9 @@ GameEngine.prototype.addEnemy= function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
+	if(this.sceneManager.currentSceneKey === LEVEL_ONE_SCENE) {
+		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv1_background.png"), 0, 0);
+	}
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);
     }
@@ -125,10 +129,10 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
 	//console.log(this.platforms);
-	console.log(Math.floor(this.cat.x / 64));
+	console.log(Math.floor(this.cat.x / 128));
 	if (this.sceneManager.getScene() === STATUS_SCENE) {
 		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
-		console.log(this.sceneManager.scenes[STATUS_SCENE].timer);
+		//console.log(this.sceneManager.scenes[STATUS_SCENE].timer);
 		if (this.sceneManager.scenes[STATUS_SCENE].timer >= 3.5) {
 			this.sceneManager.setScene(this.sceneManager.scenes[CURRENT_LEVEL]);
 			this.sceneManager.scenes[STATUS_SCENE].timer = 0;

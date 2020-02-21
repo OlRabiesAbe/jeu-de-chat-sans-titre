@@ -152,6 +152,18 @@ ASSET_MANAGER.queueDownload("./img/start_btn.png");
 ASSET_MANAGER.queueDownload("./img/title.png");
 ASSET_MANAGER.queueDownload("./img/water.png");
 ASSET_MANAGER.queueDownload("./img/window.png");
+ASSET_MANAGER.queueDownload("./img/ground.png");
+ASSET_MANAGER.queueDownload("./img/crane_piece_h.png");
+ASSET_MANAGER.queueDownload("./img/crane_piece_v.png");
+ASSET_MANAGER.queueDownload("./img/victory_text.png");
+ASSET_MANAGER.queueDownload("./img/trophy.png");
+ASSET_MANAGER.queueDownload("./img/win_btn.png");
+ASSET_MANAGER.queueDownload("./img/fence.png");
+ASSET_MANAGER.queueDownload("./img/rat.png");
+ASSET_MANAGER.queueDownload("./img/lv1_background.png");
+ASSET_MANAGER.queueDownload("./music/level_1.wav");
+ASSET_MANAGER.queueDownload("./music/level_2.wav");
+ASSET_MANAGER.queueDownload("./music/level_3_and_pound.wav");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -203,219 +215,42 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.addEntity(bullet);*/
 	
 	// Title scren entities
-	var title = new Title(gameEngine, "./img/title.png", 350, 200, 0, 0);
-	var icon = new Title(gameEngine, "./img/cat_logo.png", 450, 527, 150, 175);
-	var startBtn = new StartBtn(gameEngine, 550, 50);
+	var title = new Title(gameEngine, "./img/title.png", 525, 300, -10, 0);
+	var icon = new Title(gameEngine, "./img/cat_logo.png", 563, 494, 400, 200);
+	var startBtn = new StartBtn(gameEngine, 1280 - 400, 50);
 
 	// Declaring all entities for a title screen
 	var titleScene = new Scene(gameEngine,
 		[{type:"Other", ent:title}, {type:"Other", ent:icon},{type:"Other", ent:startBtn}]);
 
 	// STATUS SCREEN ENTITIES
-	var lives = new Lives(gameEngine, 453, 275);
-	var livesIcon = new Title(gameEngine, "./img/lives_icon.png", 144, 104, 303, 248);
-	var levelIcon = new Level(gameEngine, 303, 178);
+	var lives = new Lives(gameEngine, 1280 / 2 + 130, 320);
+	var livesIcon = new Title(gameEngine, "./img/lives_icon.png", 432, 312, 1280 / 2 - 432 / 2 - 90, 248);
+	var levelIcon = new Level(gameEngine, 1280 / 2 - 531 / 2 - 20, 50);
 	//console.log(gameEngine.sceneManager)
 	var statusScreen = new Scene(gameEngine, [{type:"Other", ent:lives}, {type:"Other", ent:livesIcon}, {type:"Other", ent:levelIcon}]);
 		
 	// GAME OVER SCREEN ENTITIES 
-	var gameover = new Title(gameEngine, "./img/game_over.png", 647, 112, 76, 234);
-	var continueBtn = new ContinueBtn(gameEngine, 148, 355);
-	var endBtn = new EndBtn(gameEngine, 412, 355);
+	var gameover = new Title(gameEngine, "./img/game_over.png", 971, 168, 1280 / 2 - 971 / 2, 234);
+	var continueBtn = new ContinueBtn(gameEngine, 1280 / 2 - 370, 234 + 168 + 10);
+	var endBtn = new EndBtn(gameEngine, 1280 / 2 + 20, 234 + 168 + 10);
 	var gameOverScreen = new Scene(gameEngine, [{type:"Other", ent:gameover}, {type:"Other", ent:continueBtn}, {type:"Other", ent:endBtn}]);
 
-	var lOneEnts = [];
+	// VICTORY SCREEN ENTITIES
+	var winner = new Title(gameEngine, "./img/victory_text.png", 764, 366, 1280 / 2 - 350, 768 / 2 - 75)
+	var trophy = new Title(gameEngine, "./img/trophy.png", 438, 416, 0, 0)
+	var winBtn = new WinBtn(gameEngine, 1280 - 400, 50);
 	
-	// TILE PARAMATERS: GAME, ASSET, FRAMEX, FRAMEY, X, Y, POSX, POSY, WIDTH, HEIGHT, FRAMEWIDTH, FRAMEHEIGHT
-	for (var i = -4; i <= 4; i++) {
-		var tile = new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 
-							-128, i * 128, -128, i * 128, 
-							128, 128, 128, 128)
-		lOneEnts.push({type:"Platform", ent:tile});
-	}
-	for (var i = 0; i < 56; i++) {
-		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
-									i * 64, 472, i * 64, 472, 
-									64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
-									i * 64, 536, i * 64, 536, 
-									64, 64, 64, 64)
-		lOneEnts.push({type:"Platform", ent:platform})
-		lOneEnts.push({type:"Platform", ent:platform2});
-	}
-	for (var i = 56; i < 60; i++) {
-		var bridge = new Tile(gameEngine, "./img/bridge.png", 0, 0, 
-									i * 64, 472, i * 64, 472,
-									64, 32, 64, 32);
-		var water = new Platform(gameEngine, i * 64, 536, 64, 64, "Red");
-		lOneEnts.push({type:"Platform", ent:bridge});
-		lOneEnts.push({type:"Platform", ent:water});
-	}
-		for (var i = 60; i < 67; i++) {
-		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
-									i * 64, 472, i * 64, 472,
-									64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
-									i * 64, 536, i * 64, 536,
-									64, 64, 64, 64)
-		lOneEnts.push({type:"Platform", ent:platform})
-		lOneEnts.push({type:"Platform", ent:platform2});
-	}
-	for (var i = 67; i < 71; i++) {
-		var platform = new Platform(gameEngine, i * 64, 536, 64, 64, "Red"); 
-		lOneEnts.push({type:"Platform", ent:platform})
-	}
-	for (var i = 71; i < 86; i++) {
-		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
-									i * 64, 472, i * 64, 472,
-									64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
-									i * 64, 536, i * 64, 536,
-									64, 64, 64, 64)
-		lOneEnts.push({type:"Platform", ent:platform})
-		lOneEnts.push({type:"Platform", ent:platform2});
-	}
-	for (var i = 86; i < 90; i++) {
-		var platform = new Platform(gameEngine, i * 64, 536, 64, 64, "Red"); 
-		lOneEnts.push({type:"Platform", ent:platform})
-	}
-	for (var i = 90; i < 154; i++) {
-		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
-									i * 64, 472, i * 64, 472,
-									64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
-									i * 64, 536, i * 64, 536,
-									64, 64, 64, 64)
-		lOneEnts.push({type:"Platform", ent:platform})
-		lOneEnts.push({type:"Platform", ent:platform2});
-	}
-	for (var i = 154; i < 158; i++) {
-		var platform = new Platform(gameEngine, i * 64, 536, 64, 64, "Red"); 
-		lOneEnts.push({type:"Platform", ent:platform})
-	}
-	for (var i = 158; i < 224; i++) {
-		var platform = new Tile(gameEngine, "./img/sidewalk.png", 0, 0,
-									i * 64, 472, i * 64, 472,
-									64, 64, 64, 64)
-		var platform2 = new Tile(gameEngine, "./img/road.png", 0, 0, 
-									i * 64, 536, i * 64, 536,
-									64, 64, 64, 64)
-		lOneEnts.push({type:"Platform", ent:platform})
-		lOneEnts.push({type:"Platform", ent:platform2});
-	}
-	var dump = new Tile(gameEngine, "./img/dumpster.png", 0, 0, 
-						64 * 18, 472 - 192, 64 * 18, 472 - 192, 
-						384, 60,384, 192);
-	lOneEnts.push({type:"Platform", ent:dump});
-	var box = new Tile(gameEngine, "./img/box.png", 0, 0,
-										64 * 28, 472 - 128, 64 * 28, 472 - 128,
-										128, 128, 128, 128);
-	var box2 = new Tile(gameEngine, "./img/box.png", 0, 0,
-										64 * 38, 472 - 128, 64 * 38, 472 - 128,
-										128, 128, 128, 128);
-	var box3 = new Tile(gameEngine, "./img/box.png", 0, 0, 
-										64 * 45, 472 - 128, 64 * 45, 472 - 128, 
-										128, 128, 128, 128);
-	var box4 = new Tile(gameEngine, "./img/box.png", 0, 0,
-										64 * 45, 472 - 256, 64 * 45, 472 - 256,
-										128, 128, 128, 128);
-	var box5 = new Tile(gameEngine, "./img/box.png", 0, 0, 
-										64 * 152, 472 - 128, 64 * 152, 472 - 128,
-										128, 128, 128, 128);
-	var box6 = new Tile(gameEngine, "./img/box.png", 0, 0, 
-										64 * 158, 472 - 128, 64 * 158, 472 - 128, 
-										128, 128, 128, 128);
-	lOneEnts.push({type:"Platform", ent:box});
-	lOneEnts.push({type:"Platform", ent:box2});
-	lOneEnts.push({type:"Platform", ent:box3});
-	lOneEnts.push({type:"Platform", ent:box4});
-	lOneEnts.push({type:"Platform", ent:box5});
-	lOneEnts.push({type:"Platform", ent:box6});
-
-	var bird = new Bird(gameEngine, 64 * 40, 472 - (64 * 6), "Fly");
-	lOneEnts.push({type:"Enemy", ent:bird});
+	var winScreen = new Scene(gameEngine, [{type:"Other", ent:winner}, {type:"Other", ent:trophy}, {type:"Other", ent:winBtn}]);
 	
-	var cowboy = new Range(gameEngine, 64 * 200, 472 - 64 * 2, "Attack");
-	lOneEnts.push({type:"Enemy", ent:cowboy});
-	var checkpoint = new Checkpoint(gameEngine, 112 * 64, 472 - 128);
-	var light = new Lamp(gameEngine, 64 * 6, 472 - 64 * 6);
-	var light2 = new Lamp(gameEngine, 64 * 15, 472 - 64 * 6);
+	var levelOne = new Scene(gameEngine, getLevelOneEnts(gameEngine));
 	
-	var light3 = new Lamp(gameEngine, 64 * 52, 472 - 64 * 6);
-	var light4 = new Lamp(gameEngine, 64 * 42, 472 - 64 * 6);
-	var light5 = new Lamp(gameEngine, 64 * 32, 472 - 64 * 6);
-	lOneEnts.push({type:"Other", ent:light});
-	lOneEnts.push({type:"Other", ent:light2});
-	lOneEnts.push({type:"Other", ent:light3});
-	lOneEnts.push({type:"Other", ent:light4});
-	lOneEnts.push({type:"Other", ent:light5});
-	var building = new Tile(gameEngine, "./img/building.png", 0, 0, 
-										64 * 10, 472 - (64*7), 64 * 10, 472 - (64*7), 
-										192, 1, 256, 448)
-	var building2 = new Tile(gameEngine, "./img/building.png", 0, 0,
-										64, 472 - (64*4), 64, 472 - (64 * 4), 
-										64*3, 1, 64 * 3, 64 * 4)
-	var building3 = new Tile(gameEngine, "./img/building.png", 0, 0,
-										64 * 61, 472 - (64*5), 64 * 61, 472 - (64 * 5), 
-										64*4, 1, 64 * 4, 64 * 5)
-	var building4 = new Tile(gameEngine, "./img/building.png", 0, 0,
-										64 * 48, 472 - (64*7), 64 * 48, 472 - (64 * 7), 
-										64*3, 1, 64 * 3, 64 * 7)
-	lOneEnts.push({type:"Other", ent:checkpoint});
-	lOneEnts.push({type:"Other", ent:building});
-	lOneEnts.push({type:"Other", ent:building2});
-	lOneEnts.push({type:"Other", ent:building3});
-	lOneEnts.push({type:"Other", ent:building4});
-	
-	
-	
-	var pane = new Tile(gameEngine, "./img/window.png", 0, 0, 
-														64 * 11, 472 - 64 * 5 + 97, 64 * 11, 472 - (64 * 5), 
-														128, 32, 128, 128)
-	var pane2 = new Tile(gameEngine, "./img/window.png", 0, 0, 
-														64 * 62, 472 - 64 * 4 + 97, 64 * 62, 472 - (64 * 4), 
-														128, 32, 128, 128)
-	lOneEnts.push({type:"Platform", ent:pane});
-	lOneEnts.push({type:"Platform", ent:pane2});
-
-	var crane = new Tile(gameEngine, "./img/crane.png", 0, 0,
-						64 * 68, 472 - (64 * 6), 64 * 68, 472 - (64 * 6),
-						512, 32, 512, 384);
-	lOneEnts.push({type:"Platform", ent:crane});
-	lOneEnts.push({type:"Enemy", ent:new EnemyPace(gameEngine, 1152, 1792, 1492, 472-115)})
-	
-	var hearts = new Health(gameEngine);
-	lOneEnts.push({type:"Other", ent:hearts});
-	lOneEnts.push({type:"Other", ent:gameEngine.cat});
-	
-	//lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 1472, 472-95)})
-	//lOneEnts.push({type:"Platform", ent:new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 128, 128, 128, 128)});
-	var levelOne = new Scene(gameEngine, lOneEnts);
-	
-	var winScreen = new Scene(gameEngine, []);
 	gameEngine.sceneManager.addScene(titleScene);
 	gameEngine.sceneManager.addScene(levelOne);
 	gameEngine.sceneManager.addScene(statusScreen);
 	gameEngine.sceneManager.addScene(gameOverScreen);
 	gameEngine.sceneManager.addScene(winScreen);
-	/*gameEngine.addEntity(gameEngine.cat);
-	gameEngine.addEntity(gameEngine.camera);
-	
-	
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 2, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 3, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 0, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 1, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 2, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 3, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 4, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 5, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 6, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 7, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 8, 4, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 6, 1, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 7, 1, 128, 128));
-	gameEngine.addPlatform(new Tile(gameEngine, "./img/placeholder_tile.png", 0, 0, 8, 1, 128, 128));*/
+
 	//console.log(gameEngine.entities);
 	gameEngine.sceneManager.setScene(gameEngine.sceneManager.scenes[TITLE_SCENE]);
 	//console.log(gameEngine.platforms);
