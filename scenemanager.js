@@ -14,7 +14,13 @@ function SceneManager(game) {
 	this.currentSceneKey = null;
 	this.sceneIdx = 0;
 	this.transitionTime = 0;
+	this.sounds = new SoundManager();
 	this.scenes = [];
+	// The Scene Manager will  handle the music
+	this.songs = [];
+	this.songs[1] = new Audio("./music/level_1.wav");
+	//this.songs[1] = new Audio("./music/level_2.wav");
+	//this.songs[1] = new Audio("./music/level_3_and_pound.wav");
 }
 
 SceneManager.prototype.constructor = SceneManager;
@@ -31,12 +37,15 @@ SceneManager.prototype.addScene = function(scene) {
  */
 SceneManager.prototype.setScene = function(otherScene) {
 	// Removes all entities from the current scene
+	if (this.songs[this.currentSceneKey] !== undefined) {
+		this.songs[this.currentSceneKey].pause();
+	}
 	for (var g = 0; g < this.game.entities.length; g++) {
 		if (this.game.entities[g] != this.game.camera &&
 			this.game.entities[g] != this.game.sceneManager) {
 			this.game.entities[g].removeFromWorld = true;
 			if (this.game.entities[g].name !== undefined && this.game.entities[g].name === "Checkpoint" 
-						&& otherScene.idx === GAME_OVER_SCENE) {
+						&& (otherScene.idx === GAME_OVER_SCENE || otherScene.idx === WIN_SCREEN)) {
 				this.game.entities[g].on = false;
 			}
 			if (this.game.entities[g].spawn !== undefined) {
@@ -61,6 +70,12 @@ SceneManager.prototype.setScene = function(otherScene) {
 	// This keeps track of the index and current scene
 	this.currentScene = otherScene;
 	this.currentSceneKey = otherScene.idx;
+	if (this.songs[this.currentSceneKey] !== undefined) {
+		this.songs[this.currentSceneKey].currentTime = 0;
+		this.songs[this.currentSceneKey].play();
+		this.songs[this.currentSceneKey].loop = true;
+	}
+	//this.sounds.songs[this.currentSceneKey].play();
 }
 
 SceneManager.prototype.getScene = function() {
@@ -76,3 +91,13 @@ function Scene(game, ents) {
 	this.entities = ents;
 	
 }
+
+function SoundManager() {
+	this.songs = [new Audio("./music/level_1.wav"),
+	new Audio("./music/level_1.wav"),
+	new Audio("./music/level_1.wav"),
+	new Audio("./music/level_1.wav")];
+	this.loop = true;
+	this.volume = true;
+}
+

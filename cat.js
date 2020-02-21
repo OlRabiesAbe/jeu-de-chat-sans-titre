@@ -1,5 +1,5 @@
 LIVES = 2;
-HEALTH = 9;
+HEALTH = 3;
 function Cat(game) {
 	//					Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
 	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 257, 128, 128, 0.03, 1, true, false);
@@ -47,7 +47,7 @@ function Cat(game) {
 	this.MAX_VDECCEL = -16; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
-	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
+	this.boundingbox = new BoundingBox(this.x, this.y, 128, 128, "Purple");
 	
 	Entity.call(this, game, 64, 64);
 }
@@ -66,10 +66,12 @@ Cat.prototype.collideDeath = function (other) {
     		
 };
 Cat.prototype.collideEnemy = function (other) {
-    var a = this.x < other.x + other.length
-			&& this.x + this.attackRange > other.x ;
-	//console.log(a)
-	return a;
+	var a = this.boundingbox.left > other.boundingbox.right
+			|| this.boundingbox.right < other.boundingbox.left
+			|| this.boundingbox.top > other.boundingbox.bottom
+			|| this.boundingbox.bottom < other.boundingbox.top
+	//console.log(a);
+	return !a;
 	
 };
 Cat.prototype.collidePlatform = function (other) {
@@ -109,7 +111,11 @@ Cat.prototype.collisionHelper = function(ctx) {
 		if (!this.game.enemies[i].removeFromWorld) {
 			if (this.collideEnemy(this.game.enemies[i]) && this.attacking) {
 					this.game.enemies[i].removeFromWorld = true;
-			} if (this.collideEnemy(this.game.enemies[i]) && !this.attacking && !this.invinc) {
+					if (this.game.enemies[i].name === "Rat") {
+						HEALTH = Math.min(9, HEALTH + 1);
+					}
+			} if (this.collideEnemy(this.game.enemies[i]) && !this.attacking && !this.invinc
+					&& (this.game.enemies[i].name !== "Rat")) {
 				HEALTH--;
 				this.invinc = true;
 				break;
@@ -129,7 +135,7 @@ Cat.prototype.update = function() {
 	if (this.invinc) {
 		this.invincTimer += 0.05;
 		this.invincTick = !this.invincTick;
-		if (this.invincTimer >= 3) {
+		if (this.invincTimer >= 4) {
 			this.invinc = false;
 			this.invincTimer = 0;
 			this.invincTick = false;
@@ -177,7 +183,7 @@ Cat.prototype.update = function() {
 	if (0 < this.x + this.hspeed < MAP_SIZE) {
 		this.x += this.hspeed;
 	}
-	
+	this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
 	//~.~.~.~.~.~.~.~.~.~.~.~.~.~. code for momentuous jumping ~.~.~.~.~.~.~.~.~.~.~.//
 	//if ur on the ground your not falling, and the inverse of that
 	if(this.y == this.ground) this.vspeed = 0;
@@ -193,24 +199,23 @@ Cat.prototype.update = function() {
 	
 	
 	if (this.ducking) {
-		this.boundingbox = new BoundingBox(this.x, this.y + 75, this.duckAnim.frameWidth - 6, this.duckAnim.frameHeight);
+		//this.boundingbox = new BoundingBox(this.x, this.y + 75, this.duckAnim.frameWidth - 6, this.duckAnim.frameHeight);
 	}
 	if (!this.running && !this.jumping && !this.attacking && !this.ducking) {
 		if (this.right) {
-			this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralR.frameWidth , this.neutralR.frameHeight);
+			this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
 		}
 		else {
-			this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralL.frameWidth, this.neutralL.frameHeight);
+			this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
 		}
 	}
-	
 	this.collisionHelper();
-	if (this.y > 800 || HEALTH === 0) {
+	if (this.y > 768 || HEALTH === 0) {
 		this.removeFromWorld = true;
-		this.y = 50;
+		this.y = 64;
 		this.falling = false;
 		LIVES--;
-		HEALTH = 9;
+		HEALTH = 3;
 		this.invinc = false;
 		if (LIVES >= 0) {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
@@ -218,19 +223,21 @@ Cat.prototype.update = function() {
 		} else {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[GAME_OVER_SCENE]);
 			LIVES = 2;
-			this.game.cat.x = 0;
+			this.game.cat.x = 64;
 			this.game.cat.spawn = 0;
 		}
 	}
 	if (this.x >= MAP_SIZE - 64) {
-		this.game.sceneManager.setScene(this.game.sceneManager.scenes[WIN_SCREEN]);
-		alert("YOU'RE WINNER")
+		this.game.sceneManager.setScene(this.game.sceneManager.scenes[WIN_SCREEN])
+		LIVES = 2
+		this.x = 64;
+		this.spawn= 0;
 	}
 	Entity.prototype.update.call(this);
 }
 
 Cat.prototype.draw = function(ctx) {
-	console.log(this.invincTimer);
+	//console.log(this.invincTimer);
 	if (!this.invincTick) {
 	//console.log(this.boundingbox.color);
 	if(this.boxes){

@@ -18,12 +18,13 @@ function Bird(game, x, y, type) {
 	this.start = x
 	this.x = x;
 	this.y = y - 150;
+	this.spawn = x;
 	this.type = type
 	this.count = 0;  	//To determine how long the bird will go in an attack dive
 	this.count2 = 0;	//To determine how long the bird will retreat upwards
 	this.leftCheck = true;	//To determine when to go left or right.
 	this.rightCheck = false
-	this.boundingbox = new BoundingBox(this.x - 150, this.y, 300, 100, "Purple"); //For testing detection
+	//this.boundingbox = new BoundingBox(this.x - 150, this.y, 64 * 5, 64 * 2, "Purple"); //For testing detection
 	this.lastX = this.x	
 	this.lastY = this.y
 	this.leftAttack = false;	
@@ -38,22 +39,22 @@ Bird.prototype.constructor = Bird;
 Bird.prototype.update= function() {
 	this.lastX = this.x
 	this.lastY = this.y
-	this.boundingbox = new BoundingBox(this.x - 150, this.y, 300, 500, "Purple");
+	//this.boundingbox = new BoundingBox(this.x - 150, this.y, 64 * 3, 64, "Purple");
 	/**
 	 * This will detect when it should switch from the default passive mode to attack mode.
 	 * Fly mode will have the bird fly back and forth from one fixed position to another.
 	 * Attack mode will be permenant when the bird detects the cat and attacks it.
 	 */
-	if (this.game.cat.x >= this.x - 100 && this.game.cat.x <= this.x + 100) {
+	if (this.game.cat.x >= this.x - 64 && this.game.cat.x <= this.x + 64) {
 		
-		this.boundingbox.color = "Red"
+		//this.boundingbox.color = "Red"
 		this.type = "Attack"
 		
 	} 
 	var cat = this.game.cat
 	if(this.count === 0){	//This will determine where the cat is located at and attack at that position.
-		this.tx = cat.x +50
-		this.ty = cat.y +50
+		this.tx = cat.x +64
+		this.ty = cat.y +64
 		var dx = this.tx - this.x;
 	    var dy = this.ty - this.y;
 	    this.vx = dx
@@ -170,8 +171,8 @@ Bird.prototype.draw = function (ctx) {
 		this.reverseAttack.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
 	}
 	
-	ctx.strokeStyle = this.boundingbox.color;
-    ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	//ctx.strokeStyle = this.boundingbox.color;
+   // ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
     Entity.prototype.draw.call(this);
 }
 
@@ -220,6 +221,7 @@ function Range(game, x, y, type) {
 	this.type = type
 	this.length = 50;
 	this.height = 100
+	this.spawn = x;
 	this.start = x
 	this.x = x;
 	this.y = y;
@@ -379,3 +381,5 @@ function distance(a, bx, by) {
     var dy = a.y - by;
     return Math.sqrt(dx * dx + dy * dy);
 }
+
+
