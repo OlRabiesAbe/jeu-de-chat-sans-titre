@@ -16,6 +16,11 @@ function Cat(game) {
 	this.runLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 129, 128, 128, 0.1, 6, true, true);
 	this.duckAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 0, 128, 128, 0.03, 8, true, false);
 	
+	this.ax = 0		//X-Coordinate of the cat hit box
+	this.ay = 0		//Y-Coordinate of the cat hit box
+	this.alength = 50	//Default length and height of the cat hit box, is modified in update.
+	this.aheight = 60
+	
     this.falling = false;
 	this.x = 0;
 	this.height = 128;
@@ -57,6 +62,8 @@ function Cat(game) {
 
 Cat.prototype = new Entity();
 Cat.prototype.constructor = Cat;
+
+
 function distance(a, b) {
     var dx = a.x - b.x;
     var dy = a.y - b.y;
@@ -220,6 +227,7 @@ Cat.prototype.update = function() {
 		LIVES--;
 		HEALTH = 3;
 		this.invinc = false;
+		this.invincTick = false;
 		if (LIVES >= 0) {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 			this.game.cat.x = this.game.cat.spawn;
@@ -240,7 +248,7 @@ Cat.prototype.update = function() {
 }
 
 Cat.prototype.draw = function(ctx) {
-	console.log(this.invincTimer);
+	//console.log(this.invincTimer);
 	if (!this.invincTick) {
 		//console.log(this.boundingbox.color);
 		if(this.boxes){
