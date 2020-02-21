@@ -55,7 +55,7 @@ function Cat(game) {
 	this.MAX_VDECCEL = -16; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
-	this.boundingbox = new BoundingBox(this.x, this.y, 128, 128, "Purple");
+	this.boundingbox = new BoundingBox(this.x, this.y - 128, 128, 128, "Purple");
 	
 	Entity.call(this, game, 64, 64);
 }
@@ -193,7 +193,7 @@ Cat.prototype.update = function() {
 	if (0 < this.x + this.hspeed < MAP_SIZE) {
 		this.x += this.hspeed;
 	}
-	this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
+	this.boundingbox = new BoundingBox(this.x, this.y - 128, 128, 128);
 	//~.~.~.~.~.~.~.~.~.~.~.~.~.~. code for momentuous jumping ~.~.~.~.~.~.~.~.~.~.~.//
 	//if ur on the ground your not falling, and the inverse of that
 	if(this.y == this.ground) this.vspeed = 0;
@@ -211,14 +211,15 @@ Cat.prototype.update = function() {
 	//if (this.ducking) {
 		//this.boundingbox = new BoundingBox(this.x, this.y + 75, this.duckAnim.frameWidth - 6, this.duckAnim.frameHeight);
 	//}
-	if (!this.running && !this.jumping && !this.attacking && !this.ducking) {
+	/*if (!this.running && !this.jumping && !this.attacking && !this.ducking) {
 		if (this.right) {
-			this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
+			this.boundingbox = new BoundingBox(this.x + 25, this.y - 64, 64, 64);
 		}
 		else {
-			this.boundingbox = new BoundingBox(this.x, this.y, 128, 128);
+			this.boundingbox = new BoundingBox(this.x + 25, this.y - 64, 64, 64);
 		}
 	}
+	*/
 	this.collisionHelper();
 	if (this.y > 768 || HEALTH === 0) {
 		this.removeFromWorld = true;
@@ -256,6 +257,8 @@ Cat.prototype.draw = function(ctx) {
 		//ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
 		ctx.strokeStyle = this.boundingbox.color;
 		ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
+		ctx.strokeStyle = "Blue"
+		ctx.strokeRect(this.boundingbox.left - this.game.camera.x, this.boundingbox.top, this.boundingbox.width, this.boundingbox.height);
 		}
 
 		if (this.attacking) {
