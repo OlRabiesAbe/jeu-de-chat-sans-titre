@@ -1,3 +1,10 @@
+/**
+ * UPDATE 2/21/20
+ * @param game
+ * @param x
+ * @param y
+ * @returns
+ */
 function Enemy(game, x, y) {
 	this.left = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 250, 153, 115, 0.1, 4, true, false);
 	this.right = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 0, 153, 115, 0.1, 6, true, false);
@@ -85,13 +92,23 @@ EnemyIdle.prototype.update= function() {
 		this.hy = this.y +10
 		this.Hlength = 110
 		this.Hheight = 100
+		
+		this.length = 100	//Determines length of the attack box.
+		this.height = 90	//Determines height of the attack box.
+		this.ax = this.x + 25;	//Determines x coordinate of the attack box
+		this.ay = this.y + 10	//Determines y coodinate of the attack box.
 	} else {
 		this.hx = this.x + 30
 		this.hy = this.y + 10
 		this.Hlength = 110
 		this.Hheight = 100
+		
+		this.length = 90	//Determines length of the attack box.
+		this.height = 100	//Determines height of the attack box.
+		this.ax = this.x + 25;	//Determines x coordinate of the attack box
+		this.ay = this.y + 10	//Determines y coodinate of the attack box.
 	}
-	this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight, "Orange");
+	this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Orange");
 
 }
 EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
@@ -112,8 +129,8 @@ EnemyIdle.prototype.draw = function (ctx) {
 	} else {
 		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	}
-	//ctx.strokeStyle = this.boundingbox.color;
-	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	ctx.strokeStyle = this.boundingbox.color;
+	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
     Entity.prototype.draw.call(this);
 }
 
