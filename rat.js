@@ -5,6 +5,12 @@ function Rat(game, x, y) {
 	this.xMax = x + 64 * 2;
 	this.l = false;
 	this.name = "Rat";
+	
+	this.hx = x
+	this.hy = y + 30
+	this.Hlength = this.animationL.frameWidth
+	this.Hheight = this.animationL.frameHeight - 30
+	
 	this.boundingbox = new BoundingBox(x, y + 30, this.animationL.frameWidth, this.animationL.frameHeight - 30, "Black")
 	Entity.call(this, game, x, y);
 }

@@ -43,7 +43,6 @@ function EnemyIdle(game, x, y) {
 	this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 460, 500, 153, 115, 0.6, 3, true, false);
 //	this.idleRevL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 345, 500, 153, 115, 0.8, 3, false, true);
 //	this.rev = false;
-	this.boundingbox = new BoundingBox(x - 5, y + 10, this.idleL.frameWidth - 64, this.idleL.frameHeight, "Black");
 	this.l = true;
 	this.r = false;
 	this.color = "Gold"
@@ -54,6 +53,18 @@ function EnemyIdle(game, x, y) {
 	this.spawn = x;
 	this.y = y;
 	this.count = 0;
+	
+	this.length = 75	//Determines length of the attack box.
+	this.height = 60	//Determines height of the attack box.
+	this.ax = this.x;	//Determines x coordinate of the attack box
+	this.ay = this.y	//Determines y coodinate of the attack box.
+	
+	this.hx = x
+	this.hy = y
+	this.Hlength = 50
+	this.Hheight = 50
+	
+	
 	this.leftCheck = true;
 	this.rightCheck = false
 	Entity.call(this, game, x - 50, y)
@@ -69,6 +80,19 @@ EnemyIdle.prototype.update= function() {
 		this.l = false;
 		this.r = true;
 	}
+	if(this.l){
+		this.hx = this.x + 12
+		this.hy = this.y +10
+		this.Hlength = 110
+		this.Hheight = 100
+	} else {
+		this.hx = this.x + 30
+		this.hy = this.y + 10
+		this.Hlength = 110
+		this.Hheight = 100
+	}
+	this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight, "Orange");
+
 }
 EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
 	if (idleAnim.isDone()) {
@@ -82,15 +106,14 @@ EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
 	return;
 }
 EnemyIdle.prototype.draw = function (ctx) {
-	ctx.strokeStyle = this.color;
-	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
-	
+	ctx.fillStyle = this.color;
 	if (this.l) {
 		this.idleL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	} else {
 		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	}
-    //ctx.fillRect(this.x,this.y,this.length,this.height);
+	ctx.strokeStyle = this.boundingbox.color;
+	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
     Entity.prototype.draw.call(this);
 }
 
@@ -98,7 +121,7 @@ EnemyIdle.prototype.draw = function (ctx) {
  * This function handles the AI implementation of the dogs.
  * 
  */
-function EnemyPace(game, minX, maxX, x, y) {
+function EnemyPace(game, x, y) {
 	this.paceL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"),0, 250, 152, 115, 0.1, 4, true, false);
 	this.pace = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 145, 0, 152, 115, 0.1, 5, true, false);
 	this.attackR = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"),610, 247, 152, 115, 0.1, 4, false, false);
@@ -109,10 +132,19 @@ function EnemyPace(game, minX, maxX, x, y) {
 	this.attack = false
 	this.y = y
 	this.x = x
-	this.minX = minX;	//To determine how far it can walk before it must turn around when pacing.
-	this.maxX = maxX;
-	this.length = 50;
-	this.height = 100
+	this.minX = x - 200;	//To determine how far it can walk before it must turn around when pacing.
+	this.maxX = x + 200;
+	this.spawn = x
+	this.length = 75	//Determines length of the attack box.
+	this.height = 60	//Determines height of the attack box.
+	this.ax = this.x;	//Determines x coordinate of the attack box
+	this.ay = this.y	//Determines y coodinate of the attack box.
+	
+	this.hx = x
+	this.hy = y
+	this.Hlength = 50
+	this.Hheight = 50
+	
 	this.type = "pace"
 	Entity.call(this, game, this.x, y)
 }
@@ -120,7 +152,9 @@ EnemyPace.prototype = new Entity();
 EnemyPace.prototype.constructor = EnemyIdle;
 
 EnemyPace.prototype.update= function() {
-	this.boundingbox = new BoundingBox(this.x - 400, this.game.cat.y + 50, 800, 100, "Green");
+	
+	
+
 	/**
 	 * Pace mode which has the dog walk back and forth in a gaurding pace.
 	 */
@@ -154,13 +188,12 @@ EnemyPace.prototype.update= function() {
 	 * Attack mode which has the dog walk all the way to the player and have it attack it.
 	 */
 	if(this.type === "attack"){
-		this.boundingbox = new BoundingBox(this.x , this.game.cat.y + 50, 200, 100, "Purple");
-		this.bound2 = new BoundingBox(this.x , this.y, 200, 100, "Red");
+		
 		if(this.game.cat.y + 50 < this.y ){
 			this.type = "pace"
 		}
-		if (this.game.cat.x >= this.x - 60 && this.game.cat.x <= this.x + 140) {
-			
+		//if (this.game.cat.x >= this.x - 60 && this.game.cat.x <= this.x + 140) {
+		if (this.game.cat.x >= this.x - 60 && this.game.cat.x <= this.x + 100) {
 			if(this.attackL.isDone() || this.attackR.isDone()){
 				if(this.l){
 					this.attackL.elapsedTime = 0
@@ -168,12 +201,26 @@ EnemyPace.prototype.update= function() {
 					this.attackR.elapsedTime = 0
 				}
 			} 
-			this.boundingbox.color = "Red"
+			//this.boundingbox.color = "Red"
 			this.attack = true
+			if(this.l){ //Draw the attack box when facing left.
+				this.ax = this.x + 20
+				this.ay = this.y + 20
+				this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Green");
+			} else {//Draw the attack box when facing right.
+				this.ax = this.x + 70
+				this.ay = this.y + 20
+				this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Orange");
+
+			}
 			
 		} else {
+			this.ax = 1000
+			this.ay = 1000
 			this.attack = false
 		}
+		this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Orange");
+
 		/**
 		 * This will handle having the dog move to the players ground position.
 		 */
@@ -188,10 +235,34 @@ EnemyPace.prototype.update= function() {
 		}
 		
 	}
+	if (this.l && !this.attack) {
+		this.hx = this.x
+		this.hy = this.y + 35
+		this.Hlength = 148
+		this.Hheight = 80
+	} else if(this.r && !this.attack ){
+		this.hx = this.x + 5
+		this.hy = this.y + 40
+		this.Hlength = 148
+		this.Hheight = 80
+	}
+	if(this.l && this.attack){
+		this.hx = this.x
+		this.hy = this.y + 15
+		this.Hlength = 148
+		this.Hheight = 107
+	} else if(this.r && this.attack){
+		this.hx = this.x
+		this.hy = this.y + 15
+		this.Hlength = 148
+		this.Hheight = 107
+	}
+	this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight, "Orange");
 }
 
 EnemyPace.prototype.draw = function(ctx) {
 	/** For Debugging purposes*/
+	
 	ctx.strokeStyle = this.boundingbox.color;
 	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	//ctx.strokeStyle = this.bound2.color;
