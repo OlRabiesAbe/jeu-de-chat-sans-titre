@@ -5,7 +5,7 @@ function Tile(game, img, framex, framey, x, y, posX, posY, width, height, frameW
 	this.x = x; this.y = y;
 	this.width = width; this.height = height; 
 	this.frameW = frameW; this.frameH = this.frameH;
-	this.allSides = allSides;
+	this.allSides = allSides; //what is allSides
 	this.posX = posX; this.posY = posY
 	//collision specifics suite
 	this.VERT_COLL_RADIUS = 16; //how far a tile's hitbox extends out to the left and right
