@@ -44,8 +44,8 @@ function Cat(game) {
 	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
-	this.MAX_HSPEED = 12;
-	this.HACCEL = 3;
+	this.MAX_HSPEED = 10;
+	this.HACCEL = 2;
 	this.HDECCEL = this.HACCEL;
 	
 	//suite of variables for the cat's vertical movement
