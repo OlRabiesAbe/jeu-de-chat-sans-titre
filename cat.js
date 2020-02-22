@@ -229,7 +229,7 @@ Cat.prototype.update = function() {
 	//if ur on the ground your not falling, and the inverse of that
 	if(this.y == this.ground) this.vspeed = 0;
 	// if jump is pressed while on the ground, vspeed = MAX_VSPEED
-	if(this.jumping && this.y + this.height >= this.ground) {
+	if(this.jumping && this.y == this.ground) {
 		this.vspeed = this.MAX_VSPEED;
 	// otherwise, decelerate
 	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
