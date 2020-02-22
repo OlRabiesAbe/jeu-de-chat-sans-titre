@@ -1,4 +1,5 @@
 /**
+ * UPDATE 2/21/20
  * This function creates a generic platform
  * @param 
  * game is the standard game engine
@@ -106,25 +107,25 @@ Platform.prototype.draw = function (ctx) {
 	if (this.animation !== null) {
 		if (this.color === "Red") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+       // ctx.strokeStyle = this.boundingbox.color;
+       // ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		} else if (this.color === "Green" || this.color === "Grey" || this.color === "Brown" 
 			|| this.color === "Yellow" || this.color === "Pink") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 			
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+        //ctx.strokeStyle = this.boundingbox.color;
+       // ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		}
 		 else if (this.color === "Blue") {
 			this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 			
-        ctx.strokeStyle = this.boundingbox.color;
-        ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+       // ctx.strokeStyle = this.boundingbox.color;
+       // ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 		}
 	}
 	else {
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x - this.game.camera.x,this.y,this.length,this.height);
+		//ctx.fillStyle = this.color;
+		//ctx.fillRect(this.x - this.game.camera.x,this.y,this.length,this.height);
 	}
     Entity.prototype.draw.call(this);
 }

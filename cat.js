@@ -70,6 +70,12 @@ function Cat(game) {
 }
 
 Cat.prototype = new Entity();
+/**
+ * Update 2/21/20
+ * @param a
+ * @param b
+ * @returns
+ */
 Cat.prototype.constructor = Cat;
 function distance(a, b) {
     var dx = a.x - b.x;
@@ -273,12 +279,12 @@ Cat.prototype.update = function() {
 		this.hx = this.x + 70
 		this.hy = this.y - 80
 		this.Hlength = 80 
-		this.Hheight = 65
+		this.Hheight = 80
 	} else {
 		this.hx = this.x - 20
 		this.hy = this.y - 80
 		this.Hlength = 80 
-		this.Hheight = 75
+		this.Hheight = 80
 	}
 	
 
