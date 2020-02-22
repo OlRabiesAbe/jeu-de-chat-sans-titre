@@ -44,15 +44,15 @@ function Cat(game) {
 	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
-	this.MAX_HSPEED = 8;
-	this.HACCEL = 1;
+	this.MAX_HSPEED = 12;
+	this.HACCEL = 3;
 	this.HDECCEL = this.HACCEL;
 	
 	//suite of variables for the cat's vertical movement
 	this.vspeed = 0;
 	this.MAX_VSPEED = 52;
 	this.VDECCEL = 4;
-	this.MAX_VDECCEL = -16; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
+	this.MAX_VDECCEL = -31; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y - 128, 128, 128, "Purple");
