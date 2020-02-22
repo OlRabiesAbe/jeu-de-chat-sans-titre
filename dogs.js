@@ -112,8 +112,8 @@ EnemyIdle.prototype.draw = function (ctx) {
 	} else {
 		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	}
-	ctx.strokeStyle = this.boundingbox.color;
-	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	//ctx.strokeStyle = this.boundingbox.color;
+	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
     Entity.prototype.draw.call(this);
 }
 
@@ -263,8 +263,8 @@ EnemyPace.prototype.update= function() {
 EnemyPace.prototype.draw = function(ctx) {
 	/** For Debugging purposes*/
 	
-	ctx.strokeStyle = this.boundingbox.color;
-	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	//ctx.strokeStyle = this.boundingbox.color;
+	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	//ctx.strokeStyle = this.bound2.color;
 	//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 	

@@ -40,8 +40,8 @@ Rat.prototype.update = function() {
 
 Rat.prototype.draw = function(ctx) {
 	//console.log(this.boundingbox)
-	ctx.strokeSytle = "Red";
-	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	//ctx.strokeSytle = "Red";
+	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
 	if (this.l) {
 		this.animationL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	} else {

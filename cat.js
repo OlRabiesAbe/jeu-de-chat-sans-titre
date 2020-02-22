@@ -268,13 +268,19 @@ Cat.prototype.update = function() {
 			this.aheight = 60
 			this.boundingbox = new BoundingBox(this.x, this.y + 60, this.neutralL.frameWidth, this.neutralL.frameHeight);
 		}
+	}	
+	if(this.right){
+		this.hx = this.x + 70
+		this.hy = this.y - 80
+		this.Hlength = 80 
+		this.Hheight = 65
+	} else {
+		this.hx = this.x - 20
+		this.hy = this.y - 80
+		this.Hlength = 80 
+		this.Hheight = 75
 	}
-	this.hx = this.x
-	this.hy = this.y - 125
-	this.Hlength = this.neutralL.frameWidth
-	this.Hheight = this.neutralL.frameHeight
-	//Draws bounding box of the cat hit box for testing purposes.
-	this.bound2 = new BoundingBox(this.ax, this.ay, this.alength, this.aheight, "Purple");
+	
 
 	this.collisionHelper();
 	if (this.y > 800 || HEALTH === 0) {
@@ -314,8 +320,8 @@ Cat.prototype.draw = function(ctx) {
 	if (!this.invincTick) {
 		//console.log(this.boundingbox.color);
 		if(this.boxes){
-			ctx.strokeStyle = this.bound2.color;
-			ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
+			//ctx.strokeStyle = this.bound2.color;
+			//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 			//ctx.strokeStyle = this.boundingbox.color;
 			//ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 		}

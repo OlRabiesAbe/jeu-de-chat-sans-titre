@@ -52,6 +52,8 @@ Bird.prototype.update= function() {
 		
 	this.lastX = this.x
 	this.lastY = this.by
+	this.ax = this.x
+	this.ay = this.by
 		
 	/**
 	 * This will detect when it should switch from the default passive mode to attack mode.
@@ -59,7 +61,7 @@ Bird.prototype.update= function() {
 	 * Attack mode will be permenant when the bird detects the cat and attacks it.
 	 */
 	
-	if (this.game.cat.x >= this.x - 500 && this.game.cat.x <= this.x + 500) {
+	if (this.game.cat.x >= this.x - 700 && this.game.cat.x <= this.x + 700) {
 		
 		this.type = "Attack"
 		
@@ -107,19 +109,8 @@ Bird.prototype.update= function() {
 	}
 	if(this.type === "Attack"){
 		this.count++
-		/**
-		if (this.game.cat.x >= this.x - 100 && this.game.cat.x <= this.x + 100) {
-			this.bound2 = new BoundingBox(this.x, this.by, this.length, this.height, "Red");
-			this.bound2.color = "Red"
-			this.type = "Fly"
-			
-		}  else {
-			this.bound2 = new BoundingBox(this.x, this.by, this.length, this.height, "Green");
-
-			this.bound2.color = "Green"
-		}
-		*/
-		if(this.count === 100){
+		
+		if(this.count === 150){
 			this.leftCheck = false;
 			this.rightCheck = true
 		}
@@ -135,19 +126,19 @@ Bird.prototype.update= function() {
 			this.rightCheck = false
 			this.count = 0
 		}
-		if(this.by > 500){
+		if(this.by > 600){
 			this.leftCheck = false;
 			this.rightCheck = true
 			this.count = 100
 		}
 				
 		if(this.leftCheck){
-			this.x += this.vx/this.distance * 6
-			this.by += this.vy/this.distance * 6 
+			this.x += this.vx/this.distance * 7
+			this.by += this.vy/this.distance * 7
 		}
 		if(this.rightCheck){
-			this.by -= this.vy/this.distance * 6 
-			this.x += this.vx/this.distance * 6 
+			this.by -= this.vy/this.distance * 7
+			this.x += this.vx/this.distance * 7 
 		}
 		
 		//Check if the bird is attacking at a downward left angle.
@@ -185,13 +176,19 @@ Bird.prototype.update= function() {
 		if(this.leftAttack){ //Draws the attack box when attacking to the left
 			this.ax = this.x + 25	
 			this.ay = this.by + 30
+			this.length = 50	//Determines length of the attack box.
+			this.height = 50
 			//this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Purple");
 		} 
 		if(this.rightAttack){	//Draws the attack box when attacking to the right.
 			this.ax = this.x + 60	
 			this.ay = this.by + 30
+			this.length = 50	//Determines length of the attack box.
+			this.height = 50
 
 		}
+		
+
 	}	
 	/**
 	 * This will implement the hitboxes for the enemies.
@@ -220,6 +217,19 @@ Bird.prototype.update= function() {
 		this.Hlength = 100
 		this.Hheight = 100
 	}
+	if(this.type === "Fly" && this.leftCheck || this.type === "Attack" && this.leftRetreat){
+		this.ax = this.x
+		this.ay = this.by + 40
+		this.length = 90	//Determines length of the attack box.
+		this.height = 30
+	} else if(this.type === "Fly" && this.rightCheck|| this.type === "Attack" && this.rightRetreat){
+		this.ax = this.x
+		this.ay = this.by + 20
+		this.length = 100	//Determines length of the attack box.
+		this.height = 30
+	}
+	this.bound2 = new BoundingBox(this.ax, this.ay, this.length, this.height, "Purple");
+
 	//this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight, "Purple");
 	Entity.prototype.update.call(this);	
 
@@ -241,8 +251,8 @@ Bird.prototype.draw = function (ctx) {
 		this.reverseAttack.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.by)
 		
 	}
-	ctx.strokeStyle = this.bound2.color;
-    ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
+	//ctx.strokeStyle = this.bound2.color;
+   // ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 	
     Entity.prototype.draw.call(this);
 }
@@ -345,7 +355,7 @@ Range.prototype.update= function() {
 		this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Green"); //For testing detection purposes
 	}
 	
-	if (this.game.cat.x >= this.x - 500 && this.game.cat.x <= this.x + 500) {
+	if (this.game.cat.x >= this.x - 600 && this.game.cat.x <= this.x + 600) {
 		this.shoot = true
 		
 	} else {
@@ -443,12 +453,12 @@ Range.prototype.update= function() {
 	}
 	
 
-	if(this.count === 100){
+	if(this.count === 150){
 		this.bx = this.x + 120;	//Bullet location
 		this.by = this.y - 15;
 		this.bStart = false
 	}
-	if(this.count === 150){
+	if(this.count === 200){
 		this.bx2 = this.x + 120;	//Bullet location
 		this.by2 = this.y - 15;
 		this.count = 0;
@@ -542,9 +552,9 @@ Range.prototype.draw = function (ctx) {
 	//For testing the attack box of both bullets
 	//ctx.strokeStyle = this.bound2.color;
    // ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
-	ctx.strokeStyle = this.boundingbox.color;
+	//ctx.strokeStyle = this.boundingbox.color;
 	
-    ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+   // ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
    
 	
 }
