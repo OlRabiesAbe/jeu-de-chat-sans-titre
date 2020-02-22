@@ -77,6 +77,8 @@ GameEngine.prototype.startInput = function () {
 		that.winBtnHover = e.clientX < 894 || e.clientX > 1240 || e.clientY < 65 || e.clientY > 203 ? false : true;
 	
 	}, false);
+
+
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
 			if (String.fromCharCode(e.which) === ' ') that.space = true;
@@ -129,7 +131,7 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
 	//console.log(this.platforms);
-	console.log(Math.floor(this.cat.x / 128));
+	//console.log(Math.floor(this.cat.x / 128));
 	if (this.sceneManager.getScene() === STATUS_SCENE) {
 		this.sceneManager.scenes[STATUS_SCENE].timer += .05;
 		//console.log(this.sceneManager.scenes[STATUS_SCENE].timer);

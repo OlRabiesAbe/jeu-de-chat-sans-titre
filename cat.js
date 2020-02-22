@@ -84,7 +84,7 @@ Cat.prototype.collideEnemy = function (other) {
 			&& this.hx + this.Hlength > other.hx 
 			&& this.hy < other.hy + other.Hheight
 			&& this.hy + this.Hheight > other.hy;
-	console.log(a)
+	//console.log(a)
 	return a;
 	
 };
