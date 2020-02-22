@@ -46,21 +46,22 @@ Tile.prototype.handleCollision = function(entity) {
 				//if the cat is within FMR units above or below the tile's top, cat gets sucked to the surface
 				//BUG W THIS, i think the top is too wide, the cat can stand on vertical walls
 				// ~+TOP OF TILE CASE+~
-				if(entity.y < this.y + this.FLOOR_MAGNET_RADIUS && entity.y > this.y - this.FLOOR_MAGNET_RADIUS) {
+				if(entity.y < this.y + this.FLOOR_MAGNET_RADIUS && entity.y > this.y - this.FLOOR_MAGNET_RADIUS
+						&& entity.x + entity.width > this.x && entity.x < this.x + this.width) {
 					entity.y = this.y;
 					entity.vspeed = 0;
 					//console.log("cat hit ground" + " tile data: (" + this.x + ", " + this.y + ")");
 				}
-			if (this.allSides.bottom) {
-				//the cat isn't allowed to get within BE units of the bottom of the tile, cause otherwise the cat could visually enter the tile
-				//~+BOTTOM OF OR INSIDE OF TILE CASE+~
-				if (entity.y > this.y + this.FLOOR_MAGNET_RADIUS && entity.y < this.y + this.height + this.BOTTOM_EXTENSION 
-						&& entity.x + entity.width > this.x + this.VERT_COLL_RADIUS && entity.x < this.x + this.width - this.VERT_COLL_RADIUS) {
-					entity.y = this.y + this.height + this.BOTTOM_EXTENSION + entity.height;
-					entity.vspeed = 0;
-					//console.log("cat hit ceiling" + " tile data: (" + this.x + ", " + this.y + ")");
+				if (this.allSides.bottom) {
+					//the cat isn't allowed to get within BE units of the bottom of the tile, cause otherwise the cat could visually enter the tile
+					//~+BOTTOM OF OR INSIDE OF TILE CASE+~
+					if (entity.y > this.y + this.FLOOR_MAGNET_RADIUS && entity.y < this.y + this.height + this.BOTTOM_EXTENSION 
+							&& entity.x + entity.width > this.x + this.VERT_COLL_RADIUS && entity.x < this.x + this.width - this.VERT_COLL_RADIUS) {
+						entity.y = this.y + this.height + this.BOTTOM_EXTENSION + entity.height;
+						entity.vspeed = 0;
+						//console.log("cat hit ceiling" + " tile data: (" + this.x + ", " + this.y + ")");
+					}
 				}
-			}
 	}
 	return;
 }
