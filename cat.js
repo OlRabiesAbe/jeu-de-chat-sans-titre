@@ -4,7 +4,8 @@ function Cat(game) {
 	//					Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
 	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 257, 128, 128, 0.03, 1, true, false);
 	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 129, 257, 128, 128, 0.03, 1, true, false);
-	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 129, 128, 128, 0.03, 8, false, false);
+	this.attackRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 385, 192, 128, 1, 1, true, false);
+	this.attackLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 193, 385, 192, 128, 1, 1, true, false);
 	
 	this.jumpRisingLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 257, 257, 128, 128, 0.03, 1, true, false);
 	this.jumpFallingLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 385, 257, 128, 128, 0.03, 1, true, false);
@@ -21,6 +22,7 @@ function Cat(game) {
 	this.alength = 50	//Default length and height of the cat hit box, is modified in update.
 	this.aheight = 60
 	
+	//what is this
 	this.hx = 0
 	this.hy = 0
 	this.Hlength = 50
@@ -31,8 +33,6 @@ function Cat(game) {
 	this.height = 128;
 	this.width = 128;
 	this.running = false;
-	this.attacking = false;
-	this.attackRange = 150		//The default attack range of the cat.
 	this.ducking = false;
 	this.jumping = false;
 	this.left = false; 
@@ -47,6 +47,10 @@ function Cat(game) {
 	this.invincTick = false;
 	this.invinc = false;
 	
+	//suite of variables for handling attack animation		(ALL_CAPS = psuedo constant)
+	this.attacking = false;
+	this.attacktimer = 16;
+	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
 	this.MAX_HSPEED = 10;
@@ -57,7 +61,7 @@ function Cat(game) {
 	this.vspeed = 0;
 	this.MAX_VSPEED = 52;
 	this.VDECCEL = 4;
-	this.MAX_VDECCEL = -16; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
+	this.MAX_VDECCEL = -32; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
@@ -163,7 +167,6 @@ Cat.prototype.collisionHelper = function(ctx) {
 
 Cat.prototype.update = function() {
 		
-	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
 	else this.jumping = false;
 	this.running = (this.game.right || this.game.left);
@@ -178,11 +181,13 @@ Cat.prototype.update = function() {
 			this.invincTick = false;
 		}
 	}
-	if (this.attacking) { 
-		if (this.attackAnim.isDone()) {
-			this.attackAnim.elapsedTime = 0;
-			this.attacking = false;	
-		}
+	
+	//+++++++++++++++++handling attacking animations+++++++++++++++++++//
+	if(this.game.space) this.attacking = true;
+	if (this.attacking) this.attacktimer -= 1;
+	if (this.attacktimer == 0) {
+		this.attacking = false;
+		this.attacktimer = 16;
 	}
 	
 	//=====setting ground=====//
@@ -197,7 +202,6 @@ Cat.prototype.update = function() {
 		}
 	}
 	this.ground = highest_ground_beneath_me;
-	//console.log("highest ground beneath me is " + this.ground);
 	
 	//~.~.~.~.~.~.~.~.~.~. code for momentuous movement ~.~.~.~.~.~.~.~.~.~.~.~.//
 	if(this.running) {
@@ -231,7 +235,6 @@ Cat.prototype.update = function() {
 	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
 	}
-	//console.log("vspeed " + this.vspeed + ", ground " + this.ground + ", y " + this.y);
 	this.y -= this.vspeed;
 	
 	if(this.running){
@@ -316,7 +319,8 @@ Cat.prototype.draw = function(ctx) {
 		}
 
 		if (this.attacking) {
-			this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2); 
+			this.right ? this.attackRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2)
+								: this.attackLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x - 64, this.y - this.height + 2);
 
 		} else if (this.y < this.ground) {
 			if (this.vspeed > 0) {
