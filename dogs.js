@@ -129,8 +129,8 @@ EnemyIdle.prototype.draw = function (ctx) {
 	} else {
 		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	}
-	ctx.strokeStyle = this.boundingbox.color;
-	ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
+	//ctx.strokeStyle = this.boundingbox.color;
+	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
     Entity.prototype.draw.call(this);
 }
 
