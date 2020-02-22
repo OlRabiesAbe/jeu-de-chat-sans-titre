@@ -279,12 +279,13 @@ Cat.prototype.update = function() {
 	this.collisionHelper();
 	if (this.y > 800 || HEALTH === 0) {
 		this.removeFromWorld = true;
-		this.y = 50;
+		this.y = 64;
 		this.falling = false;
 		LIVES--;
 		HEALTH = 3;
-		this.invinc = false;
-		this.invincTick = false;
+		
+		//this.invinc = false;
+		//this.invincTick = false;
 		if (LIVES >= 0) {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 			this.game.cat.x = this.game.cat.spawn;
