@@ -284,6 +284,7 @@ Cat.prototype.update = function() {
 		LIVES--;
 		HEALTH = 3;
 		this.invinc = false;
+		this.invincTick = false;
 		if (LIVES >= 0) {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 			this.game.cat.x = this.game.cat.spawn;
