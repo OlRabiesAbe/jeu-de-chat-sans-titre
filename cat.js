@@ -316,18 +316,19 @@ Cat.prototype.update = function() {
 	}
 	 
 	//this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight);
-	this.bound2 = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight);
+	this.bound2 = new BoundingBox(this.ax, this.ay, this.length, this.height);
 
 	Entity.prototype.update.call(this);
 }
 
 Cat.prototype.draw = function(ctx) {
 	console.log(this.invincTimer);
+	//ctx.strokeStyle = this.bound2.color;
+	//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 	if (!this.invincTick) {
 		//console.log(this.boundingbox.color);
 		if(this.boxes){
-			//ctx.strokeStyle = this.bound2.color;
-			//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
+			
 			//ctx.strokeStyle = this.boundingbox.color;
 			//ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
 		}
