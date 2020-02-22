@@ -123,7 +123,7 @@ EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
 	return;
 }
 EnemyIdle.prototype.draw = function (ctx) {
-	ctx.fillStyle = this.color;
+	//ctx.fillStyle = this.color;
 	if (this.l) {
 		this.idleL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
 	} else {
