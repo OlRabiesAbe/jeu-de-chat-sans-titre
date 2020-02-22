@@ -323,15 +323,15 @@ function getLevelOneEnts(gameEngine) {
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 26, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 39, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 47, 768 - 128 - 100)})
-	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 86, 768 - 128 - 100)})
-	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 88, 768 - 128 - 100)})
+	//lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 86, 768 - 128 - 100)})
+	//lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 88, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 47, 768 - 128 - 100)})
 	lOneEnts.push({type:"Enemy", ent:new EnemyIdle(gameEngine, 128 * 67, 768 - 128 - 95)})
 	
 	
-	lOneEnts.push({type:"Enemy", ent:new EnemyPace(gameEngine, 128 * 8, 768 - 128 - 95)})
-	lOneEnts.push({type:"Enemy", ent:new Bird(gameEngine, 128 * 4, 128)})
-	lOneEnts.push({type:"Enemy", ent:new Range(gameEngine, 128 * 6, 640 -150)})
+	lOneEnts.push({type:"Enemy", ent:new EnemyPace(gameEngine, 128 * 88, 768 - 128 - 95)})
+	lOneEnts.push({type:"Enemy", ent:new Bird(gameEngine, 128 * 23, 128)})
+	lOneEnts.push({type:"Enemy", ent:new Range(gameEngine, 128 * 51, 640 - 128 * 2 -150)})
 	
 	lOneEnts.push({type:"Enemy", ent:new Rat(gameEngine, 64 * 33, 640 - 64)})
 	lOneEnts.push({type:"Enemy", ent:new Rat(gameEngine, 128 * 60, 640 - 64)})
