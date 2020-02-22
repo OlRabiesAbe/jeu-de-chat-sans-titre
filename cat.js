@@ -4,7 +4,8 @@ function Cat(game) {
 	//					Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse)
 	this.neutralR = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 257, 128, 128, 0.03, 1, true, false);
 	this.neutralL = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 129, 257, 128, 128, 0.03, 1, true, false);
-	this.attackAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 129, 128, 128, 0.03, 8, false, false);
+	this.attackRAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 0, 385, 128, 128, 1, 1, true, false);
+	this.attackLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 129, 385, 128, 128, 1, 1, true, false);
 	this.jumpAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 769, 0, 128, 128, 0.03, 8, false, false);
 	
 	this.jumpRisingLAnim = new Animation(ASSET_MANAGER.getAsset("./img/cat_sheet.png"), 257, 257, 128, 128, 0.03, 1, true, false);
@@ -26,8 +27,6 @@ function Cat(game) {
 	this.height = 128;
 	this.width = 128;
 	this.running = false;
-	this.attacking = false;
-	this.attackRange = 150		//The default attack range of the cat.
 	this.ducking = false;
 	this.jumping = false;
 	this.left = false; 
@@ -42,7 +41,12 @@ function Cat(game) {
 	this.invincTick = false;
 	this.invinc = false;
 	
-	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
+	//suite of variables for handling attack animation		(ALL_CAPS = psuedo constant)
+	this.attacking = false;
+	this.attacktimer = 16;
+	this.attackRange = 150		//The default attack range of the cat.
+	
+	//suite of variables for the cat's horizontal movement
 	this.hspeed = 0;
 	this.MAX_HSPEED = 10;
 	this.HACCEL = 2;
@@ -53,6 +57,7 @@ function Cat(game) {
 	this.MAX_VSPEED = 52;
 	this.VDECCEL = 4;
 	this.MAX_VDECCEL = -31; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
+	
 	
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y - 128, 128, 128, "Purple");
@@ -107,11 +112,8 @@ Cat.prototype.collideRight = function () {
 
 Cat.prototype.collisionHelper = function(ctx) {
 	for (var i = 0; i < this.game.platforms.length; i++) {
-			//console.log(this.game.platforms);
            var pf = this.game.platforms[i];
-			// console.log(pf);
 			if (pf.color === "Red" && this.collideDeath(pf)) {
-				//alert(this.boundingbox.bottom + " " + this.y + " " + pf.boundingbox.top + " " + pf.y)
 				pf.color = "Blue"
 				pf.animation = new Animation(ASSET_MANAGER.getAsset("./img/puddle.png"), 0, 0, 286, 214, 0.3, 3, false, false); 
 				this.removeFromWorld = true;
@@ -136,7 +138,6 @@ Cat.prototype.collisionHelper = function(ctx) {
 
 
 Cat.prototype.update = function() {
-	if (this.game.space) this.attacking = true;
 	if (this.game.w) this.jumping = true;
 	else this.jumping = false;
 	this.running = (this.game.right || this.game.left);
@@ -151,11 +152,13 @@ Cat.prototype.update = function() {
 			this.invincTick = false;
 		}
 	}
-	if (this.attacking) { 
-		if (this.attackAnim.isDone()) {
-			this.attackAnim.elapsedTime = 0;
-			this.attacking = false;	
-		}
+	
+	//+++++++++++++++++handling attacking animations+++++++++++++++++++//
+	if(this.game.space) this.attacking = true;
+	if (this.attacking) this.attacktimer -= 1;
+	if (this.attacktimer == 0) {
+		this.attacking = false;
+		this.attacktimer = 16;
 	}
 	
 	//=====setting ground=====//
@@ -193,7 +196,9 @@ Cat.prototype.update = function() {
 	if (0 < this.x + this.hspeed < MAP_SIZE) {
 		this.x += this.hspeed;
 	}
+	
 	this.boundingbox = new BoundingBox(this.x, this.y - 128, 128, 128);
+	
 	//~.~.~.~.~.~.~.~.~.~.~.~.~.~. code for momentuous jumping ~.~.~.~.~.~.~.~.~.~.~.//
 	//if ur on the ground your not falling, and the inverse of that
 	if(this.y == this.ground) this.vspeed = 0;
@@ -204,22 +209,8 @@ Cat.prototype.update = function() {
 	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
 	}
-	//console.log("vspeed " + this.vspeed + ", ground " + this.ground + ", y " + this.y);
 	this.y -= this.vspeed;
 	
-	
-	//if (this.ducking) {
-		//this.boundingbox = new BoundingBox(this.x, this.y + 75, this.duckAnim.frameWidth - 6, this.duckAnim.frameHeight);
-	//}
-	/*if (!this.running && !this.jumping && !this.attacking && !this.ducking) {
-		if (this.right) {
-			this.boundingbox = new BoundingBox(this.x + 25, this.y - 64, 64, 64);
-		}
-		else {
-			this.boundingbox = new BoundingBox(this.x + 25, this.y - 64, 64, 64);
-		}
-	}
-	*/
 	this.collisionHelper();
 	if (this.y > 768 || HEALTH === 0) {
 		this.removeFromWorld = true;
@@ -249,21 +240,19 @@ Cat.prototype.update = function() {
 }
 
 Cat.prototype.draw = function(ctx) {
-	//console.log(this.invincTimer);
-	if (!this.invincTick) {
-		//console.log(this.boundingbox.color);
-		if(this.boxes){
-			//ctx.strokeStyle = "red";
-		//ctx.strokeRect(this.x + 25, this.y + 60, this.neutralL.frameWidth - 35, this.neutralL.frameHeight - 10);
-		ctx.strokeStyle = this.boundingbox.color;
-		ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
-		ctx.strokeStyle = "Blue"
-		ctx.strokeRect(this.boundingbox.left - this.game.camera.x, this.boundingbox.top, this.boundingbox.width, this.boundingbox.height);
+	
+		if (!this.invincTick) {
+			if(this.boxes){
+			ctx.strokeStyle = this.boundingbox.color;
+			ctx.strokeRect(this.x - this.game.camera.x, this.y - this.height + 2, this.width, this.height);
+			ctx.strokeStyle = "Blue"
+			ctx.strokeRect(this.boundingbox.left - this.game.camera.x, this.boundingbox.top, this.boundingbox.width, this.boundingbox.height);
 		}
 
 		if (this.attacking) {
-			this.attackAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2); 
-
+			this.right ? this.attackRAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2)
+								: this.attackLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2);
+								
 		} else if (this.y < this.ground) {
 			if (this.vspeed > 0) {
 				this.right ? this.jumpRisingLAnim.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.height + 2) 
