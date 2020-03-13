@@ -106,7 +106,6 @@ GameEngine.prototype.addEntity = function (entity) {
 	this.entities.push(entity);
     this.otherEntities.push(entity);
 }
-
 GameEngine.prototype.addPlatform = function (entity) {
     console.log('added entity');
 	this.entities.push(entity);
@@ -117,11 +116,14 @@ GameEngine.prototype.addEnemy= function (entity) {
 	this.entities.push(entity);
     this.enemies.push(entity);
 }
+
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
 	if(this.sceneManager.currentSceneKey === LEVEL_ONE_SCENE) {
 		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv1_background.png"), 0, 0);
+	} else if (this.sceneManager.currentSceneKey === LEVEL_TWO_SCENE) {
+		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv2_background.png"), 0, 0);
 	}
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);

@@ -6,8 +6,8 @@
  * @returns
  */
 function Enemy(game, x, y) {
-	this.left = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 250, 153, 115, 0.1, 4, true, false);
-	this.right = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 0, 153, 115, 0.1, 6, true, false);
+	this.right = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 0, 128, 128, 0.25, 4, true, false);
+	this.left = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 128, 128, 128, 0.25, 4, true, false);
 	this.l = true;
 	this.r = false
 	this.color = "Gold"
@@ -45,10 +45,8 @@ Enemy.prototype.draw = function (ctx) {
 }
 
 function EnemyIdle(game, x, y) {
-	this.idle = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 500, 153, 115, 0.6, 3, true, false);
-//	this.idleRev = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 0, 500, 153, 115, 0.8, 3, false, true);
-	this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 460, 500, 153, 115, 0.6, 3, true, false);
-//	this.idleRevL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 345, 500, 153, 115, 0.8, 3, false, true);
+	this.idle = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 0, 128, 128, 0.25, 4, true, false);
+	this.idleL = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 128, 128, 128, 0.25, 4, true, false);
 //	this.rev = false;
 	this.l = true;
 	this.r = false;
@@ -125,9 +123,9 @@ EnemyIdle.prototype.idleHelp = function(idleAnim, revAnim) {
 EnemyIdle.prototype.draw = function (ctx) {
 	//ctx.fillStyle = this.color;
 	if (this.l) {
-		this.idleL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+		this.idleL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 	} else {
-		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+		this.idle.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 	}
 	//ctx.strokeStyle = this.boundingbox.color;
 	//ctx.strokeRect(this.boundingbox.x - this.game.camera.x, this.boundingbox.y, this.boundingbox.width, this.boundingbox.height);
@@ -139,10 +137,10 @@ EnemyIdle.prototype.draw = function (ctx) {
  * 
  */
 function EnemyPace(game, x, y) {
-	this.paceL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"),0, 250, 152, 115, 0.1, 4, true, false);
-	this.pace = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"), 145, 0, 152, 115, 0.1, 5, true, false);
-	this.attackR = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"),610, 247, 152, 115, 0.1, 4, false, false);
-	this.attackL = new Animation(ASSET_MANAGER.getAsset("./img/dog.png"),305, 365, 152, 120, 0.1, 4, false, false);
+	this.paceL = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 384, 128, 128, 0.1, 4, true, false);
+	this.pace = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"), 0, 256, 128, 128, 0.1, 4, true, false);
+	this.attackR = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"),128, 512, 128, 128, 0.25, 1, false, false);
+	this.attackL = new Animation(ASSET_MANAGER.getAsset("./img/dog_sheet.png"),0, 512, 128, 128, 0.25, 1, false, false);
 	this.boundingbox = new BoundingBox(this.x, this.y, 100, 100, "Purple");
 	this.l = true;
 	this.r = false;
@@ -287,20 +285,20 @@ EnemyPace.prototype.draw = function(ctx) {
 	
 	if(this.type === "pace"){
 		if (this.l ) {
-			this.paceL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.paceL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		} else if(this.r ){
-			this.pace.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.pace.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		}
 	} else {
 		if (this.l && !this.attack) {
-			this.paceL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.paceL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		} else if(this.r && !this.attack ){
-			this.pace.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.pace.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		}
 		if(this.l && this.attack){
-			this.attackL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.attackL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		} else if(this.r && this.attack){
-			this.attackR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y);
+			this.attackR.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 24);
 		}
 	}
 		

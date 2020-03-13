@@ -53,14 +53,14 @@ function Cat(game) {
 	
 	//suite of variables for the cat's horizontal movement		(ALL_CAPS = psuedo constant)
 	this.hspeed = 0;
-	this.MAX_HSPEED = 10;
+	this.MAX_HSPEED = 13;
 	this.HACCEL = 2;
 	this.HDECCEL = this.HACCEL;
 	
 	//suite of variables for the cat's vertical movement
 	this.vspeed = 0;
-	this.MAX_VSPEED = 52;
-	this.VDECCEL = 4;
+	this.MAX_VSPEED = 42;
+	this.VDECCEL = 2;
 	this.MAX_VDECCEL = -32; //be very careful with MAX_VDECCEL, values too negative will lead to the cat falling through floors
 	
 	this.boxes = true;
@@ -309,10 +309,18 @@ Cat.prototype.update = function() {
 		}
 	}
 	if (this.x >= MAP_SIZE - 64) {
-		this.game.sceneManager.setScene(this.game.sceneManager.scenes[WIN_SCREEN])
-		LIVES = 2
+		if (CURRENT_LEVEL < WIN_SCREEN) {
+		this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
+		CURRENT_LEVEL = CURRENT_LEVEL + 1
+		} else if (CURRENT_LEVEL === WIN_SCREEN) {
+			LIVES = 2
+			CURRENT_LEVEL = LEVEL_ONE_SCENE
+			HEALTH = 3;
+		}
+		//LIVES = 2
 		this.x = 64;
 		this.spawn= 0;
+		this.y = 0;
 	}
 	 
 	//this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight);

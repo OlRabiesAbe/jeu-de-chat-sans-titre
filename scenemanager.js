@@ -19,8 +19,8 @@ function SceneManager(game) {
 	// The Scene Manager will  handle the music
 	this.songs = [];
 	this.songs[1] = new Audio("./music/level_1.wav");
-	//this.songs[1] = new Audio("./music/level_2.wav");
-	//this.songs[1] = new Audio("./music/level_3_and_pound.wav");
+	this.songs[2] = new Audio("./music/level_2.wav");
+	this.songs[3] = new Audio("./music/level_3_and_pound.wav");
 }
 
 SceneManager.prototype.constructor = SceneManager;

@@ -38,6 +38,7 @@ EndBtn.prototype.update = function() {
 	this.hover = this.game.endBtnHover;
 	if (this.game.click && this.hover && !this.removeFromWorld) {
 		this.game.sceneManager.setScene(this.game.sceneManager.scenes[TITLE_SCENE]);
+		CURRENT_LEVEL = 1
 	}
 }
 

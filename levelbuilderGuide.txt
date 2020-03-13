@@ -1,0 +1,46 @@
+	var levelN = new LevelBuilder(levelString, gameEngine, levelID);
+	gameEngine.sceneManager.addScene(new Scene(gameEngine, levelN.getLevel()));
+this is how you add a new level to the game. levels are sequential respective of how theyre added, 
+e.g. if you add level1 then level2 to the sceneManager, level 1 will come before level2 in the game.
+
+levelID is a string that will be affixed to the beginning of all tile asset names while producing the level,
+ e.g. if levelID is "city" and the levelString contains a 'G' for ground, then the LevelBuilder will place a tile with 
+ an asset string of "./img/cityground.png".
+this is done to futureproof against new levels with new assets.
+levelID is an optional parameter and can be left blank.
+
+levelString is a string that will be read by the LevelBuilder to produce the new level. 
+different characters indicate different tiles/entities.
+take, for instance, the following levelString:
+
+"TTTT;" + 
+"T  T;" +
+"T  T;" +
+"TTTT;";
+
+this levelString will produce a levelString that is a four by four box of placeholder tiles.
+levelString characters follow a convention in that all tiles are uppercase chars and all else are lowercase.
+the following is a key for levelString tiles and entities:
+NEWLINE:
+	';' all characters after a semicolon will be placed on the next row down, starting from the left
+SPACE:
+	' ' a space does indeed indicate an empty space
+TILES:
+	'T' for placeholder Tile
+	'G' for Ground
+	'B' for Box
+	'F' for Fence
+	'D' for Dumpster
+	'S' for building (a type of Structure)
+	'I' for vertical crane piece (thats an uppercase i fyi)
+	'+' for horizontal crane piece
+	'=' for bridge
+ENEMIES:
+	's' for Sitting dog
+	'p' for Pacing dog
+	'r' for Rat
+	'b' for Bird
+	'g' for range (Gunslinger)
+MISC:
+	'c' for Checkpoint
+	'l' for Lamp (thats a lowercase L fyi)

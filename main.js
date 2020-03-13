@@ -1,15 +1,12 @@
 
-var GREEN_PLATFORM_WIDTH = 358;
-var GREEN_PLATFORM_HEIGHT = 83;
-var DEATH_PUDDLE_WIDTH = 287;
-var DEATH_PUDDLE_HEIGHT = 214;
-
 var TITLE_SCENE = 0;
 var LEVEL_ONE_SCENE = 1;
-var STATUS_SCENE = 2;
-var GAME_OVER_SCENE = 3;
-var WIN_SCREEN = 4;
-var PROTOTYPE_SCENE = 5;
+var LEVEL_TWO_SCENE = 2;
+var LEVEL_THREE_SCENE = 3;
+var STATUS_SCENE = 4;
+var GAME_OVER_SCENE = 5;
+var WIN_SCREEN = 6;
+var PROTOTYPE_SCENE = 7;
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;
@@ -133,7 +130,7 @@ ASSET_MANAGER.queueDownload("./img/cat_sheet.png")
 ASSET_MANAGER.queueDownload("./img/checkpoint.png");
 ASSET_MANAGER.queueDownload("./img/cowboy.png");
 ASSET_MANAGER.queueDownload("./img/crane.png");
-ASSET_MANAGER.queueDownload("./img/dog.png");
+ASSET_MANAGER.queueDownload("./img/dog_sheet.png");
 ASSET_MANAGER.queueDownload("./img/dumpster.png");
 ASSET_MANAGER.queueDownload("./img/game_end_btn.png");
 ASSET_MANAGER.queueDownload("./img/game_over.png");
@@ -145,8 +142,6 @@ ASSET_MANAGER.queueDownload("./img/numbers.png");
 ASSET_MANAGER.queueDownload("./img/placeholder_tile.png");
 ASSET_MANAGER.queueDownload("./img/platform.png");
 ASSET_MANAGER.queueDownload("./img/puddle.png");
-ASSET_MANAGER.queueDownload("./img/road.png");
-ASSET_MANAGER.queueDownload("./img/sidewalk.png");
 ASSET_MANAGER.queueDownload("./img/skyscraper.png");
 ASSET_MANAGER.queueDownload("./img/start_btn.png");
 ASSET_MANAGER.queueDownload("./img/title.png");
@@ -159,11 +154,14 @@ ASSET_MANAGER.queueDownload("./img/victory_text.png");
 ASSET_MANAGER.queueDownload("./img/trophy.png");
 ASSET_MANAGER.queueDownload("./img/win_btn.png");
 ASSET_MANAGER.queueDownload("./img/fence.png");
+ASSET_MANAGER.queueDownload("./img/tileset.png");
 ASSET_MANAGER.queueDownload("./img/rat.png");
 ASSET_MANAGER.queueDownload("./img/lv1_background.png");
+ASSET_MANAGER.queueDownload("./img/electric.png");
 ASSET_MANAGER.queueDownload("./music/level_1.wav");
 ASSET_MANAGER.queueDownload("./music/level_2.wav");
 ASSET_MANAGER.queueDownload("./music/level_3_and_pound.wav");
+ASSET_MANAGER.queueDownload("./img/lv2_background.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -171,50 +169,9 @@ ASSET_MANAGER.downloadAll(function () {
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
-   // var bg = new Background(gameEngine);
-	//var skyscraper = new Background(gameEngine);
-	//var skyscraper = new Background(gameEngine);
-
-    //gameEngine.addPlatform(bg);	
-	//gameEngine.addEntity(skyscraper);
-	/**
-	 * Generic platforms can be created, no more need to make a function for each
-	 * platform made in the game.
-	 * 
-	 * var platformName = new Platform(gameEngine, X-Coordinate, Y-Coordinate, Length, Height)
-	 *  
-	 */
-	/*var bad = new Enemy(gameEngine, 700, 400);
-	var bad2 = new Enemy(gameEngine, 1400, 400);
-	var bad3 = new EnemyIdle(gameEngine, 500, 400);
-	var bad4 = new EnemyIdle(gameEngine, 1300);
-	var bad5 = new EnemyPace(gameEngine, 100, 600, 390);
-	var bad6 = new EnemyPace(gameEngine, 900, 1300, 390);
-	var lamp = new Lamp(gameEngine, 950, 400); 
-	var lamp2 = new Lamp(gameEngine, 1300, 400);
-	var lamp3 = new Lamp(gameEngine, 1600, 400);*/
-		
-	/*var birdFly = new Bird(gameEngine,  600, 100, "Fly");
-	var birdAttack = new Bird(gameEngine,  400, 150, "Attack");
-	var range = new Range(gameEngine,  500, 200, "Attack");
-	var bullet = new Bullet(gameEngine,  620, 185);
 	
-	gameEngine.addEntity(lamp);
-	gameEngine.addEntity(lamp2);
-	gameEngine.addEntity(lamp3);
 	
-    gameEngine.addEnemy(bad);
-	gameEngine.addEnemy(bad2);
-	gameEngine.addEnemy(bad3);
-	gameEngine.addEnemy(bad4);
-	gameEngine.addEnemy(bad5);
-	gameEngine.addEnemy(bad6);
-	gameEngine.addEnemy(birdFly);
-	gameEngine.addEnemy(birdAttack);
-	gameEngine.addEnemy(range)
-	gameEngine.addEntity(bullet);*/
-	
-	// Title scren entities
+	// Title screen entities
 	var title = new Title(gameEngine, "./img/title.png", 525, 300, -10, 0);
 	var icon = new Title(gameEngine, "./img/cat_logo.png", 563, 494, 400, 200);
 	var startBtn = new StartBtn(gameEngine, 1280 - 400, 50);
@@ -244,18 +201,29 @@ ASSET_MANAGER.downloadAll(function () {
 	var winScreen = new Scene(gameEngine, [{type:"Other", ent:winner}, {type:"Other", ent:trophy}, {type:"Other", ent:winBtn}]);
 	
 	var levelOne = new Scene(gameEngine, getLevelOneEnts(gameEngine));
-	
+	var levelTwo = new Scene(gameEngine, getLevelTwoEnts(gameEngine));
+	var levelString = "T 			;"+
+					  "	  			;" +
+					  "				;" + 
+					  "				;" + 
+					  "				;" + 
+					  "   cT    	;" + 
+					  "TTTTTTTTTTT	;";
+	var testLevel = new LevelBuilder(levelString, gameEngine);
+	console.log(testLevel)
 	gameEngine.sceneManager.addScene(titleScene);
+	
+	
+	// IF YOU WANT YOUR LEVEL TO BE FIRST FOR TESTING PURPOSES, just have it be added before the other levels. 
 	gameEngine.sceneManager.addScene(levelOne);
+	gameEngine.sceneManager.addScene(levelTwo);
+	gameEngine.sceneManager.addScene(new Scene(gameEngine, testLevel.getLevel()));
+
 	gameEngine.sceneManager.addScene(statusScreen);
 	gameEngine.sceneManager.addScene(gameOverScreen);
 	gameEngine.sceneManager.addScene(winScreen);
 
-	//console.log(gameEngine.entities);
 	gameEngine.sceneManager.setScene(gameEngine.sceneManager.scenes[TITLE_SCENE]);
-	//console.log(gameEngine.platforms);
-	//console.log(gameEngine.enemies);
-	//console.log(gameEngine.otherEntities);
 	
     gameEngine.init(ctx);
 	gameEngine.start();
