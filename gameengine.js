@@ -133,6 +133,8 @@ GameEngine.prototype.draw = function () {
 		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv1_background.png"), 0, 0);
 	} else if (this.sceneManager.currentSceneKey === LEVEL_TWO_SCENE) {
 		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv2_background.png"), 0, 0);
+	} else if (this.sceneManager.currentSceneKey === LEVEL_THREE_SCENE) {
+		this.ctx.drawImage(ASSET_MANAGER.getAsset("./img/lv3_background.png"), 0, 0);
 	}
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);

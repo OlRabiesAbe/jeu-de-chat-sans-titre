@@ -162,6 +162,7 @@ ASSET_MANAGER.queueDownload("./music/level_1.wav");
 ASSET_MANAGER.queueDownload("./music/level_2.wav");
 ASSET_MANAGER.queueDownload("./music/level_3_and_pound.wav");
 ASSET_MANAGER.queueDownload("./img/lv2_background.png");
+ASSET_MANAGER.queueDownload("./img/lv3_background.png");
 ASSET_MANAGER.queueDownload("./img/achtung.png");
 ASSET_MANAGER.queueDownload("./img/cage.png");
 ASSET_MANAGER.queueDownload("./img/cage_dog.png");
