@@ -310,11 +310,13 @@ Cat.prototype.update = function() {
 		}
 	}
 	if (this.x >= MAP_SIZE - 64) {
-		if (CURRENT_LEVEL < WIN_SCREEN) {
 		CURRENT_LEVEL = CURRENT_LEVEL + 1
+		
+		if (CURRENT_LEVEL < WIN_SCREEN) {
 		this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 		
-		} else if (CURRENT_LEVEL === WIN_SCREEN) {
+		} else {
+			this.game.sceneManager.setScene(this.game.sceneManager.scenes[WIN_SCREEN])
 			LIVES = 2
 			CURRENT_LEVEL = LEVEL_ONE_SCENE
 		}

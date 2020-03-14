@@ -2,9 +2,9 @@ var TITLE_SCENE = 0;
 var LEVEL_ONE_SCENE = 1;
 var LEVEL_TWO_SCENE = 2;
 var LEVEL_THREE_SCENE = 3;
-var STATUS_SCENE = 4;
-var GAME_OVER_SCENE = 5;
-var WIN_SCREEN = 6;
+var WIN_SCREEN = 4;
+var STATUS_SCENE = 5;
+var GAME_OVER_SCENE = 6;
 var PROTOTYPE_SCENE = 7;
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
@@ -123,6 +123,7 @@ ASSET_MANAGER.queueDownload("./img/bird_sheet.png");
 ASSET_MANAGER.queueDownload("./img/box.png");
 ASSET_MANAGER.queueDownload("./img/bridge.png");
 ASSET_MANAGER.queueDownload("./img/building.png");
+ASSET_MANAGER.queueDownload("./img/brick2.png");
 ASSET_MANAGER.queueDownload("./img/bullet.png");
 ASSET_MANAGER.queueDownload("./img/cat_logo.png");
 ASSET_MANAGER.queueDownload("./img/cat_sheet.png")
@@ -223,9 +224,9 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.sceneManager.addScene(levelTwo);
 	gameEngine.sceneManager.addScene(new Scene(gameEngine, testLevel.getLevel()));
 
+	gameEngine.sceneManager.addScene(winScreen);
 	gameEngine.sceneManager.addScene(statusScreen);
 	gameEngine.sceneManager.addScene(gameOverScreen);
-	gameEngine.sceneManager.addScene(winScreen);
 
 	gameEngine.sceneManager.setScene(gameEngine.sceneManager.scenes[TITLE_SCENE]);
 	
