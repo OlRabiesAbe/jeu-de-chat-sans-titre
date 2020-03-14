@@ -146,7 +146,9 @@ GameEngine.prototype.update = function () {
 	if (this.m) {
 		var songs = this.sceneManager.songs;
 		for (var i = 1; i < songs.length; i++) {
-			songs[i].volume = this.mute ? 0 : 1
+			if (songs[i] !== undefined) {
+				songs[i].volume = this.mute ? 0 : 1
+			}
 		}
 	}
 	//console.log(this.platforms);

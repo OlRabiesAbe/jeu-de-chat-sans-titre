@@ -21,6 +21,8 @@ function SceneManager(game) {
 	this.songs[1] = new Audio("./music/level_1.wav");
 	this.songs[2] = new Audio("./music/level_2.wav");
 	this.songs[3] = new Audio("./music/level_3_and_pound.wav");
+	this.songs[4] = new Audio("./music/winner.wav");
+	this.songs[6] = new Audio("./music/gameover.wav");
 }
 
 SceneManager.prototype.constructor = SceneManager;
@@ -73,7 +75,8 @@ SceneManager.prototype.setScene = function(otherScene) {
 	if (this.songs[this.currentSceneKey] !== undefined) {
 		this.songs[this.currentSceneKey].currentTime = 0;
 		this.songs[this.currentSceneKey].play();
-		this.songs[this.currentSceneKey].loop = true;
+		this.songs[this.currentSceneKey].loop = this.currentSceneKey !== WIN_SCREEN
+												&& this.currentSceneKey !== GAME_OVER_SCENE ? true : false;
 	}
 	//this.sounds.songs[this.currentSceneKey].play();
 }

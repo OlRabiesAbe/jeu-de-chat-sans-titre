@@ -1,3 +1,4 @@
+
 function Bird(game, x, y) {	
 	this.bird = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 0, 0, 128, 128, 0.1, 3, true, false)
 	this.reverseBird = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 0, 256, 128, 128, 0.1, 3, true, false)
@@ -259,8 +260,8 @@ Bird.prototype.draw = function (ctx) {
 
 function Range(game, x, y) {
 	//Action animation of the cowboy firing.
-	this.ready = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 0, 128, 256, 0.12, 4, false, false);
-	this.readyL = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 256, 128, 256, 0.12, 4, false, false);
+	this.ready = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 0, 128, 256, 0.1, 4, false, false);
+	this.readyL = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 256, 128, 256, 0.1, 4, false, false);
 	//Default stance of cowboy when he is not firing.
 	this.stance = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 0, 256, 128, 256, 0.12, 1, true, false);
 	this.stanceR = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 0, 0, 128, 256, 0.12, 1, true, false);
@@ -281,23 +282,23 @@ function Range(game, x, y) {
 	this.rightX = x
 	this.leftX = x - 100
 	
-	this.bx = x + 120;	//Bullet location
-	this.by = y - 15;
+	this.bx = x ;	//Bullet location
+	this.by = y - 45;
 	
 	this.ax = this.bx	//X-Coordinate of the first bullets attack box
 	this.ay = this.by	//Y-Coordinate of the first bullets attack box
 	this.ax2 = this.bx	//X-Coordinate of the second bullets attack box
 	this.ay2 = this.by	//Y-Coordinate of the second bullets attack box
-	this.length = 50	//Length of the attack box
-	this.height = 25	//Height of the attack box
+	this.length = 10	//Length of the attack box
+	this.height = 15	//Height of the attack box
 	
 	this.hx = x
 	this.hy = y
 	this.Hlength = 50
 	this.Hheight = 50
 	
-	this.bx2 = x + 120;	//Bullet2 location
-	this.by2 = y - 15;
+	this.bx2 = x ;	//Bullet2 location
+	this.by2 = y - 45;
 	
 	this.vx = 0;	//Velocity
 	this.vy = 0;
@@ -340,17 +341,17 @@ Range.prototype.constructor = Range;
 Range.prototype.update= function() {
 	var cat = this.game.cat
 	if(this.left){	//Draws both bounding boxes of each bullet when the bullet is traveling to the left
-		this.ax = this.bx		
-		this.ay = this.by + 20
-		this.ax2 = this.bx2		
-		this.ay2 = this.by2 + 20
+		this.ax = this.bx - 5	
+		this.ay = this.by 
+		this.ax2 = this.bx2	- 5	
+		this.ay2 = this.by2 
 		this.bound2 = new BoundingBox(this.ax2, this.ay2, this.length, this.height, "Green"); //For testing detection purposes
 		this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Red"); //For testing detection purposes
 	} else {//Draws both bounding boxes of each bullet when the bullet is traveling to the right
-		this.ax = this.bx + 10		
-		this.ay = this.by + 35
-		this.ax2 = this.bx2	+ 10	
-		this.ay2 = this.by2 + 35
+		this.ax = this.bx + 5
+		this.ay = this.by 
+		this.ax2 = this.bx2	+ 5	
+		this.ay2 = this.by2 
 		this.bound2 = new BoundingBox(this.ax2, this.ay2, this.length, this.height, "Green"); //For testing detection purposes
 		this.boundingbox = new BoundingBox(this.ax, this.ay, this.length, this.height, "Green"); //For testing detection purposes
 	}
@@ -369,7 +370,8 @@ Range.prototype.update= function() {
 		this.left = false;
 		this.right = true;
 	}
-	
+	var readyFire = false
+	var readyFire2 = false
 	if(this.count === 0 && this.shoot){
 		this.defaultTest = false
 		this.defaultLeft = false
@@ -379,11 +381,11 @@ Range.prototype.update= function() {
 		this.ready.elapsedTime = 0
 				
 		if(this.left){
-	    	this.bx = this.x - 120
+	    	this.bx = this.x
 	    	this.bleft = true
 	    	this.bright = false
 	    } else {
-	    	this.bx = this.x + 120;
+	    	this.bx = this.x + 128;
 	    	this.bleft = false
 	    	this.bright = true
 	    }
@@ -399,11 +401,13 @@ Range.prototype.update= function() {
 	    this.vx = dx //Velocity Calculated
 	    this.vy = dy
 	    this.distance = Math.sqrt(dx * dx + dy * dy); //Total Distance Calculated
-	    
+	    readyFire = true
 	    this.bStart = true
 	}
+	if(this.shoot){
+		this.count++
+	}
 	
-	this.count++
 	if(this.count === 50 && this.shoot){
 	    this.defaultLeft = false
 	    this.defaultRight = false
@@ -411,9 +415,9 @@ Range.prototype.update= function() {
 		this.ready.elapsedTime = 0
 		this.readyL.elapsedTime = 0
 		if(this.left){
-		    this.bx2 = this.x - 120
+		    this.bx2 = this.x 
 		  } else {
-		    this.bx2 = this.x + 120;
+		    this.bx2 = this.x + 128;
 		}
 	    if(this.right){
 	    	var tx = cat.x 	+ 65//Target Location
@@ -428,7 +432,8 @@ Range.prototype.update= function() {
 	    this.vx2 = dx //Velocity Calculated
 	    this.vy2 = dy
 	    this.distance2 = Math.sqrt(dx * dx + dy * dy); //Total Distance Calculated
-	   
+		readyFire2 = true
+
 		this.b2Start = true
 	}
 	if(this.ready.isDone() || this.readyL.isDone()){
@@ -442,7 +447,15 @@ Range.prototype.update= function() {
 		    this.fire = false
 		}
 	}
-	if(this.bStart){
+	/**
+	if(readyFire && this.count === 5){
+		this.bStart = true
+	}
+	if(readyFire2 && this.count === 55){
+		this.b2Start = true
+	}
+	*/
+	if(this.bStart ){
 		this.bx += this.vx/this.distance * this.speed  //The constant is a scalar to determine speed of the bullet.
 		this.by += this.vy/this.distance * this.speed
 		
@@ -454,13 +467,13 @@ Range.prototype.update= function() {
 	
 
 	if(this.count === 150){
-		this.bx = this.x + 120;	//Bullet location
-		this.by = this.y - 15;
+		this.bx = this.x ;	//Bullet location
+		this.by = this.y - 45;
 		this.bStart = false
 	}
 	if(this.count === 200){
-		this.bx2 = this.x + 120;	//Bullet location
-		this.by2 = this.y - 15;
+		this.bx2 = this.x ;	//Bullet location
+		this.by2 = this.y - 45;
 		this.count = 0;
 		this.b2Start = false
 	}

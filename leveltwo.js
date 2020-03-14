@@ -1,4 +1,5 @@
 /**
+ /**
  * http://usejsdoc.org/
  */
 function getLevelTwoEnts(gameEngine) {
@@ -238,12 +239,12 @@ function getLevelTwoEnts(gameEngine) {
 	
 	var box = new Tile(gameEngine, "./img/box.png", 0, 0,
 			128 * 78, 128 * 2 , 128 * 78, 128 * 2,
-			129, 128, 128, 128, {allDir:true, bottom:true});
+			129, 128, 128, 128, {allDir:true, bottom:false});
 	lTwoEnts.push({type:"Platform", ent:box});
 	
 	var box = new Tile(gameEngine, "./img/box.png", 0, 0,
 			128 * 79, 128 * 2, 128 * 79, 128 * 2,
-			129, 128, 128, 128, {allDir:true, bottom:true});
+			129, 128, 128, 128, {allDir:true, bottom:false});
 	lTwoEnts.push({type:"Platform", ent:box});
 	var box6 = new Tile(gameEngine, "./img/box.png", 0, 0,
 			128 * 84, (128 * 2), 128 * 84, (128 * 2),

@@ -29,9 +29,9 @@ function Cat(game) {
 	this.Hheight = 50
 	
     this.falling = false;
-	this.x = 36;
+	this.x = 0;
 	this.height = 128;
-	this.width = 128;
+	this.width = 80;
 	this.running = false;
 	this.ducking = false;
 	this.jumping = false;
@@ -65,7 +65,8 @@ function Cat(game) {
 	
 	this.boxes = true;
 	this.boundingbox = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
-	
+	this.bound2 = new BoundingBox(this.x, this.y + 30, this.neutralR.frameWidth, this.neutralR.frameHeight, "Purple");
+
 	Entity.call(this, game, 64, 64);
 }
 
@@ -172,7 +173,7 @@ Cat.prototype.collisionHelper = function(ctx) {
 
 
 Cat.prototype.update = function() {
-		
+	console.log(this.x/128)	
 	if (this.game.w) this.jumping = true;
 	else this.jumping = false;
 	this.running = (this.game.right || this.game.left);
@@ -237,7 +238,6 @@ Cat.prototype.update = function() {
 	// if jump is pressed while on the ground, vspeed = MAX_VSPEED
 	if(this.jumping && this.y == this.ground) {
 		this.vspeed = this.MAX_VSPEED;
-
 	// otherwise, decelerate
 	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
@@ -293,9 +293,9 @@ Cat.prototype.update = function() {
 	if (this.y > 800 || HEALTH === 0) {
 		this.removeFromWorld = true;
 		this.y = 64;
-		HEALTH = 3;
 		this.falling = false;
 		LIVES--;
+		HEALTH = 3;
 		
 		//this.invinc = false;
 		//this.invincTick = false;
@@ -313,7 +313,7 @@ Cat.prototype.update = function() {
 		CURRENT_LEVEL = CURRENT_LEVEL + 1
 		
 		if (CURRENT_LEVEL < WIN_SCREEN) {
-		this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
+			this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 		
 		} else {
 			this.game.sceneManager.setScene(this.game.sceneManager.scenes[WIN_SCREEN])
@@ -328,13 +328,13 @@ Cat.prototype.update = function() {
 	}
 	 
 	//this.boundingbox = new BoundingBox(this.hx, this.hy, this.Hlength, this.Hheight);
-	this.bound2 = new BoundingBox(this.ax, this.ay, this.length, this.height);
+	this.bound2 = new BoundingBox(this.x + 30 , this.y, 80, 128, "Green");
 
 	Entity.prototype.update.call(this);
 }
 
 Cat.prototype.draw = function(ctx) {
-//	console.log(this.invincTimer);
+	console.log(this.invincTimer);
 	//ctx.strokeStyle = this.bound2.color;
 	//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 	if (!this.invincTick) {
