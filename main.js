@@ -1,4 +1,3 @@
-
 var TITLE_SCENE = 0;
 var LEVEL_ONE_SCENE = 1;
 var LEVEL_TWO_SCENE = 2;
@@ -120,7 +119,7 @@ BoundingBox.prototype.updateBoundingBox = function(theX, theY, theWidth, theHeig
 
 var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./img/bird.png");
+ASSET_MANAGER.queueDownload("./img/bird_sheet.png");
 ASSET_MANAGER.queueDownload("./img/box.png");
 ASSET_MANAGER.queueDownload("./img/bridge.png");
 ASSET_MANAGER.queueDownload("./img/building.png");
@@ -128,7 +127,7 @@ ASSET_MANAGER.queueDownload("./img/bullet.png");
 ASSET_MANAGER.queueDownload("./img/cat_logo.png");
 ASSET_MANAGER.queueDownload("./img/cat_sheet.png")
 ASSET_MANAGER.queueDownload("./img/checkpoint.png");
-ASSET_MANAGER.queueDownload("./img/cowboy.png");
+ASSET_MANAGER.queueDownload("./img/gunslinger_sheet.png");
 ASSET_MANAGER.queueDownload("./img/crane.png");
 ASSET_MANAGER.queueDownload("./img/dog_sheet.png");
 ASSET_MANAGER.queueDownload("./img/dumpster.png");
@@ -162,6 +161,10 @@ ASSET_MANAGER.queueDownload("./music/level_1.wav");
 ASSET_MANAGER.queueDownload("./music/level_2.wav");
 ASSET_MANAGER.queueDownload("./music/level_3_and_pound.wav");
 ASSET_MANAGER.queueDownload("./img/lv2_background.png");
+ASSET_MANAGER.queueDownload("./img/achtung.png");
+ASSET_MANAGER.queueDownload("./img/cage.png");
+ASSET_MANAGER.queueDownload("./img/cage_dog.png");
+ASSET_MANAGER.queueDownload("./img/cage_cat.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -202,19 +205,20 @@ ASSET_MANAGER.downloadAll(function () {
 	
 	var levelOne = new Scene(gameEngine, getLevelOneEnts(gameEngine));
 	var levelTwo = new Scene(gameEngine, getLevelTwoEnts(gameEngine));
-	var levelString = "T 			;"+
-					  "	  			;" +
-					  "				;" + 
-					  "				;" + 
-					  "				;" + 
-					  "   cT    	;" + 
-					  "TTTTTTTTTTT	;";
+	var levelString = ";" +
+"    SSSSSSSSSS               X   bI         SSS                    c I       b               ;" +
+"    SSSS   SSSSC             CXX  I          SS          KK        X I         g             ;" +
+"    SSSS s SSSSS             CCC  I  C      g S        XKSCK       C I          C            ;" +
+"   SSSSSSSSSSSSS  X       c  CCC  I  C  X   SSS       XSSSSXX      C I   X     CC   X        ;" +
+" lCSSSSSSSSSSSSSpCX      BB  KXXKXI rC  K l SSS  pC  SSSSSSSK   K  C I  lXK   pCC ssX     l l l l l;" +
+"GGGGGGGGGGGGGGGGGGGWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGWWWWWWWWGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG;";
 	var testLevel = new LevelBuilder(levelString, gameEngine);
 	console.log(testLevel)
 	gameEngine.sceneManager.addScene(titleScene);
 	
 	
 	// IF YOU WANT YOUR LEVEL TO BE FIRST FOR TESTING PURPOSES, just have it be added before the other levels. 
+	//gameEngine.sceneManager.addScene(new Scene(gameEngine, testLevel.getLevel()));
 	gameEngine.sceneManager.addScene(levelOne);
 	gameEngine.sceneManager.addScene(levelTwo);
 	gameEngine.sceneManager.addScene(new Scene(gameEngine, testLevel.getLevel()));

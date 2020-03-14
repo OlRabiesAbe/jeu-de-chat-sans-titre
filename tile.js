@@ -1,3 +1,4 @@
+
 //~.~.~.~.~.~.~.~.~.~.~.~. code for a generic tile ~.~.~.~.~.~.~.~.~.~.~.~.//
 function Tile(game, img, framex, framey, x, y, posX, posY, width, height, frameW, frameH, allSides, canMove, isVertical, start, end) {
 	this.game = game;
@@ -5,7 +6,7 @@ function Tile(game, img, framex, framey, x, y, posX, posY, width, height, frameW
 	this.buffer = 30
 	this.x = x; this.y = y;
 	this.width = width; this.height = height; 
-	this.frameW = frameW; this.frameH = frameH;
+	this.frameW = frameW; this.frameH = this.frameH;
 	this.allSides = allSides; //what is allSides
 	this.posX = posX; this.posY = posY
 	//collision specifics suite
@@ -161,5 +162,19 @@ Tile.prototype.update = function(ctx) { //Tile.update pretty must just handles d
 }
 Tile.prototype.draw = function(ctx) { //i dont understand drawing funcs
 	this.animation.drawFrame(this.game.clockTick, ctx, this.posX - this.game.camera.x, this.posY, 1);
+	if(this.canMove){
+			ctx.strokeStyle = "Black";
+			ctx.rect(this.x - this.game.camera.x, 0, 128, 128);
+			ctx.fill()
+			ctx.moveTo(this.x + 64- this.game.camera.x,0);
+			ctx.lineWidth = 3
+
+			ctx.lineTo(this.x + 64- this.game.camera.x,this.y)
+
+			//ctx.line(this.x)
+			ctx.stroke()
+		
+		
+	}
 	Entity.prototype.draw.call(this);
 }

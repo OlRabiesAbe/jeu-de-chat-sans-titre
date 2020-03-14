@@ -29,7 +29,7 @@ function Cat(game) {
 	this.Hheight = 50
 	
     this.falling = false;
-	this.x = 0;
+	this.x = 36;
 	this.height = 128;
 	this.width = 128;
 	this.running = false;
@@ -237,6 +237,7 @@ Cat.prototype.update = function() {
 	// if jump is pressed while on the ground, vspeed = MAX_VSPEED
 	if(this.jumping && this.y == this.ground) {
 		this.vspeed = this.MAX_VSPEED;
+
 	// otherwise, decelerate
 	} else if (this.y < this.ground && this.vspeed > this.MAX_VDECCEL){
 		this.vspeed -= this.VDECCEL;
@@ -292,9 +293,9 @@ Cat.prototype.update = function() {
 	if (this.y > 800 || HEALTH === 0) {
 		this.removeFromWorld = true;
 		this.y = 64;
+		HEALTH = 3;
 		this.falling = false;
 		LIVES--;
-		HEALTH = 3;
 		
 		//this.invinc = false;
 		//this.invincTick = false;
@@ -310,13 +311,14 @@ Cat.prototype.update = function() {
 	}
 	if (this.x >= MAP_SIZE - 64) {
 		if (CURRENT_LEVEL < WIN_SCREEN) {
-		this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
 		CURRENT_LEVEL = CURRENT_LEVEL + 1
+		this.game.sceneManager.setScene(this.game.sceneManager.scenes[STATUS_SCENE])
+		
 		} else if (CURRENT_LEVEL === WIN_SCREEN) {
 			LIVES = 2
 			CURRENT_LEVEL = LEVEL_ONE_SCENE
-			HEALTH = 3;
 		}
+		HEALTH = 3;
 		//LIVES = 2
 		this.x = 64;
 		this.spawn= 0;
@@ -330,7 +332,7 @@ Cat.prototype.update = function() {
 }
 
 Cat.prototype.draw = function(ctx) {
-	console.log(this.invincTimer);
+//	console.log(this.invincTimer);
 	//ctx.strokeStyle = this.bound2.color;
 	//ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
 	if (!this.invincTick) {

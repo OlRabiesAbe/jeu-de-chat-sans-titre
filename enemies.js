@@ -1,8 +1,8 @@
 function Bird(game, x, y) {	
-	this.bird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 35, 35, 185,70, 0.1, 4, true, false)
-	this.reverseBird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 30, 600, 185,70, 0.1, 4, true, false)
-	this.attackBird = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 30, 400, 185,100, 0.1, 1, true, false)
-	this.reverseAttack = new Animation(ASSET_MANAGER.getAsset("./img/bird.png"), 200, 770, 185,100, 0.1, 1, true, false)
+	this.bird = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 0, 0, 128, 128, 0.1, 3, true, false)
+	this.reverseBird = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 0, 256, 128, 128, 0.1, 3, true, false)
+	this.attackBird = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 0, 128, 128, 128, 0.1, 1, true, false)
+	this.reverseAttack = new Animation(ASSET_MANAGER.getAsset("./img/bird_sheet.png"), 128, 128, 128, 128, 0.1, 1, true, false)
 	
 	this.tx = 0; //Target Location
 	this.ty = 0; 
@@ -259,18 +259,18 @@ Bird.prototype.draw = function (ctx) {
 
 function Range(game, x, y) {
 	//Action animation of the cowboy firing.
-	this.ready = new Animation(ASSET_MANAGER.getAsset("./img/cowboy.png"), 240, 370, 190, 160, 0.12, 3, false, false);
-	this.readyL = new Animation(ASSET_MANAGER.getAsset("./img/cowboy.png"), 280, 750, 190, 160, 0.12, 3, false, false);
+	this.ready = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 0, 128, 256, 0.12, 4, false, false);
+	this.readyL = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 128, 256, 128, 256, 0.12, 4, false, false);
 	//Default stance of cowboy when he is not firing.
-	this.stance = new Animation(ASSET_MANAGER.getAsset("./img/cowboy.png"), 27, 740, 95, 160, 0.12, 1, true, false);
-	this.stanceR = new Animation(ASSET_MANAGER.getAsset("./img/cowboy.png"), 20, 370, 95, 160, 0.12, 1, true, false);
+	this.stance = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 0, 256, 128, 256, 0.12, 1, true, false);
+	this.stanceR = new Animation(ASSET_MANAGER.getAsset("./img/gunslinger_sheet.png"), 0, 0, 128, 256, 0.12, 1, true, false);
 	
 	//Animation of first and second bullet facing right. 
-	this.bullet = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 15, 240, 61.75, 70, 0.12, 7, true, false);
-	this.bullet2 = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 15, 240, 61.75, 70, 0.12, 7, true, false);
+	this.bullet = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 16, 16, 0.12, 1, true, false);
+	this.bullet2 = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 16, 16, 0.12, 1, true, false);
 	//Animation of first and second bullet facing left.
-	this.bulletL = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 5, 0, 61.75, 70, 0.12, 7, true, false);
-	this.bullet2L = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 5, 0, 61.75, 70, 0.12, 7, true, false);
+	this.bulletL = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 16, 16, 0.12, 1, true, false);
+	this.bullet2L = new Animation(ASSET_MANAGER.getAsset("./img/bullet.png"), 0, 0, 16, 16, 0.12, 1, true, false);
 
 	this.spawn = x;
 	this.game = game
@@ -523,16 +523,16 @@ Range.prototype.update= function() {
 Range.prototype.draw = function (ctx) {
 
 	if(this.left && this.fire ){
-		this.readyL.drawFrame(this.game.clockTick, ctx, this.leftX - this.game.camera.x, this.y)
+		this.readyL.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 100)
 	} 
 	if(this.right && this.fire ){
-		this.ready.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y)
+		this.ready.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - 100)
 	} 
 	if(this.defaultRight) {
-		this.stanceR.drawFrame(this.game.clockTick, ctx, this.rightX - this.game.camera.x, this.y)
+		this.stanceR.drawFrame(this.game.clockTick, ctx, this.rightX - this.game.camera.x, this.y  - 100)
 	}
 	if(this.defaultLeft || this.defaultTest){
-		this.stance.drawFrame(this.game.clockTick, ctx, this.rightX - this.game.camera.x, this.y)
+		this.stance.drawFrame(this.game.clockTick, ctx, this.rightX - this.game.camera.x, this.y  - 100)
 	}
 	
 	if(this.bStart && this.bright ){

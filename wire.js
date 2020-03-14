@@ -10,8 +10,8 @@ function Wire(game, x, y) {
 	this.m1 = 40
 	this.m2 = 40
 	
-	this.l1 = 100
-	this.l2 = 100
+	this.l1 = 120
+	this.l2 = 120
 	
 	this.t1 = Math.PI/2			//Theta Angle
 	this.t2 = Math.PI/2
@@ -25,6 +25,18 @@ function Wire(game, x, y) {
 	
 	this.x2 = this.x1 + this.l2 * Math.sin(this.t2)
 	this.y2 = this.y1 - this.l2 * Math.cos(this.t2)
+	
+	//Attack box
+	this.ax = this.x2
+	this.ay = this.y2
+	this.length = 60
+	this.height = 40
+	
+	
+	
+	this.bound = new BoundingBox(this.x2, this.y2, this.alength, this.height, "Green");
+	this.bound2 = new BoundingBox(this.ax, this.ay, this.alength, this.height, "Purple");
+	
 	
 	Entity.call(this, game, this.sx, this.sy)
 }
@@ -67,22 +79,41 @@ Wire.prototype.update = function (){
 	this.x2 = this.x1 + this.l2 * Math.sin(this.t2)
 	this.y2 = this.y1 + this.l2 * Math.cos(this.t2)
 	
+	//Attack box update
+	this.ax = this.x2 + this.sx 
+	this.ay = this.y2 + this.sy 
+//	console.log("TEST")
+//	console.log(this.buffer)
+	this.bound = new BoundingBox(this.x2, this.y2, this.length, this.height, "Green");
+	this.bound2 = new BoundingBox(this.ax, this.ay, this.length, this.height, "Purple");
+	
 	
 }
 Wire.prototype.draw = function (ctx) {
+	ctx.save()
+	/**
+	ctx.strokeStyle = this.bound2.color;
+	ctx.strokeRect(this.bound2.x - this.game.camera.x, this.bound2.y, this.bound2.width, this.bound2.height);
+	ctx.strokeStyle = this.bound.color;
+	ctx.strokeRect(this.bound.x - this.game.camera.x, this.bound.y, this.bound.width, this.bound.height);
+	*/
 	ctx.beginPath()
 	ctx.translate(this.sx,this.sy)
 	ctx.lineWidth = 3
 	ctx.moveTo(0 - this.game.camera.x, 0);   
 	ctx.arc(0 - this.game.camera.x , 0, 5, 0, Math.PI * 2, false);
 	ctx.strokeStyle = "Black";
-	ctx.fill();
+	//ctx.fill();
 	ctx.lineTo(this.x1- this.game.camera.x, this.y1);  
 	ctx.arc(this.x1- this.game.camera.x, this.y1, 5, 0, Math.PI * 2, false);
 	ctx.moveTo(this.x1 - this.game.camera.x, this.y1);
 	ctx.lineTo(this.x2 - this.game.camera.x, this.y2); 
-	ctx.stroke();          // Render the path
-	this.shock.drawFrame(this.game.clockTick, ctx, this.x2 - this.game.camera.x - 40, this.y2 - 75)
-
+	//this.bound = new BoundingBox(this.x2, this.y2, this.alength, this.height, "Green");
 	
+	this.shock.drawFrame(this.game.clockTick, ctx, this.x2 - this.game.camera.x - 40, this.y2 - 75)
+	
+	
+	ctx.stroke(); 
+
+	ctx.restore()
 }

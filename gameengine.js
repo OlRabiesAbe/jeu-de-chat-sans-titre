@@ -41,6 +41,7 @@ function GameEngine() {
     this.click = null;
     this.mouse = null;
     this.wheel = null;
+	this.mute = false;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 }
@@ -78,13 +79,19 @@ GameEngine.prototype.startInput = function () {
 	
 	}, false);
 
-
     this.ctx.canvas.addEventListener("keydown", function (e) {	
 		if (String.fromCharCode(e.which) === 'W') that.w = true;
-			if (String.fromCharCode(e.which) === ' ') that.space = true;
 			if (String.fromCharCode(e.which) === 'D') that.right = true;
 			if (String.fromCharCode(e.which) === 'A') that.left = true;
 			if (String.fromCharCode(e.which) === 'S') that.down = true;
+			if (String.fromCharCode(e.which) === ' ') that.space = true;
+			if (String.fromCharCode(e.which) === 'M') {
+				that.m = e.repeat ? false : true
+				if (that.m) {
+					that.mute = !that.mute;
+				}
+			}
+			
 			e.preventDefault();
     }, false);
 	this.ctx.canvas.addEventListener("click", function (e) {
@@ -95,8 +102,10 @@ GameEngine.prototype.startInput = function () {
 		if (String.fromCharCode(e.which) === 'D') that.right = false;
 		if (String.fromCharCode(e.which) === 'A') that.left = false;
 		if (String.fromCharCode(e.which) === 'S') that.down = false;
+		if (String.fromCharCode(e.which) === ' ') that.down = false;
 		if (String.fromCharCode(e.which) === 'W') that.w = false;
-		if (String.fromCharCode(e.which) === ' ') that.space = false;
+		if (String.fromCharCode(e.which) === 'M') that.m = false;
+		check = false;
 	}, false);
    // console.log('Input started');
 }
@@ -132,6 +141,12 @@ GameEngine.prototype.draw = function () {
 }
 
 GameEngine.prototype.update = function () {
+	if (this.m) {
+		var songs = this.sceneManager.songs;
+		for (var i = 1; i < songs.length; i++) {
+			songs[i].volume = this.mute ? 0 : 1
+		}
+	}
 	//console.log(this.platforms);
 	//console.log(Math.floor(this.cat.x / 128));
 	if (this.sceneManager.getScene() === STATUS_SCENE) {
